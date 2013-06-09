@@ -15,6 +15,28 @@ namespace MetroLooper
         public BankPage()
         {
             InitializeComponent();
+            Project p = new Project("My Project");
+            this.DataContext = p;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            int bankIndex = 0;
+            foreach (UIElement ctrl in ContentPanel.Children)
+            {
+                if (ctrl.GetType() == typeof(Grid))
+                {
+                    ((Grid)ctrl).DataContext = ((Project)(this.DataContext)).banks[bankIndex];
+                    bankIndex++;
+                }
+            }
+        }
+
+        private void Border_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/LoopPage.xaml?loopSelected=1", UriKind.RelativeOrAbsolute));
         }
     }
 }
