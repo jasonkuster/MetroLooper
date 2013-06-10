@@ -26,10 +26,17 @@ namespace MetroLooper
             int bankIndex = 0;
             foreach (UIElement ctrl in ContentPanel.Children)
             {
-                if (ctrl.GetType() == typeof(Grid))
+                if (ctrl.GetType() == typeof(StackPanel) && ((StackPanel)ctrl).Orientation == System.Windows.Controls.Orientation.Horizontal)
                 {
-                    ((Grid)ctrl).DataContext = ((Project)(this.DataContext)).banks[bankIndex];
-                    bankIndex++;
+                    if (bankIndex < ((Project)(this.DataContext)).banks.Count)
+                    {
+                        ((StackPanel)ctrl).DataContext = ((Project)(this.DataContext)).banks[bankIndex];
+                        bankIndex++;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
