@@ -15,19 +15,40 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel Grid.Row="0" Margin="12,17,0,28" Grid.ColumnSpan="2">
             <TextBlock Text="METROLOOPER" Style="{StaticResource PhoneTextNormalStyle}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        	<StackPanel Orientation="Horizontal">
+        		<StackPanel Width="123">
+        			<Border BorderBrush="White" BorderThickness="1" Tap="Border_Tap" HorizontalAlignment="Left" Height="100" VerticalAlignment="Center" Width="100" Background="Black" Margin="11,20,-11,0">
+        				<Image Margin="0,0,0,-2" Source="/Toolkit.Content/ApplicationBar.Check.png"/>
+        			</Border>
+        			<Button Content="Pl/St" Margin="0,0,2,0" Height="74"/>
+        		</StackPanel>
+        		<Slider Margin="0,60,0,0" Width="123" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" VerticalAlignment="Top">
+        			<Slider.RenderTransform>
+        				<CompositeTransform Rotation="270" ScaleX="1.5"/>
+        			</Slider.RenderTransform>
+        		</Slider>
+        	</StackPanel>
         </Grid>
     </Grid>
 
