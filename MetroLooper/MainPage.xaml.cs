@@ -25,6 +25,7 @@ namespace MetroLooper
             _recorder = new Recorder();
 
             _engine = new AudioEngine();
+            _recorder.engine = _engine;
             //_engine.PlaySound();
 
             _recorder.Record();

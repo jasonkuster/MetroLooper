@@ -18,7 +18,7 @@ namespace MetroLooper
         private int totalNumBytes;
         private MemoryStream stream;
 
-        AudioEngine engine { get; set; }
+        public AudioEngine engine { get; set; }
 
         /// <summary>
         /// True if Microphone is currently started/recording
