@@ -13,6 +13,7 @@ namespace MetroLooper
         private Recorder _recorder;
         public AudioEngine _engine;
         public bool isPlaying;
+        public bool isRecording;
 
         /// <summary>
         /// Default constructor, does all initialization
@@ -20,9 +21,7 @@ namespace MetroLooper
         public AudioManager()
         {
             _recorder = new Recorder();
-
             _engine = new AudioEngine();
-            _recorder.engine = _engine;
 
             isPlaying = false;
 
@@ -32,9 +31,10 @@ namespace MetroLooper
         /// <summary>
         /// Start Recording Track
         /// </summary>
-        public void StartRecording()
+        public void RecordStart()
         {
             _recorder.StartRecording();
+            isRecording = true;
         }
 
         /// <summary>
@@ -42,9 +42,15 @@ namespace MetroLooper
         /// </summary>
         /// <param name="bank">Bank to submit to</param>
         /// <param name="track">Track to submit to</param>
-        public void StopRecordingAndSubmit(int bank, int track)
+        public void RecordStopAndSubmit(int bank, int track)
         {
-            _recorder.StopRecording(bank, track);
+            short[] data;
+            int size;
+
+            _recorder.StopRecording(out data, out size);
+            _engine.PushData(data, size, bank, track);
+
+            isRecording = false;
         }
 
         /// <summary>
@@ -76,12 +82,12 @@ namespace MetroLooper
             if (returnedSize == -1)
             {
                 //Engine not initialized
-                throw new Exception("Audio Engine not yet initialized, could not play track");
+                throw new Exception("Audio Engine not yet initialized, could not play track.");
             }
             else if (returnedSize == 0)
             {
                 //track not set yet
-                throw new Exception("Track has no data yet");
+                throw new Exception("Track:" + track + " in bank:"+ bank + " has no data yet.");
             }
 
             isPlaying = true;
