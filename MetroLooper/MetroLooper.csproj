@@ -94,7 +94,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Bank.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
+    <Compile Include="Audio\Recorder.cs" />
+    <Compile Include="Audio\XNAAsyncDispatcher.cs" />
     <Compile Include="BankPage.xaml.cs">
       <DependentUpon>BankPage.xaml</DependentUpon>
     </Compile>
@@ -199,6 +201,12 @@
   </ItemGroup>
   <ItemGroup>
     <DesignTimeOnly Include="SampleData\LoopSamples\LoopSamples.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioComponent\AudioComponent.vcxproj">
+      <Project>{92A37FC7-ED72-45AE-9AD4-7EEA88C17E71}</Project>
+      <Name>AudioComponent</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

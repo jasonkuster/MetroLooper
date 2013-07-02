@@ -56,6 +56,7 @@ namespace MetroLooper
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
+            ApplicationLifetimeObjects.Add(new XNAAsyncDispatcher(TimeSpan.FromMilliseconds(50)));
         }
 
         // Code to execute when the application is launching (eg, from Start)

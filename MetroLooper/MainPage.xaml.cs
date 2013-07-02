@@ -13,6 +13,7 @@ namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
         // Constructor
         public MainPage()
         {
@@ -20,6 +21,16 @@ namespace MetroLooper
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        private void Record_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         // Sample code for building a localized ApplicationBar
