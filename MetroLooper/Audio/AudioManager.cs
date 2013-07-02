@@ -13,6 +13,7 @@ namespace MetroLooper
         private Recorder _recorder;
         public AudioEngine _engine;
         public bool isPlaying;
+        public bool isRecording;
 
         /// <summary>
         /// Default constructor, does all initialization
@@ -32,9 +33,10 @@ namespace MetroLooper
         /// <summary>
         /// Start Recording Track
         /// </summary>
-        public void StartRecording()
+        public void RecordStart()
         {
             _recorder.StartRecording();
+            isRecording = true;
         }
 
         /// <summary>
@@ -42,9 +44,10 @@ namespace MetroLooper
         /// </summary>
         /// <param name="bank">Bank to submit to</param>
         /// <param name="track">Track to submit to</param>
-        public void StopRecordingAndSubmit(int bank, int track)
+        public void RecordStopAndSubmit(int bank, int track)
         {
             _recorder.StopRecording(bank, track);
+            isRecording = false;
         }
 
         /// <summary>

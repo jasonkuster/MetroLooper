@@ -13,11 +13,14 @@ namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        AudioManager _manager;
 
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+
+            _manager = new AudioManager();
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -25,12 +28,26 @@ namespace MetroLooper
 
         private void Record_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!_manager.isRecording)
+            {
+                _manager.RecordStart();
+            }
+            else
+            {
+                _manager.RecordStopAndSubmit(0, 0);
+            }
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!_manager.isPlaying)
+            {
+                _manager.PlayAll();
+            }
+            else
+            {
+                _manager.StopAll();
+            }
         }
 
         // Sample code for building a localized ApplicationBar
