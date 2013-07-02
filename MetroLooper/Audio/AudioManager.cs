@@ -21,9 +21,7 @@ namespace MetroLooper
         public AudioManager()
         {
             _recorder = new Recorder();
-
             _engine = new AudioEngine();
-            _recorder.engine = _engine;
 
             isPlaying = false;
 
@@ -46,7 +44,12 @@ namespace MetroLooper
         /// <param name="track">Track to submit to</param>
         public void RecordStopAndSubmit(int bank, int track)
         {
-            _recorder.StopRecording(bank, track);
+            short[] data;
+            int size;
+
+            _recorder.StopRecording(out data, out size);
+            _engine.PushData(data, size, bank, track);
+
             isRecording = false;
         }
 
@@ -79,12 +82,12 @@ namespace MetroLooper
             if (returnedSize == -1)
             {
                 //Engine not initialized
-                throw new Exception("Audio Engine not yet initialized, could not play track");
+                throw new Exception("Audio Engine not yet initialized, could not play track.");
             }
             else if (returnedSize == 0)
             {
                 //track not set yet
-                throw new Exception("Track has no data yet");
+                throw new Exception("Track:" + track + " in bank:"+ bank + " has no data yet.");
             }
 
             isPlaying = true;

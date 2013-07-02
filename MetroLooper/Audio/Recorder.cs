@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
-using AudioComponent;
 using System.IO;
 
 namespace MetroLooper.AudioDoNotUse
@@ -18,8 +17,6 @@ namespace MetroLooper.AudioDoNotUse
         private int totalNumBytes;
         private MemoryStream stream;
         private short[] _shortBuffer;
-
-        public AudioEngine engine { get; set; }
 
         /// <summary>
         /// True if Microphone is currently started/recording
@@ -54,30 +51,28 @@ namespace MetroLooper.AudioDoNotUse
             if (_microphone.State != MicrophoneState.Started)
             {
                 _microphone.Start();
-                engine.PlaySound(); //record with playback
             }
         }
-        public void StopRecording(int bank, int track)
+        //public void StopRecording(int bank, int track)
+        public void StopRecording(out short[] outData, out int size)
         {
-            if (_microphone.State == MicrophoneState.Started)
+            _microphone.Stop();
+
+            byte[] data = stream.ToArray();
+            _shortBuffer = new short[totalNumBytes / 2];
+
+            for (int i = 0; i < totalNumBytes; i += 2)
             {
-                _microphone.Stop();
-
-                byte[] data = stream.ToArray();
-                _shortBuffer = new short[totalNumBytes / 2];
-
-                for (int i = 0; i < totalNumBytes; i += 2)
-                {
-                    _shortBuffer[i / 2] = BitConverter.ToInt16(data, i);
-                }
-
-                System.Diagnostics.Debug.WriteLine("Recorded Time:" + (totalNumBytes / 2.0) / _microphone.SampleRate);
-
-                engine.PushData(_shortBuffer, totalNumBytes / 2, bank, track);
-
-                stream = new MemoryStream();
-                totalNumBytes = 0;
+                _shortBuffer[i / 2] = BitConverter.ToInt16(data, i);
             }
+
+            System.Diagnostics.Debug.WriteLine("Recorded Time:" + (totalNumBytes / 2.0) / _microphone.SampleRate);
+
+            outData = _shortBuffer;
+            size = totalNumBytes / 2;
+
+            stream = new MemoryStream();
+            totalNumBytes = 0;
         }
 
         private void MicrophoneBufferReady(object sender, EventArgs e)
@@ -85,7 +80,6 @@ namespace MetroLooper.AudioDoNotUse
             _microphone.GetData(_buffer);
             stream.Write(_buffer, 0, numBytes);
             totalNumBytes += numBytes;
-            //Make voice here
         }
     }
 }

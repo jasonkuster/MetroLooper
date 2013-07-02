@@ -14,6 +14,7 @@ namespace MetroLooper
     public partial class MainPage : PhoneApplicationPage
     {
         AudioManager _manager;
+        int count;
 
         // Constructor
         public MainPage()
@@ -21,6 +22,7 @@ namespace MetroLooper
             InitializeComponent();
 
             _manager = new AudioManager();
+            count = 0;
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -31,10 +33,17 @@ namespace MetroLooper
             if (!_manager.isRecording)
             {
                 _manager.RecordStart();
+                RecordStatus.Text = "Recording";
             }
             else
             {
-                _manager.RecordStopAndSubmit(0, 0);
+                _manager.RecordStopAndSubmit(0, count);
+                count++;
+                if (count >= 10)
+                {
+                    count = 0;
+                }
+                RecordStatus.Text = "Not Recording";
             }
         }
 
@@ -43,10 +52,12 @@ namespace MetroLooper
             if (!_manager.isPlaying)
             {
                 _manager.PlayAll();
+                PlayStatus.Text = "Playing";
             }
             else
             {
                 _manager.StopAll();
+                PlayStatus.Text = "Not Playing";
             }
         }
 
