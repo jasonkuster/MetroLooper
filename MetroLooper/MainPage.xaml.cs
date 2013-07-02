@@ -8,30 +8,29 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using MetroLooper.Resources;
-using AudioComponent;
 
 namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private Recorder _recorder;
-        AudioEngine _engine;
 
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
-            _recorder = new Recorder();
-
-            _engine = new AudioEngine();
-            _recorder.engine = _engine;
-            //_engine.PlaySound();
-
-            _recorder.Record();
-
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        private void Record_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         // Sample code for building a localized ApplicationBar

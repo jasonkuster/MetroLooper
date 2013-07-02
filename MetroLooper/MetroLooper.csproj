@@ -94,6 +94,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\XNAAsyncDispatcher.cs" />

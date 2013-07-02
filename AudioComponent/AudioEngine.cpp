@@ -10,24 +10,40 @@ class VoiceCallback : public IXAudio2VoiceCallback
 {
 public:
 	HANDLE hBufferEndEvent;
+
 	VoiceCallback(): hBufferEndEvent( CreateEventEx( NULL, FALSE, FALSE, NULL ) ){}
 	~VoiceCallback(){ CloseHandle( hBufferEndEvent ); }
 
 	//Called when the voice has just finished playing a contiguous audio stream.
-	void __stdcall VoiceCallback::OnStreamEnd() { SetEvent( hBufferEndEvent ); OutputDebugString(L"stream end"); }
+	void __stdcall VoiceCallback::OnStreamEnd() { SetEvent( hBufferEndEvent ); OutputDebugString(L"Stream end\n"); }
 
 	//Unused methods are stubs
 	void __stdcall OnVoiceProcessingPassEnd() { }
 	void __stdcall OnVoiceProcessingPassStart(UINT32 SamplesRequired) {    }
-	void __stdcall OnBufferEnd(void * pBufferContext)    { OutputDebugString(L"buffer end"); }
-	void __stdcall OnBufferStart(void * pBufferContext) {    }
-	void __stdcall OnLoopEnd(void * pBufferContext) {    }
+	void __stdcall OnBufferEnd(void * pBufferContext)
+	{
+		OutputDebugString(L"Buffer end\n"); 
+		AudioEngine::BufferFinished((int)pBufferContext);
+	}
+	void __stdcall OnBufferStart(void * pBufferContext) {  OutputDebugString(L"Buffer start\n");  }
+	void __stdcall OnLoopEnd(void * pBufferContext) {  OutputDebugString(L"Loop end\n");  }
 	void __stdcall OnVoiceError(void * pBufferContext, HRESULT Error) { }
 };
 
 AudioEngine::AudioEngine()
 {
-	initialized = false;
+	Initialize();
+}
+
+ICallback ^CSCallback = nullptr;
+void AudioEngine::SetCallback( ICallback ^Callback)
+{
+	CSCallback = Callback;
+}
+
+void AudioEngine::BufferFinished(int bufferContext)
+{
+	CSCallback->Exec(bufferContext);
 }
 
 void AudioEngine::BufferEnded()
@@ -55,25 +71,17 @@ void AudioEngine::Initialize()
 		waveformat.cbSize = 0;
 
 		VoiceCallback *callback = new VoiceCallback();
-		ThrowIfFailed(pXAudio2->CreateSourceVoice(&pVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
 
-		// Submit the array
-		buffer.AudioBytes = 2 * BUFFER_LENGTH;
-		buffer.pAudioData = (byte *)soundData;
-		//buffer.Flags = XAUDIO2_END_OF_STREAM;
-		buffer.PlayBegin = 0;
-		buffer.PlayLength = BUFFER_LENGTH;
-		buffer.LoopBegin = 0;
-		buffer.LoopLength = BUFFER_LENGTH;
-		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-
-		pVoice->SetFrequencyRatio(1);
-		pVoice->SetVolume(0);
-		ThrowIfFailed(pVoice->SubmitSourceBuffer(&buffer));
-
-		// The sound will play in a continuous loop, but the volume is currently set at 0. 
-		// Playing the sound in this samples refers to increasing the volume so that the sound is audible.
-		ThrowIfFailed(pVoice->Start());
+		for (int i = 0; i < MAX_BANKS; i++)
+		{
+			for (int j = 0; j < MAX_TRACKS; j++)
+			{
+				ThrowIfFailed(pXAudio2->CreateSourceVoice(&(voices[i][j]), &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
+				voices[i][j]->SetFrequencyRatio(1);
+				voices[i][j]->SetVolume(1.0);
+				buffer_sizes[i][j] = 0;
+			}
+		}
 
 		WaitForSingleObjectEx( callback->hBufferEndEvent, INFINITE, TRUE );
 
@@ -81,13 +89,16 @@ void AudioEngine::Initialize()
 	}
 }
 
-void AudioEngine::PushData(const Platform::Array<byte>^ data, int size)
+void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int bank, int track)
 {
-	XAUDIO2_BUFFER buffer = {0};
-	buffer.AudioBytes = size;  //buffer containing audio data
+	for (int sample = 0; sample < BUFFER_LENGTH && sample < size; sample++)
+	{
+		short value = data->get(sample);
+		audioData[bank][track][sample] = value;
+	}
+	buffer_sizes[bank][track] = size;
 
-	buffer.pAudioData = data->Data;
-	pVoice->SubmitSourceBuffer(&buffer);
+
 }
 
 void AudioEngine::Suspend()
@@ -110,11 +121,73 @@ void AudioEngine::Resume()
 		);
 }
 
+int AudioEngine::PlayTrack(int bank, int track)
+{
+	if (!initialized)
+		return -1;
+
+	int size = buffer_sizes[bank][track];
+	if (size == 0)
+	{
+		return 0;
+	}
+
+	buffer2.AudioBytes = 2 * BUFFER_LENGTH;
+	audioData[bank][track];
+	buffer2.pAudioData = (byte *)audioData[bank][track];
+	buffer2.PlayBegin = 0;
+	buffer2.PlayLength = BUFFER_LENGTH;
+	buffer2.pContext = (void *)42;
+
+	if (size < BUFFER_LENGTH)
+	{
+		buffer2.PlayLength = size;
+		buffer2.AudioBytes = 2*size;
+	}
+
+	ThrowIfFailed(voices[bank][track]->SubmitSourceBuffer(&buffer2));
+
+	return size;
+}
 
 void AudioEngine::PlaySound()
 {
-	Initialize();
-	ThrowIfFailed(pVoice->SetVolume(1));
+	if (!initialized)
+		return;
+
+	for (int bank = 0; bank < MAX_BANKS; bank++)
+	{
+		for (int track = 0; track < MAX_TRACKS; track++)
+		{
+			int size = buffer_sizes[bank][track];
+			if (size == 0)
+			{
+				continue;
+			}
+			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
+			audioData[bank][track];
+			buffer2.pAudioData = (byte *)audioData[bank][track];
+			buffer2.PlayBegin = 0;
+			buffer2.PlayLength = BUFFER_LENGTH;
+			buffer2.pContext = (void *)42;
+
+			if (size < BUFFER_LENGTH)
+			{
+				buffer2.PlayLength = size;
+				buffer2.AudioBytes = 2*size;
+			}
+
+			ThrowIfFailed(voices[bank][track]->SubmitSourceBuffer(&buffer2));
+		}
+	}
+
+	for (int i = 0; i < MAX_BANKS; i++)
+	{
+		for (int j = 0; j < MAX_TRACKS; j++)
+		{
+			ThrowIfFailed(voices[i][j]->Start());
+		}
+	}
 }
 
 void AudioEngine::StopSound()
@@ -122,7 +195,13 @@ void AudioEngine::StopSound()
 	if (!initialized)
 		return;
 
-	ThrowIfFailed(pVoice->SetVolume(0));
+	for (int i = 0; i < MAX_BANKS; i++)
+	{
+		for (int j = 0; j < MAX_TRACKS; j++)
+		{
+			ThrowIfFailed(voices[i][j]->Stop());
+		}
+	}
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
