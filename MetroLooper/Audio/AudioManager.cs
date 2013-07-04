@@ -5,13 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using AudioComponent;
 using MetroLooper.AudioDoNotUse;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MetroLooper
 {
     class AudioManager : ICallback
     {
         private Recorder _recorder;
-        public AudioEngine _engine;
+        private AudioEngine _engine;
+
+        private bool recordOnPlaybackCallback;
+
         public bool isPlaying;
         public bool isRecording;
 
@@ -24,6 +28,7 @@ namespace MetroLooper
             _engine = new AudioEngine();
 
             isPlaying = false;
+            this.recordOnPlaybackCallback = false;
 
             _engine.SetCallback(this);
         }
@@ -33,8 +38,17 @@ namespace MetroLooper
         /// </summary>
         public void RecordStart()
         {
-            _recorder.StartRecording();
-            isRecording = true;
+            this._recorder.StartRecording();
+            this._engine.PlaySound();
+            this.isRecording = true;
+        }
+
+        public void RecordAndPlay()
+        {
+            this.recordOnPlaybackCallback = true;
+            _engine.PlaySound();
+            this.isPlaying = true;
+            this.isRecording = true;
         }
 
         /// <summary>
@@ -51,6 +65,7 @@ namespace MetroLooper
             _engine.PushData(data, size, bank, track);
 
             isRecording = false;
+            this.recordOnPlaybackCallback = false;
         }
 
         /// <summary>
@@ -71,6 +86,11 @@ namespace MetroLooper
             isPlaying = false;
         }
 
+        public void GetPerf()
+        {
+            _engine.ReadPerformanceData();
+        }
+
         /// <summary>
         /// Play track
         /// </summary>
@@ -87,16 +107,38 @@ namespace MetroLooper
             else if (returnedSize == 0)
             {
                 //track not set yet
-                throw new Exception("Track:" + track + " in bank:"+ bank + " has no data yet.");
+                throw new Exception("Track:" + track + " in bank:" + bank + " has no data yet.");
             }
 
             isPlaying = true;
         }
 
-
-        public void Exec(int bufferContext)
+        /// <summary>
+        /// Callback method when a buffer (track) finishes
+        /// </summary>
+        /// <param name="bufferContext">Buffer context</param>
+        public void BufferFinished(int bufferContext)
         {
             System.Diagnostics.Debug.WriteLine("Callback called:" + (bufferContext).ToString());
+        }
+
+        /// <summary>
+        /// Callback method for playback starting
+        /// </summary>
+        public void PlaybackStarted()
+        {
+            if (this.recordOnPlaybackCallback)
+            {
+                _recorder.StartRecording();
+                System.Diagnostics.Debug.WriteLine("Playback started, recording now");
+                this.isRecording = true;
+            }
+        }
+
+        public void PrintValue(int value)
+        {
+            double millis = (value / 16000.0) * 1000;
+            System.Diagnostics.Debug.WriteLine("Latency in samples:" + value + ", Milliseconds:"+millis);
         }
     }
 }

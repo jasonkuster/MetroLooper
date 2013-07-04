@@ -49,6 +49,7 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Button x:Name="Record" Click="Record_Click" Content="Record" Height="200" Width="200" Margin="0,0,256,407"/>
             <Button x:Name="Play" Click="Play_Click" Content="Play" Height="200" Width="200" Margin="246,0,10,407"/>
+            <Button x:Name="Perf" Click="Perf_Click" Content="Perf" Height="200" Width="200" Margin="0,267,256,140"/>
             <TextBox x:Name="RecordStatus" Margin="10,200,264,345" Text="Not Recording" FontSize="16"/>
             <TextBox x:Name="PlayStatus" Margin="264,200,10,345" Text="Not Playing" FontSize="16"/>
         </Grid>

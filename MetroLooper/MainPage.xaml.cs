@@ -32,7 +32,7 @@ namespace MetroLooper
         {
             if (!_manager.isRecording)
             {
-                _manager.RecordStart();
+                _manager.RecordAndPlay();
                 RecordStatus.Text = "Recording";
             }
             else
@@ -59,6 +59,11 @@ namespace MetroLooper
                 _manager.StopAll();
                 PlayStatus.Text = "Not Playing";
             }
+        }
+
+        private void Perf_Click(object sender, RoutedEventArgs e)
+        {
+            _manager.GetPerf();
         }
 
         // Sample code for building a localized ApplicationBar

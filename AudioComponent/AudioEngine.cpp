@@ -19,13 +19,18 @@ public:
 
 	//Unused methods are stubs
 	void __stdcall OnVoiceProcessingPassEnd() { }
-	void __stdcall OnVoiceProcessingPassStart(UINT32 SamplesRequired) {    }
+	void __stdcall OnVoiceProcessingPassStart(UINT32 SamplesRequired) {  }
 	void __stdcall OnBufferEnd(void * pBufferContext)
 	{
 		OutputDebugString(L"Buffer end\n"); 
 		AudioEngine::BufferFinished((int)pBufferContext);
 	}
-	void __stdcall OnBufferStart(void * pBufferContext) {  OutputDebugString(L"Buffer start\n");  }
+
+	void __stdcall OnBufferStart(void * pBufferContext) 
+	{ 
+		OutputDebugString(L"Buffer start\n");  
+		AudioEngine::BufferStarted((int)pBufferContext);  
+	}
 	void __stdcall OnLoopEnd(void * pBufferContext) {  OutputDebugString(L"Loop end\n");  }
 	void __stdcall OnVoiceError(void * pBufferContext, HRESULT Error) { }
 };
@@ -36,6 +41,8 @@ AudioEngine::AudioEngine()
 }
 
 ICallback ^CSCallback = nullptr;
+int AudioEngine::numBuffersPlaying = 0;
+
 void AudioEngine::SetCallback( ICallback ^Callback)
 {
 	CSCallback = Callback;
@@ -43,13 +50,30 @@ void AudioEngine::SetCallback( ICallback ^Callback)
 
 void AudioEngine::BufferFinished(int bufferContext)
 {
-	CSCallback->Exec(bufferContext);
+	CSCallback->BufferFinished(bufferContext);
+	numBuffersPlaying--;
+}
+void AudioEngine::BufferStarted(int bufferContext)
+{
+	if (numBuffersPlaying == 0 || bufferContext == 0)
+	{
+		CSCallback->PlaybackStarted();
+	}
+	else if (bufferContext != 0)
+	{
+		numBuffersPlaying++;
+	}
 }
 
-void AudioEngine::BufferEnded()
+void AudioEngine::ReadPerformanceData()
 {
-	OutputDebugString(L"Buffer Ended");
+	XAUDIO2_PERFORMANCE_DATA data;
+	pXAudio2->GetPerformanceData(&data);
+
+	int latencyInSamples = data.CurrentLatencyInSamples;
+	CSCallback->PrintValue(latencyInSamples);
 }
+
 void AudioEngine::Initialize()
 {
 	if (!initialized)
@@ -86,6 +110,8 @@ void AudioEngine::Initialize()
 		WaitForSingleObjectEx( callback->hBufferEndEvent, INFINITE, TRUE );
 
 		initialized = true;
+
+		numBuffersPlaying = 0;
 	}
 }
 
@@ -97,8 +123,6 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 		audioData[bank][track][sample] = value;
 	}
 	buffer_sizes[bank][track] = size;
-
-
 }
 
 void AudioEngine::Suspend()
@@ -155,6 +179,8 @@ void AudioEngine::PlaySound()
 	if (!initialized)
 		return;
 
+	int voiceCount = 0;
+
 	for (int bank = 0; bank < MAX_BANKS; bank++)
 	{
 		for (int track = 0; track < MAX_TRACKS; track++)
@@ -164,6 +190,7 @@ void AudioEngine::PlaySound()
 			{
 				continue;
 			}
+			voiceCount++;
 			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
 			audioData[bank][track];
 			buffer2.pAudioData = (byte *)audioData[bank][track];
@@ -188,6 +215,11 @@ void AudioEngine::PlaySound()
 			ThrowIfFailed(voices[i][j]->Start());
 		}
 	}
+
+	if (voiceCount == 0)
+	{
+		BufferStarted(0);
+	}
 }
 
 void AudioEngine::StopSound()
@@ -202,6 +234,8 @@ void AudioEngine::StopSound()
 			ThrowIfFailed(voices[i][j]->Stop());
 		}
 	}
+
+	numBuffersPlaying = 0;
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
