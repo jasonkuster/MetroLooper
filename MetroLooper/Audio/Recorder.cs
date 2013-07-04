@@ -17,6 +17,7 @@ namespace MetroLooper.AudioDoNotUse
         private int totalNumBytes;
         private MemoryStream stream;
         private short[] _shortBuffer;
+        DateTime start;
 
         /// <summary>
         /// True if Microphone is currently started/recording
@@ -78,6 +79,7 @@ namespace MetroLooper.AudioDoNotUse
         private void MicrophoneBufferReady(object sender, EventArgs e)
         {
             _microphone.GetData(_buffer);
+
             stream.Write(_buffer, 0, numBytes);
             totalNumBytes += numBytes;
         }
