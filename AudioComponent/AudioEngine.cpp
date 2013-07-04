@@ -117,12 +117,21 @@ void AudioEngine::Initialize()
 
 void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int bank, int track)
 {
-	for (int sample = 0; sample < BUFFER_LENGTH && sample < size; sample++)
+	//Should not remove latency from all tracks but the first in a bank. Need to test this.
+	int latencyInSamples = 0;
+	if (track > 0)
+	{
+		XAUDIO2_PERFORMANCE_DATA data;
+		pXAudio2->GetPerformanceData(&data);
+		latencyInSamples = data.CurrentLatencyInSamples;
+	}
+
+	for (int sample = latencyInSamples; sample < BUFFER_LENGTH && sample < size; sample++)
 	{
 		short value = data->get(sample);
-		audioData[bank][track][sample] = value;
+		audioData[bank][track][sample-latencyInSamples] = value;
 	}
-	buffer_sizes[bank][track] = size;
+	buffer_sizes[bank][track] = size-latencyInSamples;
 }
 
 void AudioEngine::Suspend()
