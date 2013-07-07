@@ -22,14 +22,18 @@ namespace AudioComponent
 		static const int BUFFER_LENGTH = SAMPLE_RATE  * RECORDING_SECONDS;
 		interface IXAudio2*  pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
-
 		IXAudio2SourceVoice *voices[MAX_BANKS][MAX_TRACKS];
+		IXAudio2SourceVoice *clickVoice;
+
 		int buffer_sizes[MAX_BANKS][MAX_TRACKS];
+		int beatsPerMinute;
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
-		XAUDIO2_BUFFER buffer;
+		short clickData[SAMPLE_RATE];
+
 		XAUDIO2_BUFFER buffer2;
 		bool initialized;
+		bool isClickPlaying;
 
 		static int numBuffersPlaying;
 
@@ -43,6 +47,7 @@ namespace AudioComponent
 
 		static void BufferFinished(int bufferContext);
 		static void BufferStarted(int bufferContext);
+		static void PrintValue(int value);
 
 		void Suspend();
 		void Resume();
@@ -52,9 +57,15 @@ namespace AudioComponent
 		void ReadPerformanceData();
 
 		int PlayTrack(int bank, int track);
+		void PlayClickTrack();
+		void StopClickTrack();
+
+		bool IsClickPlaying() {return isClickPlaying;}
+		int GetBPM() {return beatsPerMinute;}
 
 		void SetCallback( ICallback ^Callback);
 
 		void PushData(const Platform::Array<short>^ data, int size, int bank, int track);
+		void SetBPM(int bpm);
 	};
 }

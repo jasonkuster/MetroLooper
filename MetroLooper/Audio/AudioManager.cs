@@ -26,11 +26,12 @@ namespace MetroLooper
         {
             _recorder = new Recorder();
             _engine = new AudioEngine();
+            _engine.SetCallback(this); //Do this before anything else!
 
             isPlaying = false;
             this.recordOnPlaybackCallback = false;
 
-            _engine.SetCallback(this);
+            _engine.SetBPM(120);
         }
 
         /// <summary>
@@ -86,9 +87,55 @@ namespace MetroLooper
             isPlaying = false;
         }
 
+        /// <summary>
+        /// Gets and prints out Performance Data (latency)
+        /// </summary>
         public void GetPerf()
         {
             _engine.ReadPerformanceData();
+        }
+
+        /// <summary>
+        /// Start playing click track
+        /// </summary>
+        public void PlayClick()
+        {
+            if (!_engine.IsClickPlaying())
+            {
+                _engine.PlayClickTrack();
+            }
+        }
+
+        /// <summary>
+        /// Stop click track
+        /// </summary>
+        public void StopClick()
+        {
+            if (_engine.IsClickPlaying())
+            {
+                _engine.StopClickTrack();
+            }
+        }
+
+        /// <summary>
+        /// Sets engine BPM if click track is not playing
+        /// </summary>
+        /// <param name="bpm">Beats Per Minute</param>
+        public void SetBPM(int bpm)
+        {
+            if (!_engine.IsClickPlaying())
+            {
+                _engine.SetBPM(bpm);
+            }
+        }
+
+        /// <summary>
+        /// Gets engine BPM
+        /// </summary>
+        /// <returns>Current BPM of click track</returns>
+        public int GetBPM()
+        {
+            return _engine.GetBPM();
         }
 
         /// <summary>
@@ -138,7 +185,7 @@ namespace MetroLooper
         public void PrintValue(int value)
         {
             double millis = (value / 16000.0) * 1000;
-            System.Diagnostics.Debug.WriteLine("Latency in samples:" + value + ", Milliseconds:"+millis);
+            System.Diagnostics.Debug.WriteLine("Latency in samples:" + value + ", Milliseconds:" + millis);
         }
     }
 }
