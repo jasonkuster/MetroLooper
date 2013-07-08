@@ -64,6 +64,10 @@ void AudioEngine::BufferStarted(int bufferContext)
 		numBuffersPlaying++;
 	}
 }
+void AudioEngine::PrintValue(int value)
+{
+	CSCallback->PrintValue(value);
+}
 
 void AudioEngine::ReadPerformanceData()
 {
@@ -107,9 +111,17 @@ void AudioEngine::Initialize()
 			}
 		}
 
+		ThrowIfFailed(pXAudio2->CreateSourceVoice(&clickVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO));
+		clickVoice->SetFrequencyRatio(1.0);
+		clickVoice->SetVolume(1.0);
+
 		WaitForSingleObjectEx( callback->hBufferEndEvent, INFINITE, TRUE );
 
+		ZeroMemory(clickData, SAMPLE_RATE*sizeof(short));
+		clickData[0] = SHRT_MAX;
+
 		initialized = true;
+		isClickPlaying = false;
 
 		numBuffersPlaying = 0;
 	}
@@ -117,12 +129,19 @@ void AudioEngine::Initialize()
 
 void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int bank, int track)
 {
-	for (int sample = 0; sample < BUFFER_LENGTH && sample < size; sample++)
+	//Should remove latency from all tracks. Need to test this.
+	int latencyInSamples = 0;
+
+	XAUDIO2_PERFORMANCE_DATA perfData;
+	pXAudio2->GetPerformanceData(&perfData);
+	latencyInSamples = perfData.CurrentLatencyInSamples;
+
+	for (int sample = latencyInSamples; sample < BUFFER_LENGTH && sample < size; sample++)
 	{
 		short value = data->get(sample);
-		audioData[bank][track][sample] = value;
+		audioData[bank][track][sample-latencyInSamples] = value;
 	}
-	buffer_sizes[bank][track] = size;
+	buffer_sizes[bank][track] = size-latencyInSamples;
 }
 
 void AudioEngine::Suspend()
@@ -192,7 +211,6 @@ void AudioEngine::PlaySound()
 			}
 			voiceCount++;
 			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
-			audioData[bank][track];
 			buffer2.pAudioData = (byte *)audioData[bank][track];
 			buffer2.PlayBegin = 0;
 			buffer2.PlayLength = BUFFER_LENGTH;
@@ -222,6 +240,26 @@ void AudioEngine::PlaySound()
 	}
 }
 
+void AudioEngine::PlayClickTrack()
+{
+	if (!initialized)
+		return;
+
+	ThrowIfFailed(clickVoice->Start());
+	isClickPlaying = true;
+}
+
+void AudioEngine::StopClickTrack()
+{
+	if (!initialized)
+		return;
+
+	ThrowIfFailed(clickVoice->Stop());
+	SetBPM(beatsPerMinute); //Refresh click voice buffers.
+
+	isClickPlaying = false;
+}
+
 void AudioEngine::StopSound()
 {
 	if (!initialized)
@@ -236,6 +274,26 @@ void AudioEngine::StopSound()
 	}
 
 	numBuffersPlaying = 0;
+}
+
+void AudioEngine::SetBPM(int bpm)
+{
+	int samples = (SAMPLE_RATE/(bpm/60));
+	beatsPerMinute = bpm;
+
+	clickVoice->FlushSourceBuffers();
+
+	buffer2.AudioBytes = 2 * SAMPLE_RATE;
+	buffer2.pAudioData = (byte *)clickData;
+	buffer2.PlayBegin = 0;
+	buffer2.PlayLength = samples;
+	buffer2.LoopBegin = 0;
+	buffer2.LoopLength = samples;
+	buffer2.LoopCount = XAUDIO2_LOOP_INFINITE;
+
+	//PrintValue(beatsPerMinute);
+
+	clickVoice->SubmitSourceBuffer(&buffer2);
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
