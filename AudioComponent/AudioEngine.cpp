@@ -181,6 +181,9 @@ int AudioEngine::PlayTrack(int bank, int track)
 	buffer2.PlayBegin = 0;
 	buffer2.PlayLength = BUFFER_LENGTH;
 	buffer2.pContext = (void *)42;
+	buffer2.LoopBegin = 0;
+	buffer2.LoopLength = 0;
+	buffer2.LoopCount = 0;
 
 	if (size < BUFFER_LENGTH)
 	{
@@ -215,6 +218,9 @@ void AudioEngine::PlaySound()
 			buffer2.PlayBegin = 0;
 			buffer2.PlayLength = BUFFER_LENGTH;
 			buffer2.pContext = (void *)42;
+			buffer2.LoopBegin = 0;
+			buffer2.LoopLength = 0;
+			buffer2.LoopCount = 0;
 
 			if (size < BUFFER_LENGTH)
 			{

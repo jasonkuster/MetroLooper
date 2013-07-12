@@ -125,6 +125,8 @@ namespace MetroLooper
         {
             if (!_engine.IsClickPlaying())
             {
+                if (bpm > 180) bpm = 180;
+                else if (bpm < 60) bpm = 60;
                 _engine.SetBPM(bpm);
             }
         }
