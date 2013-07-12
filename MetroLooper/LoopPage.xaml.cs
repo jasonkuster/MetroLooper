@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework;
 using System.Windows.Threading;
 using System.Threading;
 using MetroLooper.ViewModels;
+using System.Windows.Data;
 
 namespace MetroLooper
 {
@@ -29,34 +30,20 @@ namespace MetroLooper
         private bool stop;
         private bool starting;
         private int met = 0;
+        private int count = 1;
+        public enum LOCK_STATE { RECORDING, ALL, NONE };
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+        private bool timerRunning;
 
         public LoopPage()
         {
             InitializeComponent();
             this.DataContext = MainViewModel.Instance;
-            //this.timer = new Timer(Music_Go, new object(), 0, System.Threading.Timeout.Infinite);
-            //this.timer = new DispatcherTimer();
-            //timer.Interval = TimeSpan.FromMilliseconds(4000);
-            //timer.Tick += Music_Go;
-
-            //metronome = new Timer(Progress_Go, new object(), 0, System.Threading.Timeout.Infinite);
-            //metronome.Interval = TimeSpan.FromMilliseconds(20);
-            //metronome.Tick += ProgressGo;
-            //metronome.Tick += Music_Go;
-
-            //ticking = false;
-            //recording = false;
-            //stop = false;
-            //starting = false;
-
-            //settings["projects"] = new ObservableCollection<Project>();
-            //((ObservableCollection<Project>)settings["projects"]).Add(new Project("proj 1"));
-            //((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank());
-
+            this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            timerRunning = false;
         }
 
-        /*
+        
         private void Music_Go(object state)
         {
             System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
@@ -66,16 +53,20 @@ namespace MetroLooper
                 {
                     //Finalize
                     //Recorder.stop()
-                    ((Bank)this.DataContext).tracks.Add(new Track("Track"));
-                    loopList.ItemsSource = null;
-                    loopList.ItemsSource = ((Bank)this.DataContext).tracks;
-                    System.Diagnostics.Debug.WriteLine("Tracks contains " + ((Bank)this.DataContext).tracks.Count + " items.");
+                    //loopList.ItemsSource = null;
+                    //loopList.ItemsSource = ((Bank)this.DataContext).tracks;
+                    //System.Diagnostics.Debug.WriteLine("Tracks contains " + ((Bank)this.DataContext).tracks.Count + " items.");
+                    Dispatcher.BeginInvoke(delegate
+                    {
+                        ((MainViewModel)DataContext).SelectedBank.tracks.Add(new Model.Track("the Track", null));
+                    });
                     recording = false;
                     if (stop)
                     {
-                        continueButton.IsEnabled = true;
-                        stopButton.IsEnabled = false;
-                        recOneButton.IsEnabled = true;
+                        Dispatcher.BeginInvoke(delegate
+                        {
+                            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+                        });
                     }
                 }
                 if (!stop || starting)
@@ -83,39 +74,36 @@ namespace MetroLooper
                     starting = false;
                     //Recorder.startRecording();
                     recording = true;
-                    if (!stop)
+                    Dispatcher.BeginInvoke(delegate
                     {
-                        stopButton.IsEnabled = true;
-                    }
+                        ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.RECORDING);
+                    });
                 }
             }
             else
             {
-                continueButton.IsEnabled = true;
-                stopButton.IsEnabled = false;
-                recOneButton.IsEnabled = true;
+                Dispatcher.BeginInvoke(delegate
+                {
+                    ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+                });
             }
         }
-
+        
         private void Progress_Go(object state)
         {
-
-            if (measureBar.Value < 100 )
+            Music_Go(state);
+            Dispatcher.BeginInvoke(delegate
             {
-                measureBar.Value += 1;
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("Progress bar reset.");
-                measureBar.Value = 0;
-            }
+                MeasureAnimation.Stop();
+                MeasureAnimation.Begin();
+            });
         }
-         */
+         
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ((MainViewModel)DataContext).stop = true;
+            ((MainViewModel)DataContext).Stop = false;
             /*
             string selectedBankString;
             int selectedBank;
@@ -146,15 +134,21 @@ namespace MetroLooper
              * */
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
+
 
         private void continueButton_Click(object sender, RoutedEventArgs e)
         {
+            startRecord(false);
             //Starts recording, every n measures (converted to seconds via bpm/60 * measures * 4)
             //recording = true;
             //stop = false;
             //starting = true;
-            //continueButton.IsEnabled = false;
-            //recOneButton.IsEnabled = false;
+            
+
             //if (ticking)
             //{
             //    //timer.Start();
@@ -163,24 +157,26 @@ namespace MetroLooper
             //    Progress_Go(null);
             //}
 
-            ((MainViewModel)DataContext).startRecord(false);
+            //((MainViewModel)DataContext).startRecord(false);
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
+            stopRecord();
             //Stops recording and deletes current track
             //recording = false;
             //stop = true;
             //starting = false;
             //stopButton.IsEnabled = false;
 
-            ((MainViewModel)DataContext).stopRecord();
+            //((MainViewModel)DataContext).stopRecord();
         }
 
         private void recOneButton_Click(object sender, RoutedEventArgs e)
         {
 
-            ((MainViewModel)DataContext).startRecord(true);
+            //((MainViewModel)DataContext).startRecord(true);
+            startRecord(true);
             //recording = true;
             //stop = true;
             //starting = true;
@@ -222,6 +218,48 @@ namespace MetroLooper
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Code to show delete button
+            ((Model.Track)e.AddedItems[0]).IsSelected = true;
+            if (e.RemovedItems[0] != null)
+            {
+                ((Model.Track)e.RemovedItems[0]).IsSelected = false;
+            }
+        }
+
+        private void startRecord(bool one)
+        {
+            //Start timer here
+            if (!timerRunning)
+            {
+                timer.Change(0, 4000);
+                timerRunning = true;
+            }
+
+
+            recording = true;
+            starting = true;
+            stop = one;
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.PPREC);
+        }
+
+        private void stopRecord()
+        {
+            recording = false;
+            stop = true;
+            starting = false;
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.ALL);
+        }
+    }
+
+    public sealed class BooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return value is Visibility && (Visibility)value == Visibility.Visible;
         }
     }
 }

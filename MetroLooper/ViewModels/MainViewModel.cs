@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using MetroLooper.Model;
 using System.Collections.ObjectModel;
 using System.IO.IsolatedStorage;
 using Windows.Storage;
+using System.ComponentModel;
+using System.Windows.Media;
+//using Windows.UI;
 
 namespace MetroLooper.ViewModels
 {
-    class MainViewModel
+    public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly RecordingManager rm;
-
-        private BankViewModel bankVM;
+        public enum LOCK_STATE { RECORDING, PPREC, ALL, NONE };
 
         static readonly object padlock = new object();
         private static MainViewModel mainVM = null;
@@ -33,9 +35,9 @@ namespace MetroLooper.ViewModels
             }
         }
 
-        private MainViewModel()
+        public MainViewModel()
         {
-            rm = new RecordingManager(lockUI, addTrack, 0, 4000);
+            recButtons = true;
         }
 
         public ObservableCollection<Project> Projects
@@ -49,6 +51,9 @@ namespace MetroLooper.ViewModels
                 IsolatedStorageSettings.ApplicationSettings["projects"] = value;
             }
         }
+
+        //private RecordingManager _recordingManager;
+        //public RecordingManager recordingManager;
 
         private Project selectedProject = null;
         public Project SelectedProject
@@ -86,44 +91,100 @@ namespace MetroLooper.ViewModels
             }
         }
 
-        private void addTrack(StorageFile newTrack){
+        private void addTrack(StorageFile newTrack)
+        {
             SelectedBank.tracks.Add(new Track("myTrack", newTrack));
         }
 
-        public bool recButtons { get; set; }
-        public bool stop { get; set; }
+        private bool recButtons = true;
+        public bool RecButtons
+        {
+            get
+            {
+                return recButtons;
+            }
+            set
+            {
+                this.recButtons = value;
+                this.RaisePropertyChanged("RecButtons");
+            }
+        }
 
-        private void lockUI(RecordingManager.LOCK_STATE lockState)
+        private bool stop = false;
+        public bool Stop
+        {
+            get
+            {
+                return stop;
+            }
+            set
+            {
+                this.stop = value;
+                this.RaisePropertyChanged("Stop");
+            }
+        }
+
+        private Brush barColor = new SolidColorBrush(Colors.Blue);
+        public Brush BarColor
+        {
+            get
+            {
+                return barColor;
+            }
+            set
+            {
+                if (!this.barColor.Equals(value))
+                {
+                    this.barColor = value;
+                    this.RaisePropertyChanged("BarColor");
+                }
+            }
+        }
+
+        public void lockUI(LOCK_STATE lockState)
         {
             switch (lockState)
-	        {
-		        case RecordingManager.LOCK_STATE.RECORDING:
-                    recButtons = false;
-                    stop = true;
+            {
+                case LOCK_STATE.RECORDING:
+                    RecButtons = false;
+                    Stop = true;
+                    BarColor = new SolidColorBrush(Colors.Red);
                     break;
-                case RecordingManager.LOCK_STATE.ALL:
+                case LOCK_STATE.PPREC:
                     recButtons = false;
-                    stop = false;
+                    Stop = true;
+                    BarColor = new SolidColorBrush(Colors.Orange);
                     break;
-                case RecordingManager.LOCK_STATE.NONE:
-                    recButtons = true;
-                    stop = true;
+                case LOCK_STATE.ALL:
+                    RecButtons = false;
+                    Stop = false;
+                    BarColor = new SolidColorBrush(Colors.Orange);
+                    break;
+                case LOCK_STATE.NONE:
+                    RecButtons = true;
+                    Stop = false;
+                    BarColor = new SolidColorBrush(Colors.Blue);
                     break;
                 default:
-                    recButtons = false;
-                    stop = false;
+                    RecButtons = false;
+                    Stop = false;
+                    BarColor = new SolidColorBrush(Colors.Blue);
                     break;
-	        }
+            }
         }
 
-        public void startRecord(bool one)
-        {
-            rm.startRecord(one);
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public void stopRecord()
+        private void RaisePropertyChanged(string propertyName)
         {
-            rm.stopRecord();
+            System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                PropertyChangedEventHandler handler = this.PropertyChanged;
+                if (handler != null)
+                {
+                    handler(this, new PropertyChangedEventArgs(propertyName));
+                }
+            });
         }
     }
 }

@@ -9,7 +9,7 @@ using Windows.Storage;
 
 namespace MetroLooper.Model
 {
-    class Bank
+    public class Bank
     {
         public Bank()
         {

@@ -12,7 +12,11 @@
       <Capability Name="ID_CAP_MICROPHONE" />
     </Capabilities>
     <Tasks>
-      <DefaultTask Name ="_default" NavigationPage="LoopPage.xaml"/>
+<<<<<<< HEAD
+      <DefaultTask  Name ="_default" NavigationPage="LoopPage.xaml"/>
+=======
+      <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
+>>>>>>> 8873e94026fa397bc3c81bb781e93af8b7ea7904
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="MetroLooperToken" TaskName="_default">

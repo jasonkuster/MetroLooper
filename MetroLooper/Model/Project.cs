@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MetroLooper.Model
 {
-    class Project
+    public class Project
     {
         public Project()
         {

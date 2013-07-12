@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Windows.Storage;
+using Windows.Storage.Streams;
+using System.IO.IsolatedStorage;
+using System.IO;
 
 namespace MetroLooper.Model
 {
@@ -36,7 +39,7 @@ namespace MetroLooper.Model
             starting = true;
             if (one)
             {
-                stop = false;
+                stop = true;
             }
         }
 
@@ -48,7 +51,7 @@ namespace MetroLooper.Model
             lockUI(LOCK_STATE.ALL);
         }
 
-        public void Record_Go(object state)
+        public async void Record_Go(object state)
         {
             System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             if (recording)
@@ -56,9 +59,16 @@ namespace MetroLooper.Model
                 if (!starting)
                 {
                     //Finalize
-                    //Recorder.stop()
-                    //StorageFile f;
-                    addTrack(null);
+                    byte[] audioData = {};
+                    int size = 0;
+                    //Engine.StopRecord(audioData, size);
+                    //Engine.Submit(bank, track, audioData, size);
+                    //using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+                    //using (var stream = new IsolatedStorageFileStream("filename.txt",FileMode.Create, FileAccess.Write, store))
+                    //{
+                    //    stream.Write(audioData, 0, size);
+                    //}
+                    //addTrack(await StorageFile.GetFileFromPathAsync("filename.txt"));
                     recording = false;
                     if (stop)
                     {
@@ -68,7 +78,7 @@ namespace MetroLooper.Model
                 if (!stop || starting)
                 {
                     starting = false;
-                    //Recorder.startRecording();
+                    //Engine.StartRecord();
                     recording = true;
                     if (!stop)
                     {
