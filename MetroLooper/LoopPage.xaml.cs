@@ -41,7 +41,8 @@ namespace MetroLooper
                 selectedBank = 0;
             }
             this.DataContext = ((ObservableCollection<Project>)settings["projects"])[0].banks[selectedBank];
-        }
+        }
+
 
         private void continueButton_Click(object sender, RoutedEventArgs e)
         {

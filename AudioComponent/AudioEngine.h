@@ -5,6 +5,7 @@ namespace AudioComponent
 #define SAMPLE_RATE (16000)
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
+#define MAX_OFFSET 200*(SAMPLE_RATE/1000)
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public interface class ICallback
@@ -26,6 +27,7 @@ namespace AudioComponent
 		IXAudio2SourceVoice *clickVoice;
 
 		int buffer_sizes[MAX_BANKS][MAX_TRACKS];
+		int offsets[MAX_BANKS][MAX_TRACKS];
 		int beatsPerMinute;
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
@@ -40,6 +42,13 @@ namespace AudioComponent
 		void Initialize();
 		void ThrowIfFailed(HRESULT);
 
+		int GetLatency()
+		{
+			XAUDIO2_PERFORMANCE_DATA perfData;
+			pXAudio2->GetPerformanceData(&perfData);
+			return perfData.CurrentLatencyInSamples;
+		}
+
 		struct ImplData;
 
 	public:
@@ -49,17 +58,19 @@ namespace AudioComponent
 		static void BufferStarted(int bufferContext);
 		static void PrintValue(int value);
 
+		Platform::Array<short>^ GetAudioData(int bank, int track);
+		int GetAudioDataSize(int bank, int track);
+
 		void Suspend();
 		void Resume();
 
 		void PlaySound();
+		void PlayTrack(int bank, int track);
 		void StopSound();
 		void ReadPerformanceData();
 
-		int PlayTrack(int bank, int track);
 		void PlayClickTrack();
 		void StopClickTrack();
-
 		bool IsClickPlaying() {return isClickPlaying;}
 		int GetBPM() {return beatsPerMinute;}
 
@@ -67,5 +78,12 @@ namespace AudioComponent
 
 		void PushData(const Platform::Array<short>^ data, int size, int bank, int track);
 		void SetBPM(int bpm);
+
+		void SetOffset(int offset_ms, int bank, int track)
+		{
+			int offset_samples = offset_ms*(SAMPLE_RATE/1000);
+			offsets[bank][track] = offset_samples;
+		}
+		int GetOffsetMS(int bank, int track) { return offsets[bank][track]/(SAMPLE_RATE/1000); }
 	};
 }
