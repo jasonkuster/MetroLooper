@@ -7,17 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace MetroLooper
+namespace MetroLooper.Model
 {
-    class Bank
+    public class Bank
     {
         public Bank()
         {
             finalized = false;
-            tracks = new ObservableCollection<StorageFile>();
+            tracks = new ObservableCollection<Track>();
         }
+
         public string bankID { get; set; }
         public bool finalized { get; private set; }
-        public ObservableCollection<StorageFile> tracks { get; private set; }
+        public ObservableCollection<Track> tracks { get; private set; }
+        public StorageFile finalTrack { get; set; }
     }
 }

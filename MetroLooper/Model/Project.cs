@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MetroLooper
+namespace MetroLooper.Model
 {
-    class Project
+    public class Project
     {
         public Project()
         {

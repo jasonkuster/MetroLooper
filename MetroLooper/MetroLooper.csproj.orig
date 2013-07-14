@@ -94,10 +94,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Model\Bank.cs" />
+=======
+    <Compile Include="Audio\AudioManager.cs" />
+    <Compile Include="Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\XNAAsyncDispatcher.cs" />
+>>>>>>> 8873e94026fa397bc3c81bb781e93af8b7ea7904
     <Compile Include="BankPage.xaml.cs">
       <DependentUpon>BankPage.xaml</DependentUpon>
     </Compile>
