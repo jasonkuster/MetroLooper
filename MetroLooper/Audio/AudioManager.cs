@@ -44,11 +44,11 @@ namespace MetroLooper
             this.isRecording = true;
         }
 
-        public void RecordAndPlay()
+        public void RecordAndPlay(int bank)
         {
             this.recordOnPlaybackCallback = true;
             _engine.PlayClickTrack();
-            _engine.PlaySound();
+            _engine.PlayBank(bank);
             this.isPlaying = true;
             this.isRecording = true;
         }
