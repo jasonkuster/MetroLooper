@@ -47,6 +47,7 @@ namespace MetroLooper
         public void RecordAndPlay()
         {
             this.recordOnPlaybackCallback = true;
+            _engine.PlayClickTrack();
             _engine.PlaySound();
             this.isPlaying = true;
             this.isRecording = true;
@@ -61,11 +62,14 @@ namespace MetroLooper
         {
             short[] data;
             int size;
+            _engine.StopClickTrack();
+            _engine.StopSound();
 
             _recorder.StopRecording(out data, out size);
             _engine.PushData(data, size, bank, track);
 
             isRecording = false;
+            isPlaying = false;
             this.recordOnPlaybackCallback = false;
         }
 
@@ -93,6 +97,8 @@ namespace MetroLooper
         public void GetPerf()
         {
             _engine.ReadPerformanceData();
+            //_engine.PlayClickTrack();
+            //_engine.PlayTrack(0, 2);
         }
 
         /// <summary>
@@ -147,17 +153,7 @@ namespace MetroLooper
         /// <param name="track">track to play</param>
         public void PlayTrack(int bank, int track)
         {
-            int returnedSize = _engine.PlayTrack(bank, track);
-            if (returnedSize == -1)
-            {
-                //Engine not initialized
-                throw new Exception("Audio Engine not yet initialized, could not play track.");
-            }
-            else if (returnedSize == 0)
-            {
-                //track not set yet
-                throw new Exception("Track:" + track + " in bank:" + bank + " has no data yet.");
-            }
+            _engine.PlayTrack(bank, track);
 
             isPlaying = true;
         }
@@ -176,7 +172,7 @@ namespace MetroLooper
         /// </summary>
         public void PlaybackStarted()
         {
-            if (this.recordOnPlaybackCallback)
+            if (this.recordOnPlaybackCallback && !_recorder.isRecording)
             {
                 _recorder.StartRecording();
                 System.Diagnostics.Debug.WriteLine("Playback started, recording now");
@@ -184,10 +180,45 @@ namespace MetroLooper
             }
         }
 
+        /// <summary>
+        /// Print Value
+        /// </summary>
+        /// <param name="value">Value to print</param>
         public void PrintValue(int value)
+        {
+            System.Diagnostics.Debug.WriteLine("Value reported:" + value);
+        }
+
+        /// <summary>
+        /// Print Latency Value
+        /// </summary>
+        /// <param name="value">Latency in Samples</param>
+        public void PrintLatencyValue(int value)
         {
             double millis = (value / 16000.0) * 1000;
             System.Diagnostics.Debug.WriteLine("Latency in samples:" + value + ", Milliseconds:" + millis);
+        }
+
+        /// <summary>
+        /// Retrieves Audio Data from engine
+        /// </summary>
+        /// <param name="bank">Bank number</param>
+        /// <param name="track">Track number</param>
+        /// <param name="audioData">array of audioData to be filled</param>
+        /// <returns>Number of samples returned</returns>
+        public int GetAudioData(int bank, int track, out short[] audioData)
+        {
+            audioData = _engine.GetAudioData(bank, track);
+            return _engine.GetAudioDataSize(bank, track);
+        }
+
+        /// <summary>
+        /// Mix down bank
+        /// </summary>
+        /// <param name="bank">bank number</param>
+        public void MixDownBank(int bank)
+        {
+            _engine.MixDownBank(bank);
         }
     }
 }

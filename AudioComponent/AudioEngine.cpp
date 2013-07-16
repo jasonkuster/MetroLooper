@@ -2,9 +2,11 @@
 #include "pch.h"
 #include "AudioEngine.h"
 #include <windows.h>
+#include <iostream>
 
 using namespace AudioComponent;
 using namespace Platform;
+using namespace std;
 
 class VoiceCallback : public IXAudio2VoiceCallback
 {
@@ -29,9 +31,10 @@ public:
 	void __stdcall OnBufferStart(void * pBufferContext) 
 	{ 
 		OutputDebugString(L"Buffer start\n");  
+		//AudioEngine::PrintValue((int)pBufferContext);
 		AudioEngine::BufferStarted((int)pBufferContext);  
 	}
-	void __stdcall OnLoopEnd(void * pBufferContext) {  OutputDebugString(L"Loop end\n");  }
+	void __stdcall OnLoopEnd(void * pBufferContext) {  /*OutputDebugString(L"Loop end\n");*/  }
 	void __stdcall OnVoiceError(void * pBufferContext, HRESULT Error) { }
 };
 
@@ -111,14 +114,20 @@ void AudioEngine::Initialize()
 			}
 		}
 
-		ThrowIfFailed(pXAudio2->CreateSourceVoice(&clickVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO));
+		ThrowIfFailed(pXAudio2->CreateSourceVoice(&clickVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
 		clickVoice->SetFrequencyRatio(1.0);
 		clickVoice->SetVolume(1.0);
 
 		WaitForSingleObjectEx( callback->hBufferEndEvent, INFINITE, TRUE );
 
 		ZeroMemory(clickData, SAMPLE_RATE*sizeof(short));
-		clickData[0] = SHRT_MAX;
+
+		for (int i = 0; i < SAMPLE_RATE/20; i++)
+		{
+			clickData[i] = sin(2*3.141*440*i/SAMPLE_RATE)*SHRT_MAX;
+		}
+
+		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
 
 		initialized = true;
 		isClickPlaying = false;
@@ -129,19 +138,17 @@ void AudioEngine::Initialize()
 
 void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int bank, int track)
 {
-	//Should remove latency from all tracks. Need to test this.
-	int latencyInSamples = 0;
-
-	XAUDIO2_PERFORMANCE_DATA perfData;
-	pXAudio2->GetPerformanceData(&perfData);
-	latencyInSamples = perfData.CurrentLatencyInSamples;
-
-	for (int sample = latencyInSamples; sample < BUFFER_LENGTH && sample < size; sample++)
+	for (int index = 0; index < MAX_OFFSET; index++)
+	{
+		audioData[bank][track][index] = -1;
+	}
+	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size; sample++)
 	{
 		short value = data->get(sample);
-		audioData[bank][track][sample-latencyInSamples] = value;
+		audioData[bank][track][sample] = value;
 	}
-	buffer_sizes[bank][track] = size-latencyInSamples;
+
+	buffer_sizes[bank][track] = size;
 }
 
 void AudioEngine::Suspend()
@@ -164,36 +171,38 @@ void AudioEngine::Resume()
 		);
 }
 
-int AudioEngine::PlayTrack(int bank, int track)
+void AudioEngine::PlayTrack(int bank, int track)
 {
 	if (!initialized)
-		return -1;
+	{
+		return;
+	}
 
 	int size = buffer_sizes[bank][track];
 	if (size == 0)
 	{
-		return 0;
+		return;
 	}
 
 	buffer2.AudioBytes = 2 * BUFFER_LENGTH;
-	audioData[bank][track];
 	buffer2.pAudioData = (byte *)audioData[bank][track];
-	buffer2.PlayBegin = 0;
+
+	buffer2.PlayBegin = MAX_OFFSET+offsets[bank][track]+GetLatency(); //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 	buffer2.PlayLength = BUFFER_LENGTH;
 	buffer2.pContext = (void *)42;
-	buffer2.LoopBegin = 0;
+
+	buffer2.LoopBegin = XAUDIO2_NO_LOOP_REGION;
 	buffer2.LoopLength = 0;
 	buffer2.LoopCount = 0;
 
 	if (size < BUFFER_LENGTH)
 	{
-		buffer2.PlayLength = size;
+		buffer2.PlayLength = size-buffer2.PlayBegin;
 		buffer2.AudioBytes = 2*size;
 	}
 
 	ThrowIfFailed(voices[bank][track]->SubmitSourceBuffer(&buffer2));
-
-	return size;
+	ThrowIfFailed(voices[bank][track]->Start());
 }
 
 void AudioEngine::PlaySound()
@@ -212,19 +221,22 @@ void AudioEngine::PlaySound()
 			{
 				continue;
 			}
+
 			voiceCount++;
 			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
 			buffer2.pAudioData = (byte *)audioData[bank][track];
-			buffer2.PlayBegin = 0;
+
+			buffer2.PlayBegin = MAX_OFFSET+offsets[bank][track]+GetLatency(); //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 			buffer2.PlayLength = BUFFER_LENGTH;
 			buffer2.pContext = (void *)42;
-			buffer2.LoopBegin = 0;
+
+			buffer2.LoopBegin = XAUDIO2_NO_LOOP_REGION;
 			buffer2.LoopLength = 0;
 			buffer2.LoopCount = 0;
 
 			if (size < BUFFER_LENGTH)
 			{
-				buffer2.PlayLength = size;
+				buffer2.PlayLength = size-buffer2.PlayBegin;
 				buffer2.AudioBytes = 2*size;
 			}
 
@@ -240,10 +252,7 @@ void AudioEngine::PlaySound()
 		}
 	}
 
-	if (voiceCount == 0)
-	{
-		BufferStarted(0);
-	}
+	CSCallback->PrintValue(GetLatency());
 }
 
 void AudioEngine::PlayClickTrack()
@@ -297,9 +306,44 @@ void AudioEngine::SetBPM(int bpm)
 	buffer2.LoopLength = samples;
 	buffer2.LoopCount = XAUDIO2_LOOP_INFINITE;
 
-	//PrintValue(beatsPerMinute);
-
 	clickVoice->SubmitSourceBuffer(&buffer2);
+}
+
+Platform::Array<short>^ AudioEngine::GetAudioData(int bank, int track)
+{
+	Platform::Array<short>^ data;
+	for (int i = 0; i < buffer_sizes[bank][track]; i++)
+	{
+		data[i] = audioData[bank][track][i];
+	}
+	return data;
+}
+
+int AudioEngine::GetAudioDataSize(int bank, int track)
+{
+	return buffer_sizes[bank][track];
+}
+
+void AudioEngine::MixDownBank(int bank)
+{
+	int numTracks = 0;
+	for (int track = 0; track < MAX_TRACKS; track++)
+	{
+		int size = buffer_sizes[bank][track];
+		if (size == 0)
+		{
+			break;
+		}
+		numTracks++;
+	}
+	for (int sample = 0; sample < BUFFER_LENGTH-(2*MAX_OFFSET); sample++)
+	{
+		for (int track = 0; track < numTracks; track++)
+		{
+			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]];
+			bankAudioData[bank][sample] += (sampleValue/numTracks);
+		}
+	}
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
