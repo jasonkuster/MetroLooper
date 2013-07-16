@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace MetroLooper
 {
-    class AudioManager : ICallback
+    public class AudioManager : ICallback
     {
         private Recorder _recorder;
         private AudioEngine _engine;

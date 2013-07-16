@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework;
 using System.Windows.Threading;
 using System.Threading;
 using MetroLooper.ViewModels;
+using MetroLooper.Model;
 using System.Windows.Data;
 
 namespace MetroLooper
@@ -24,22 +25,21 @@ namespace MetroLooper
     {
 
         private Timer timer;
-        private Timer metronome;
         private bool ticking = false;
         private bool startTicking = false;
         private bool recording = false;
         private bool stop = true;
         private bool starting = false;
-        private int met = 0;
-        private int count = 1;
         public enum LOCK_STATE { RECORDING, ALL, NONE };
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
         private bool timerRunning;
+        private MainViewModel viewModel;
 
         public LoopPage()
         {
             InitializeComponent();
-            this.DataContext = MainViewModel.Instance;
+            viewModel = MainViewModel.Instance;
+            this.DataContext = viewModel;
             this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             timerRunning = false;
         }
@@ -51,10 +51,8 @@ namespace MetroLooper
             {
                 if (!starting)
                 {
-                    //Finalize
-                    //Recorder.stop()
-                    ((MainViewModel)DataContext).AudioMan.RecordStopAndSubmit(((MainViewModel)DataContext).SelectedBank.bankID, ((MainViewModel)DataContext).SelectedBank.tracks.Count);
-                    //System.Diagnostics.Debug.WriteLine("Tracks contains " + ((Bank)this.DataContext).tracks.Count + " items.");
+                    viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
+                    viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
                     Dispatcher.BeginInvoke(delegate
                     {
                         ((MainViewModel)DataContext).SelectedBank.tracks.Add(new Model.Track("the Track", null));
@@ -93,8 +91,18 @@ namespace MetroLooper
             Music_Go(state);
             if (startTicking)
             {
-                ((MainViewModel)DataContext).AudioMan.PlayClick();
+                Dispatcher.BeginInvoke(delegate
+                {
+                    ((MainViewModel)DataContext).AudioMan.PlayClick();
+                });
+                startTicking = false;
+                ticking = true;
             }
+            //else if (ticking)
+            //{
+            //    ((MainViewModel)DataContext).AudioMan.StopClick();
+            //    ((MainViewModel)DataContext).AudioMan.PlayClick();
+            //}
             Dispatcher.BeginInvoke(delegate
             {
                 MeasureAnimation.Stop();
@@ -160,6 +168,7 @@ namespace MetroLooper
             else if (ticking)
             {
                 ((MainViewModel)DataContext).AudioMan.StopClick();
+                ticking = false;
             }
             else
             {

@@ -63,7 +63,10 @@ namespace MetroLooper.ViewModels
                 }
                 return audioMan;
             }
-            private set;
+            private set
+            {
+                audioMan = value;
+            }
         }
 
         private Project selectedProject = null;
@@ -92,7 +95,7 @@ namespace MetroLooper.ViewModels
             {
                 if (selectedBank == null)
                 {
-                    selectedBank = new Bank();
+                    selectedBank = new Bank(0);
                 }
                 return selectedBank;
             }
