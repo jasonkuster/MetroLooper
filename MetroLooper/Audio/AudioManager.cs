@@ -47,7 +47,6 @@ namespace MetroLooper
         public void RecordStart()
         {
             this._recorder.StartRecording();
-            this._engine.PlaySound();
             this.isRecording = true;
         }
 
@@ -84,7 +83,6 @@ namespace MetroLooper
         /// </summary>
         public void PlayAll()
         {
-            _engine.PlayClickTrack();
             _engine.PlaySound();
             isPlaying = true;
         }
@@ -94,7 +92,10 @@ namespace MetroLooper
         /// </summary>
         public void StopAll()
         {
-            _engine.StopClickTrack();
+            if (_engine.IsClickPlaying())
+            {
+                _engine.StopClickTrack();
+            }
             _engine.StopSound();
             isPlaying = false;
         }
@@ -105,8 +106,16 @@ namespace MetroLooper
         public void GetPerf()
         {
             _engine.ReadPerformanceData();
-            //_engine.PlayClickTrack();
-            //_engine.PlayTrack(0, 2);
+        }
+
+        public void SetVolume(int bank, int track, double volume_db)
+        {
+            _engine.SetVolume(bank, track, volume_db);
+        }
+
+        public void SetPitchSemitones(int bank, int track, double pitchRatio)
+        {
+            _engine.SetPitch(bank, track, pitchRatio);
         }
 
         /// <summary>

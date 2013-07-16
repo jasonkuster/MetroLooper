@@ -81,6 +81,9 @@ namespace AudioComponent
 		void StopSound();
 		void ReadPerformanceData();
 
+		void SetVolume(int bank, int track, double volume_db);
+		void SetPitch(int bank, int track, double pitch);
+			
 		void PlayClickTrack();
 		void StopClickTrack();
 		bool IsClickPlaying() {return isClickPlaying;}

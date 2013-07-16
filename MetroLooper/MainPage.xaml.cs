@@ -32,7 +32,7 @@ namespace MetroLooper
         {
             if (!_manager.isRecording)
             {
-                _manager.RecordAndPlay();
+                _manager.RecordAndPlay(0);
                 RecordStatus.Text = "Recording";
             }
             else

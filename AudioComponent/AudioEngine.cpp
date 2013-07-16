@@ -77,6 +77,17 @@ void AudioEngine::ReadPerformanceData()
 	CSCallback->PrintLatencyValue(GetLatency());
 }
 
+void AudioEngine::SetVolume(int bank, int track, double volume_db)
+{
+	voices[bank][track]->SetVolume(pow(10,(volume_db/20.0)));
+}
+
+void AudioEngine::SetPitch(int bank, int track, double pitch)
+{
+	float ratio = pow(2.0, pitch / 12.0);
+	voices[bank][track]->SetFrequencyRatio(ratio);
+}
+
 void AudioEngine::Initialize()
 {
 	if (!initialized)
@@ -220,6 +231,7 @@ void AudioEngine::PlayTrack(int bank, int track)
 		buffer2.AudioBytes = 2*size;
 	}
 
+	ThrowIfFailed(voices[bank][track]->FlushSourceBuffers());
 	ThrowIfFailed(voices[bank][track]->SubmitSourceBuffer(&buffer2));
 	ThrowIfFailed(voices[bank][track]->Start());
 }
@@ -235,46 +247,11 @@ void AudioEngine::PlaySound()
 	{
 		for (int track = 0; track < MAX_TRACKS; track++)
 		{
-			int size = buffer_sizes[bank][track];
-			if (size == 0)
-			{
-				continue;
-			}
-
 			voiceCount++;
-			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
-			buffer2.pAudioData = (byte *)audioData[bank][track];
-
-			int begin = MAX_OFFSET+offsets[bank][track];
-			begin -= latency_offsets[bank][track];
-
-			buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
-			buffer2.PlayLength = BUFFER_LENGTH;
-			buffer2.pContext = (void *)42;
-
-			buffer2.LoopBegin = XAUDIO2_NO_LOOP_REGION;
-			buffer2.LoopLength = 0;
-			buffer2.LoopCount = 0;
-
-			if (size < BUFFER_LENGTH)
-			{
-				buffer2.PlayLength = size-buffer2.PlayBegin;
-				buffer2.AudioBytes = 2*size;
-			}
-
-			ThrowIfFailed(voices[bank][track]->SubmitSourceBuffer(&buffer2));
+			PlayTrack(bank, track);
 		}
 	}
 
-	for (int i = 0; i < MAX_BANKS; i++)
-	{
-		for (int j = 0; j < MAX_TRACKS; j++)
-		{
-			ThrowIfFailed(voices[i][j]->Start());
-		}
-	}
-
-	//CSCallback->PrintLatencyValue(GetLatency());
 	currentLatency = GetLatency();
 }
 
@@ -353,11 +330,10 @@ void AudioEngine::MixDownBank(int bank)
 	for (int track = 0; track < MAX_TRACKS; track++)
 	{
 		int size = buffer_sizes[bank][track];
-		if (size == 0)
+		if (size != 0)
 		{
-			break;
+			numTracks++;
 		}
-		numTracks++;
 	}
 	for (int sample = 0; sample < BUFFER_LENGTH-(2*MAX_OFFSET); sample++)
 	{
