@@ -16,7 +16,14 @@ namespace MetroLooper
 
         private bool recordOnPlaybackCallback;
 
+        /// <summary>
+        /// Is Playing
+        /// </summary>
         public bool isPlaying;
+
+        /// <summary>
+        /// Is Recording
+        /// </summary>
         public bool isRecording;
 
         /// <summary>
@@ -47,7 +54,6 @@ namespace MetroLooper
         public void RecordAndPlay(int bank)
         {
             this.recordOnPlaybackCallback = true;
-            _engine.PlayClickTrack();
             _engine.PlayBank(bank);
             this.isPlaying = true;
             this.isRecording = true;
@@ -62,7 +68,6 @@ namespace MetroLooper
         {
             short[] data;
             int size;
-            _engine.StopClickTrack();
             _engine.StopSound();
 
             _recorder.StopRecording(out data, out size);
