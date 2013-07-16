@@ -5,7 +5,8 @@ namespace AudioComponent
 #define SAMPLE_RATE (16000)
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
-#define MAX_OFFSET 200*(SAMPLE_RATE/1000)
+#define MAX_OFFSET 500*(SAMPLE_RATE/1000)
+#define LATENCY 140
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public interface class ICallback
@@ -14,12 +15,13 @@ namespace AudioComponent
 		virtual void BufferFinished(int bufferContext);
 		virtual void PlaybackStarted();
 		virtual void PrintValue(int value);
+		virtual void PrintLatencyValue(int value);
 	};
 
 	public ref class AudioEngine sealed
 	{
 	private:
-		static const int RECORDING_SECONDS = 10;
+		static const int RECORDING_SECONDS = 20;
 		static const int BUFFER_LENGTH = SAMPLE_RATE  * RECORDING_SECONDS;
 		interface IXAudio2*  pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
@@ -28,7 +30,9 @@ namespace AudioComponent
 
 		int buffer_sizes[MAX_BANKS][MAX_TRACKS];
 		int offsets[MAX_BANKS][MAX_TRACKS];
+		int latency_offsets[MAX_BANKS][MAX_TRACKS];
 		int beatsPerMinute;
+		int currentLatency;
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
 		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
@@ -51,6 +55,7 @@ namespace AudioComponent
 		}
 
 		struct ImplData;
+		int microphoneLatency;
 
 	public:
 		AudioEngine();
@@ -61,6 +66,11 @@ namespace AudioComponent
 
 		Platform::Array<short>^ GetAudioData(int bank, int track);
 		int GetAudioDataSize(int bank, int track);
+
+		void setMicrophoneLatencyMS(double value)
+		{
+			microphoneLatency = (int)(value*(SAMPLE_RATE/1000));
+		}
 
 		void Suspend();
 		void Resume();
@@ -84,10 +94,10 @@ namespace AudioComponent
 
 		void SetOffset(int offset_ms, int bank, int track)
 		{
-			if (offset_ms > 200)
-				offset_ms = 200;
-			else if (offset_ms < -200)
-				offset_ms = -200;
+			if (offset_ms > MAX_OFFSET)
+				offset_ms = MAX_OFFSET;
+			else if (offset_ms < -MAX_OFFSET)
+				offset_ms = -MAX_OFFSET;
 
 			int offset_samples = offset_ms*(SAMPLE_RATE/1000);
 			offsets[bank][track] = offset_samples;
