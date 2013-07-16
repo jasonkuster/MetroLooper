@@ -180,17 +180,45 @@ namespace MetroLooper
             }
         }
 
+        /// <summary>
+        /// Print Value
+        /// </summary>
+        /// <param name="value">Value to print</param>
         public void PrintValue(int value)
+        {
+            System.Diagnostics.Debug.WriteLine("Value reported:" + value);
+        }
+
+        /// <summary>
+        /// Print Latency Value
+        /// </summary>
+        /// <param name="value">Latency in Samples</param>
+        public void PrintLatencyValue(int value)
         {
             double millis = (value / 16000.0) * 1000;
             System.Diagnostics.Debug.WriteLine("Latency in samples:" + value + ", Milliseconds:" + millis);
         }
 
-
+        /// <summary>
+        /// Retrieves Audio Data from engine
+        /// </summary>
+        /// <param name="bank">Bank number</param>
+        /// <param name="track">Track number</param>
+        /// <param name="audioData">array of audioData to be filled</param>
+        /// <returns>Number of samples returned</returns>
         public int GetAudioData(int bank, int track, out short[] audioData)
         {
             audioData = _engine.GetAudioData(bank, track);
             return _engine.GetAudioDataSize(bank, track);
+        }
+
+        /// <summary>
+        /// Mix down bank
+        /// </summary>
+        /// <param name="bank">bank number</param>
+        public void MixDownBank(int bank)
+        {
+            _engine.MixDownBank(bank);
         }
     }
 }

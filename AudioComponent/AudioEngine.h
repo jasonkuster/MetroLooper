@@ -31,6 +31,7 @@ namespace AudioComponent
 		int beatsPerMinute;
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
+		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
 		short clickData[SAMPLE_RATE];
 
 		XAUDIO2_BUFFER buffer2;
@@ -74,6 +75,8 @@ namespace AudioComponent
 		bool IsClickPlaying() {return isClickPlaying;}
 		int GetBPM() {return beatsPerMinute;}
 
+		void MixDownBank(int bank);
+
 		void SetCallback( ICallback ^Callback);
 
 		void PushData(const Platform::Array<short>^ data, int size, int bank, int track);
@@ -81,6 +84,11 @@ namespace AudioComponent
 
 		void SetOffset(int offset_ms, int bank, int track)
 		{
+			if (offset_ms > 200)
+				offset_ms = 200;
+			else if (offset_ms < -200)
+				offset_ms = -200;
+
 			int offset_samples = offset_ms*(SAMPLE_RATE/1000);
 			offsets[bank][track] = offset_samples;
 		}

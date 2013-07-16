@@ -324,6 +324,28 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 	return buffer_sizes[bank][track];
 }
 
+void AudioEngine::MixDownBank(int bank)
+{
+	int numTracks = 0;
+	for (int track = 0; track < MAX_TRACKS; track++)
+	{
+		int size = buffer_sizes[bank][track];
+		if (size == 0)
+		{
+			break;
+		}
+		numTracks++;
+	}
+	for (int sample = 0; sample < BUFFER_LENGTH-(2*MAX_OFFSET); sample++)
+	{
+		for (int track = 0; track < numTracks; track++)
+		{
+			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]];
+			bankAudioData[bank][sample] += (sampleValue/numTracks);
+		}
+	}
+}
+
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
 {
 	if (FAILED(hr))
