@@ -17,7 +17,7 @@ namespace MetroLooper.Model
             tracks = new ObservableCollection<Track>();
         }
 
-        public string bankID { get; set; }
+        public int bankID { get; set; }
         public bool finalized { get; private set; }
         public ObservableCollection<Track> tracks { get; private set; }
         public StorageFile finalTrack { get; set; }

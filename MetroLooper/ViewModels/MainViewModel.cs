@@ -52,8 +52,19 @@ namespace MetroLooper.ViewModels
             }
         }
 
-        //private RecordingManager _recordingManager;
-        //public RecordingManager recordingManager;
+        private AudioManager audioMan;
+        public AudioManager AudioMan
+        {
+            get
+            {
+                if (null == audioMan)
+                {
+                    audioMan = new AudioManager();
+                }
+                return audioMan;
+            }
+            private set;
+        }
 
         private Project selectedProject = null;
         public Project SelectedProject

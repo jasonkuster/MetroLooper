@@ -28,6 +28,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.ColumnSpan="2">
+            <!--
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -49,6 +50,7 @@
         			</Slider.RenderTransform>
         		</Slider>
         	</StackPanel>
+            -->
         </Grid>
     </Grid>
 
