@@ -227,8 +227,8 @@ void AudioEngine::PlayTrack(int bank, int track)
 
 	if (size < BUFFER_LENGTH)
 	{
-		buffer2.PlayLength = size-buffer2.PlayBegin;
-		buffer2.AudioBytes = 2*size;
+		buffer2.PlayLength = size;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
 	}
 
 	ThrowIfFailed(voices[bank][track]->FlushSourceBuffers());
