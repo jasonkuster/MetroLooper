@@ -92,10 +92,6 @@ namespace MetroLooper
         /// </summary>
         public void StopAll()
         {
-            if (_engine.IsClickPlaying())
-            {
-                _engine.StopClickTrack();
-            }
             _engine.StopSound();
             isPlaying = false;
         }
