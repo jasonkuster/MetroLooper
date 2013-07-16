@@ -91,6 +91,10 @@ namespace MetroLooper
         private void Progress_Go(object state)
         {
             Music_Go(state);
+            if (startTicking)
+            {
+                ((MainViewModel)DataContext).AudioMan.PlayClick();
+            }
             Dispatcher.BeginInvoke(delegate
             {
                 MeasureAnimation.Stop();
