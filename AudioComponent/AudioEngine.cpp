@@ -60,7 +60,7 @@ void AudioEngine::BufferStarted(int bufferContext)
 {
 	if (numBuffersPlaying == 0 || bufferContext == 0)
 	{
-		CSCallback->PlaybackStarted();
+		//CSCallback->PlaybackStarted();
 	}
 	else if (bufferContext != 0)
 	{
