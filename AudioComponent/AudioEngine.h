@@ -13,7 +13,7 @@ namespace AudioComponent
 	{
 	public:
 		virtual void BufferFinished(int bufferContext);
-		virtual void PlaybackStarted();
+		//virtual void PlaybackStarted();
 		virtual void PrintValue(int value);
 		virtual void PrintLatencyValue(int value);
 	};
