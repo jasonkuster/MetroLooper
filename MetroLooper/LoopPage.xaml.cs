@@ -18,6 +18,7 @@ using System.Threading;
 using MetroLooper.ViewModels;
 using MetroLooper.Model;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace MetroLooper
 {
@@ -25,6 +26,9 @@ namespace MetroLooper
     {
 
         private Timer timer;
+        private Timer recTimer;
+        private Timer micTimer;
+        private int timingLength = 4000;
         private bool ticking = false;
         private bool startTicking = false;
         private bool recording = false;
@@ -41,53 +45,88 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             timerRunning = false;
+        }
+
+        private void StartMic(object state)
+        {
+            if (recording)
+            {
+                if (starting) //!stop ||  <--continuous play scenario, remove else
+                {
+                    starting = false;
+                    recording = true;
+                    Dispatcher.BeginInvoke(delegate
+                    {
+                        foreach (Track t in viewModel.SelectedBank.tracks)
+                        {
+                            t.Finalized = true;
+                        }
+                        viewModel.AudioMan.RecordStart();
+                        viewModel.lockUI(MainViewModel.LOCK_STATE.RECORDING);
+                    });
+                }
+            }
+        }
+
+        private void CompleteRecord(object state)
+        {
+            if (recording)
+            {
+                if (!starting)
+                {
+                    Dispatcher.BeginInvoke(delegate
+                    {
+                        viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
+                        viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
+                    });
+                    recording = false;
+                    //if (stop)
+                    //{
+                        Dispatcher.BeginInvoke(delegate
+                        {
+                            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+                        });
+                    //}
+                }
+            }
         }
         
         private void Music_Go(object state)
         {
             System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
-            if (recording)
-            {
-                if (!starting)
-                {
-                    viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
-                    Dispatcher.BeginInvoke(delegate
-                    {
-                        viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
-                    });
-                    recording = false;
-                    if (stop)
-                    {
-                        Dispatcher.BeginInvoke(delegate
-                        {
-                            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
-                        });
-                    }
-                }
-                if (!stop || starting)
-                {
-                    starting = false;
-                    //Recorder.startRecording();
-                    recording = true;
-                    Dispatcher.BeginInvoke(delegate
-                    {
-                        ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.RECORDING);
-                    });
-                }
-            }
-            else
+            
+            
             {
                 Dispatcher.BeginInvoke(delegate
                 {
-                    ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+                    foreach (Track t in viewModel.SelectedBank.tracks)
+                    {
+                        t.Finalized = true;
+                    }
+                    viewModel.AudioMan.StopAll();
+                    viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
+                    viewModel.lockUI(MainViewModel.LOCK_STATE.NONE);
                 });
             }
         }
         
         private void Progress_Go(object state)
         {
-            Music_Go(state);
+            Dispatcher.BeginInvoke(delegate
+            {
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    t.Finalized = true;
+                }
+                viewModel.AudioMan.StopAll();
+                viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
+                MeasureAnimation.Stop();
+                MeasureAnimation.Begin();
+            });
+            //Music_Go(state);
             if (startTicking)
             {
                 Dispatcher.BeginInvoke(delegate
@@ -97,16 +136,14 @@ namespace MetroLooper
                 startTicking = false;
                 ticking = true;
             }
-            //else if (ticking)
-            //{
-            //    ((MainViewModel)DataContext).AudioMan.StopClick();
-            //    ((MainViewModel)DataContext).AudioMan.PlayClick();
-            //}
-            Dispatcher.BeginInvoke(delegate
+            else if (ticking)
             {
-                MeasureAnimation.Stop();
-                MeasureAnimation.Begin();
-            });
+                Dispatcher.BeginInvoke(delegate
+                {
+                    ((MainViewModel)DataContext).AudioMan.StopClick();
+                    ((MainViewModel)DataContext).AudioMan.PlayClick();
+                });
+            }
         }
          
 
@@ -139,20 +176,12 @@ namespace MetroLooper
 
         private void recOneButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!timerRunning)
+            {
+                timer.Change(0, 4000);
+                timerRunning = true;
+            }
             startRecord(true);
-            //recording = true;
-            //stop = true;
-            //starting = true;
-            //continueButton.IsEnabled = false;
-            //recOneButton.IsEnabled = false;
-            //if (!metronome.IsEnabled)
-            //{
-            //    //timer.Start();
-            //    metronome.Start();
-            //    Music_Go(null, null);
-            //    ProgressGo(null, null);
-            //}
-            
         }
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
@@ -206,8 +235,6 @@ namespace MetroLooper
                 timer.Change(0, 4000);
                 timerRunning = true;
             }
-
-
             recording = true;
             starting = true;
             stop = one;
@@ -233,6 +260,19 @@ namespace MetroLooper
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
             return value is Visibility && (Visibility)value == Visibility.Visible;
+        }
+    }
+
+    public sealed class BooleanToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return (value is bool && (bool)value) ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Orange);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return value is SolidColorBrush && ((SolidColorBrush)value).Color == System.Windows.Media.Colors.Green;
         }
     }
 }

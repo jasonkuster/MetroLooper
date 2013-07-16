@@ -13,6 +13,7 @@
         <local:LocalizedStrings xmlns:local="clr-namespace:MetroLooper" x:Key="LocalizedStrings"/>
 
         <conv:BooleanToVisibilityConverter x:Key="BoolVisConverter"/>
+        <conv:BooleanToBrushConverter x:Key="BoolBrushConverter"/>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

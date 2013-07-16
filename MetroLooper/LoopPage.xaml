@@ -15,11 +15,9 @@
     shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="LoopItemTemplate">
-			<Grid Width="647">
+			<Grid Width="647" Background="{Binding Finalized,Converter={StaticResource BoolBrushConverter}}">
 				<TextBlock x:Name="TrackName" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="26.667" Margin="0,2"/>
-				<Border x:Name="delBorder" BorderBrush="White" BorderThickness="1" HorizontalAlignment="Right" Height="36" VerticalAlignment="Top" Width="100" Margin="0,2" Visibility="{Binding IsSelected,Converter={StaticResource BoolVisConverter}}">
-					<TextBlock x:Name="delBlock" TextWrapping="Wrap" Text="Delete" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-				</Border>
+				<TextBlock x:Name="finBlock" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized,Converter={StaticResource BoolVisConverter}}"/>
 			</Grid>
 		</DataTemplate>
 		<Storyboard x:Name="MeasureAnimation">

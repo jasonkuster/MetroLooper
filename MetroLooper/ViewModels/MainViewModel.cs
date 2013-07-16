@@ -105,6 +105,23 @@ namespace MetroLooper.ViewModels
             }
         }
 
+        private Track selectedTrack = null;
+        public Track SelectedTrack
+        {
+            get
+            {
+                if (selectedTrack == null)
+                {
+                    selectedTrack = new Track(0,null);
+                }
+                return selectedTrack;
+            }
+            set
+            {
+                selectedTrack = value;
+            }
+        }
+
         private void addTrack(StorageFile newTrack)
         {
             SelectedBank.tracks.Add(new Track(0, newTrack));

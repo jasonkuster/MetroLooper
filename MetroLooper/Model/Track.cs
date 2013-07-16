@@ -15,9 +15,25 @@ namespace MetroLooper.Model
             this.trackID = trackID;
             this.file = file;
             isSelected = false;
+            Finalized = false;
         }
         public int trackID { get; set; }
         public StorageFile file { get; set; }
+        public bool _Finalized;
+        public bool Finalized {
+            get
+            {
+                return _Finalized;
+            }
+            set
+            {
+                if (_Finalized != value)
+                {
+                    _Finalized = value;
+                    this.RaisePropertyChanged("Finalized");
+                }
+            }
+        }
         private bool isSelected;
         public bool IsSelected
         {
