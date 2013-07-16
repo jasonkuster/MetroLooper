@@ -162,6 +162,16 @@ namespace MetroLooper
         }
 
         /// <summary>
+        /// Play audio bank 
+        /// </summary>
+        /// <param name="bank">Bank number</param>
+        public void PlayBank(int bank)
+        {
+            _engine.PlayBank(bank);
+            isPlaying = true;
+        }
+
+        /// <summary>
         /// Callback method when a buffer (track) finishes
         /// </summary>
         /// <param name="bufferContext">Buffer context</param>

@@ -170,6 +170,23 @@ void AudioEngine::Resume()
 		);
 }
 
+void AudioEngine::PlayBank(int bank)
+{
+	if (!initialized)
+	{
+		return;
+	}
+
+	for (int track = 0; track < MAX_TRACKS; track++)
+	{
+		int size = buffer_sizes[bank][track];
+		if (size > 0)
+		{
+			PlayTrack(bank, track);
+		}
+	}
+}
+
 void AudioEngine::PlayTrack(int bank, int track)
 {
 	if (!initialized)
@@ -186,7 +203,10 @@ void AudioEngine::PlayTrack(int bank, int track)
 	buffer2.AudioBytes = 2 * BUFFER_LENGTH;
 	buffer2.pAudioData = (byte *)audioData[bank][track];
 
-	buffer2.PlayBegin = MAX_OFFSET+offsets[bank][track]+GetLatency(); //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
+	int begin = MAX_OFFSET+offsets[bank][track];
+	begin -= latency_offsets[bank][track];
+
+	buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 	buffer2.PlayLength = BUFFER_LENGTH;
 	buffer2.pContext = (void *)42;
 

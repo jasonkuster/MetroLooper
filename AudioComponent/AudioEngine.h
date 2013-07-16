@@ -77,6 +77,7 @@ namespace AudioComponent
 
 		void PlaySound();
 		void PlayTrack(int bank, int track);
+		void PlayBank(int bank);
 		void StopSound();
 		void ReadPerformanceData();
 
