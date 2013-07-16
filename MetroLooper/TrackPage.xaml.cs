@@ -31,6 +31,7 @@ namespace MetroLooper
 
         private void PlayBank(object sender, RoutedEventArgs e)
         {
+            viewModel.AudioMan.StopAll();
             viewModel.AudioMan.PlayBank(this.BankNumber);
         }
 

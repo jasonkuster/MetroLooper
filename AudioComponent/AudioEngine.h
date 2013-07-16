@@ -5,7 +5,7 @@ namespace AudioComponent
 #define SAMPLE_RATE (16000)
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
-#define MAX_OFFSET 500*(SAMPLE_RATE/1000)
+#define MAX_OFFSET 600*(SAMPLE_RATE/1000)
 #define LATENCY 140
 
 	[Windows::Foundation::Metadata::WebHostHidden]
