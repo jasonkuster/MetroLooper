@@ -74,11 +74,7 @@ void AudioEngine::PrintValue(int value)
 
 void AudioEngine::ReadPerformanceData()
 {
-	XAUDIO2_PERFORMANCE_DATA data;
-	pXAudio2->GetPerformanceData(&data);
-
-	int latencyInSamples = data.CurrentLatencyInSamples;
-	CSCallback->PrintValue(latencyInSamples);
+	CSCallback->PrintLatencyValue(GetLatency());
 }
 
 void AudioEngine::Initialize()
@@ -149,6 +145,9 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 	}
 
 	buffer_sizes[bank][track] = size;
+	latency_offsets[bank][track] = currentLatency + microphoneLatency + LATENCY;
+	CSCallback->PrintLatencyValue(currentLatency);
+	CSCallback->PrintLatencyValue(microphoneLatency);
 }
 
 void AudioEngine::Suspend()
@@ -226,7 +225,10 @@ void AudioEngine::PlaySound()
 			buffer2.AudioBytes = 2 * BUFFER_LENGTH;
 			buffer2.pAudioData = (byte *)audioData[bank][track];
 
-			buffer2.PlayBegin = MAX_OFFSET+offsets[bank][track]+GetLatency(); //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
+			int begin = MAX_OFFSET+offsets[bank][track];
+			begin -= latency_offsets[bank][track];
+
+			buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 			buffer2.PlayLength = BUFFER_LENGTH;
 			buffer2.pContext = (void *)42;
 
@@ -252,7 +254,8 @@ void AudioEngine::PlaySound()
 		}
 	}
 
-	CSCallback->PrintValue(GetLatency());
+	//CSCallback->PrintLatencyValue(GetLatency());
+	currentLatency = GetLatency();
 }
 
 void AudioEngine::PlayClickTrack()
@@ -293,7 +296,7 @@ void AudioEngine::StopSound()
 
 void AudioEngine::SetBPM(int bpm)
 {
-	int samples = (SAMPLE_RATE/(bpm/60));
+	int samples = (int)(SAMPLE_RATE/(bpm/60.0));
 	beatsPerMinute = bpm;
 
 	clickVoice->FlushSourceBuffers();

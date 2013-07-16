@@ -33,7 +33,7 @@ namespace MetroLooper
 
             _engine.SetBPM(120);
         }
-
+        
         /// <summary>
         /// Start Recording Track
         /// </summary>
@@ -66,6 +66,7 @@ namespace MetroLooper
             _engine.StopSound();
 
             _recorder.StopRecording(out data, out size);
+            _engine.setMicrophoneLatencyMS(_recorder.latency_ms);
             _engine.PushData(data, size, bank, track);
 
             isRecording = false;
@@ -78,6 +79,7 @@ namespace MetroLooper
         /// </summary>
         public void PlayAll()
         {
+            _engine.PlayClickTrack();
             _engine.PlaySound();
             isPlaying = true;
         }
@@ -87,6 +89,7 @@ namespace MetroLooper
         /// </summary>
         public void StopAll()
         {
+            _engine.StopClickTrack();
             _engine.StopSound();
             isPlaying = false;
         }
@@ -164,7 +167,7 @@ namespace MetroLooper
         /// <param name="bufferContext">Buffer context</param>
         public void BufferFinished(int bufferContext)
         {
-            System.Diagnostics.Debug.WriteLine("Callback called:" + (bufferContext).ToString());
+            //System.Diagnostics.Debug.WriteLine("Callback called:" + (bufferContext).ToString());
         }
 
         /// <summary>

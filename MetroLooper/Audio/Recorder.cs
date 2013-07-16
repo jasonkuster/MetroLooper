@@ -17,6 +17,8 @@ namespace MetroLooper.AudioDoNotUse
         private int totalNumBytes;
         private MemoryStream stream;
         private short[] _shortBuffer;
+        public double latency_ms;
+        private bool readLatency = false;
         DateTime start;
 
         /// <summary>
@@ -52,6 +54,8 @@ namespace MetroLooper.AudioDoNotUse
             if (_microphone.State != MicrophoneState.Started)
             {
                 _microphone.Start();
+                start = DateTime.Now;
+                readLatency = true;
             }
         }
         //public void StopRecording(int bank, int track)
@@ -78,6 +82,14 @@ namespace MetroLooper.AudioDoNotUse
 
         private void MicrophoneBufferReady(object sender, EventArgs e)
         {
+            if (readLatency)
+            {
+                DateTime present = DateTime.Now;
+                TimeSpan diff = present.Subtract(start);
+                latency_ms = diff.TotalMilliseconds;
+                readLatency = false;
+            }
+
             _microphone.GetData(_buffer);
 
             stream.Write(_buffer, 0, numBytes);
