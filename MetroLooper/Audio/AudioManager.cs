@@ -54,6 +54,7 @@ namespace MetroLooper
         {
             this.recordOnPlaybackCallback = true;
             _engine.PlayBank(bank);
+            _recorder.StartRecording();
             this.isPlaying = true;
             this.isRecording = true;
         }
@@ -190,7 +191,7 @@ namespace MetroLooper
             //System.Diagnostics.Debug.WriteLine("Callback called:" + (bufferContext).ToString());
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Callback method for playback starting
         /// </summary>
         public void PlaybackStarted()
@@ -201,7 +202,7 @@ namespace MetroLooper
                 System.Diagnostics.Debug.WriteLine("Playback started, recording now");
                 this.isRecording = true;
             }
-        }
+        }*/
 
         /// <summary>
         /// Print Value
