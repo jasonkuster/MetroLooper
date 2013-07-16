@@ -120,6 +120,9 @@
       <DependentUpon>LoopSamples.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Track.cs" />
+    <Compile Include="TrackPage.xaml.cs">
+      <DependentUpon>TrackPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BankViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TrackViewModel.cs" />
@@ -142,6 +145,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SampleData\LoopSamples\LoopSamples.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TrackPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework;
 using System.Windows.Threading;
 using System.Threading;
 using MetroLooper.ViewModels;
+using MetroLooper.Model;
 using System.Windows.Data;
 
 namespace MetroLooper
@@ -24,25 +25,24 @@ namespace MetroLooper
     {
 
         private Timer timer;
-        private Timer metronome;
-        private bool ticking;
-        private bool recording;
-        private bool stop;
-        private bool starting;
-        private int met = 0;
-        private int count = 1;
+        private bool ticking = false;
+        private bool startTicking = false;
+        private bool recording = false;
+        private bool stop = true;
+        private bool starting = false;
         public enum LOCK_STATE { RECORDING, ALL, NONE };
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
         private bool timerRunning;
+        private MainViewModel viewModel;
 
         public LoopPage()
         {
             InitializeComponent();
-            this.DataContext = MainViewModel.Instance;
+            viewModel = MainViewModel.Instance;
+            this.DataContext = viewModel;
             this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             timerRunning = false;
         }
-
         
         private void Music_Go(object state)
         {
@@ -51,14 +51,10 @@ namespace MetroLooper
             {
                 if (!starting)
                 {
-                    //Finalize
-                    //Recorder.stop()
-                    //loopList.ItemsSource = null;
-                    //loopList.ItemsSource = ((Bank)this.DataContext).tracks;
-                    //System.Diagnostics.Debug.WriteLine("Tracks contains " + ((Bank)this.DataContext).tracks.Count + " items.");
+                    viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
                     Dispatcher.BeginInvoke(delegate
                     {
-                        ((MainViewModel)DataContext).SelectedBank.tracks.Add(new Model.Track("the Track", null));
+                        viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
                     });
                     recording = false;
                     if (stop)
@@ -92,6 +88,20 @@ namespace MetroLooper
         private void Progress_Go(object state)
         {
             Music_Go(state);
+            if (startTicking)
+            {
+                Dispatcher.BeginInvoke(delegate
+                {
+                    ((MainViewModel)DataContext).AudioMan.PlayClick();
+                });
+                startTicking = false;
+                ticking = true;
+            }
+            //else if (ticking)
+            //{
+            //    ((MainViewModel)DataContext).AudioMan.StopClick();
+            //    ((MainViewModel)DataContext).AudioMan.PlayClick();
+            //}
             Dispatcher.BeginInvoke(delegate
             {
                 MeasureAnimation.Stop();
@@ -103,79 +113,32 @@ namespace MetroLooper
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ((MainViewModel)DataContext).Stop = false;
-            /*
-            string selectedBankString;
-            int selectedBank;
-            string selectedProjString;
-            int selectedProj;
-            if (NavigationContext.QueryString.TryGetValue("projSelected", out selectedProjString))
-            {
-                selectedProj = int.Parse(selectedProjString);
-            }
-            else
-            {
-                //freak the fuck out
-                //this should only happen in debug
-                selectedProj = 0;
-            }
-            if (NavigationContext.QueryString.TryGetValue("bankSelected", out selectedBankString))
-            {
-                selectedBank = int.Parse(selectedBankString);
-            }
-            else
-            {
-                //freak the fuck out
-                //this should only happen in debug
-                selectedBank = 0;
-            }
-            this.DataContext = ((ObservableCollection<Project>)settings["projects"])[selectedProj].banks[selectedBank];
-            loopList.ItemsSource = ((Bank)this.DataContext).tracks;
-             * */
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
+            using (var s = await file.OpenStreamForWriteAsync())
+            {
+                s.Write(new byte[1], 0, 0);
+            }
         }
 
 
         private void continueButton_Click(object sender, RoutedEventArgs e)
         {
             startRecord(false);
-            //Starts recording, every n measures (converted to seconds via bpm/60 * measures * 4)
-            //recording = true;
-            //stop = false;
-            //starting = true;
-            
-
-            //if (ticking)
-            //{
-            //    //timer.Start();
-            //    metronome.;
-            //    Music_Go(null);
-            //    Progress_Go(null);
-            //}
-
-            //((MainViewModel)DataContext).startRecord(false);
         }
 
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
             stopRecord();
-            //Stops recording and deletes current track
-            //recording = false;
-            //stop = true;
-            //starting = false;
-            //stopButton.IsEnabled = false;
-
-            //((MainViewModel)DataContext).stopRecord();
         }
 
         private void recOneButton_Click(object sender, RoutedEventArgs e)
         {
-
-            //((MainViewModel)DataContext).startRecord(true);
             startRecord(true);
             //recording = true;
             //stop = true;
@@ -189,17 +152,27 @@ namespace MetroLooper
             //    Music_Go(null, null);
             //    ProgressGo(null, null);
             //}
-            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
-            //using (StreamWriter s = new StreamWriter(await file.OpenStreamForWriteAsync()))
-            //{
-            //    //write data to file
-            //}
-            //((Bank)(this.DataContext)).tracks.Add(file);
+            
         }
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
         {
-            //Play metronome
+            if (!timerRunning)
+            {
+                timer.Change(0, 4000);
+                timerRunning = true;
+                ((MainViewModel)DataContext).AudioMan.PlayClick();
+                ticking = true;
+            }
+            else if (ticking)
+            {
+                ((MainViewModel)DataContext).AudioMan.StopClick();
+                ticking = false;
+            }
+            else
+            {
+                startTicking = true;
+            }
         }
 
         private void finalizeButton_Click(object sender, RoutedEventArgs e)

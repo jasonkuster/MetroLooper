@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{dcbf617a-ec44-4900-8e2e-8155b275a46b}" Title="MetroLooper" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="MetroLooper author" Description="Sample description" Publisher="MetroLooper" PublisherID="{20ca91cd-1172-4ac3-9e6f-2c31b631a337}">
+  <App xmlns="" ProductID="{dcbf617a-ec44-4900-8e2e-8155b275a46b}" Title="MetroLooper" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Jason Kuster and Colin Francis" Description="Sample description" Publisher="Sad FlapjCk Apps" PublisherID="{20ca91cd-1172-4ac3-9e6f-2c31b631a337}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -12,7 +12,7 @@
       <Capability Name="ID_CAP_MICROPHONE" />
     </Capabilities>
     <Tasks>
-      <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
+      <DefaultTask Name="_default" NavigationPage="LoopPage.xaml" />
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="MetroLooperToken" TaskName="_default">

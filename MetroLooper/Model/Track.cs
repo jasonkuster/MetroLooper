@@ -10,13 +10,13 @@ namespace MetroLooper.Model
 {
     public class Track : INotifyPropertyChanged
     {
-        public Track(string name, StorageFile file)
+        public Track(int trackID, StorageFile file)
         {
-            trackName = name;
+            this.trackID = trackID;
             this.file = file;
             isSelected = false;
         }
-        public string trackName { get; set; }
+        public int trackID { get; set; }
         public StorageFile file { get; set; }
         private bool isSelected;
         public bool IsSelected

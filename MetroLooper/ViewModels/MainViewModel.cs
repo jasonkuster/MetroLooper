@@ -52,8 +52,22 @@ namespace MetroLooper.ViewModels
             }
         }
 
-        //private RecordingManager _recordingManager;
-        //public RecordingManager recordingManager;
+        private AudioManager audioMan;
+        public AudioManager AudioMan
+        {
+            get
+            {
+                if (null == audioMan)
+                {
+                    audioMan = new AudioManager();
+                }
+                return audioMan;
+            }
+            private set
+            {
+                audioMan = value;
+            }
+        }
 
         private Project selectedProject = null;
         public Project SelectedProject
@@ -63,7 +77,7 @@ namespace MetroLooper.ViewModels
                 if (selectedProject == null)
                 {
                     selectedProject = new Project("Test Project");
-                    selectedProject.banks.Add(new Bank());
+                    selectedProject.banks.Add(new Bank(0));
                     selectedBank = selectedProject.banks[0];
                 }
                 return selectedProject;
@@ -81,7 +95,7 @@ namespace MetroLooper.ViewModels
             {
                 if (selectedBank == null)
                 {
-                    selectedBank = new Bank();
+                    selectedBank = new Bank(0);
                 }
                 return selectedBank;
             }
@@ -93,7 +107,7 @@ namespace MetroLooper.ViewModels
 
         private void addTrack(StorageFile newTrack)
         {
-            SelectedBank.tracks.Add(new Track("myTrack", newTrack));
+            SelectedBank.tracks.Add(new Track(0, newTrack));
         }
 
         private bool recButtons = true;
