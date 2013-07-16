@@ -52,10 +52,9 @@ namespace MetroLooper
                 if (!starting)
                 {
                     viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
-                    viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
                     Dispatcher.BeginInvoke(delegate
                     {
-                        ((MainViewModel)DataContext).SelectedBank.tracks.Add(new Model.Track("the Track", null));
+                        viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
                     });
                     recording = false;
                     if (stop)

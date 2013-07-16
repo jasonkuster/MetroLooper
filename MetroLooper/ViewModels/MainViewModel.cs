@@ -77,7 +77,7 @@ namespace MetroLooper.ViewModels
                 if (selectedProject == null)
                 {
                     selectedProject = new Project("Test Project");
-                    selectedProject.banks.Add(new Bank());
+                    selectedProject.banks.Add(new Bank(0));
                     selectedBank = selectedProject.banks[0];
                 }
                 return selectedProject;
@@ -107,7 +107,7 @@ namespace MetroLooper.ViewModels
 
         private void addTrack(StorageFile newTrack)
         {
-            SelectedBank.tracks.Add(new Track("myTrack", newTrack));
+            SelectedBank.tracks.Add(new Track(0, newTrack));
         }
 
         private bool recButtons = true;
