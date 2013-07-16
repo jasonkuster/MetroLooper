@@ -96,9 +96,9 @@ namespace MetroLooper
         /// </summary>
         public void GetPerf()
         {
-            //_engine.ReadPerformanceData();
-            _engine.PlayClickTrack();
-            _engine.PlayTrack(0, 2);
+            _engine.ReadPerformanceData();
+            //_engine.PlayClickTrack();
+            //_engine.PlayTrack(0, 2);
         }
 
         /// <summary>
