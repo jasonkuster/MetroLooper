@@ -53,7 +53,7 @@ namespace MetroLooper
         private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
         {
             double value = Convert.ToDouble(OffsetText.Text);
-            if (value > -200)
+            if (value > -400)
             {
                 value -= 20.0;
                 OffsetText.Text = value.ToString();
@@ -64,7 +64,7 @@ namespace MetroLooper
         private void OffsetIncreaseButton_Click(object sender, RoutedEventArgs e)
         {
             double value = Convert.ToDouble(OffsetText.Text);
-            if (value < 200)
+            if (value < 400)
             {
                 value += 20.0;
                 OffsetText.Text = value.ToString();

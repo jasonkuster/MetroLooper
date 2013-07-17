@@ -136,6 +136,8 @@ void AudioEngine::Initialize()
 
 		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
 
+		pulledData = ref new Platform::Array<short>(BUFFER_LENGTH);
+
 		initialized = true;
 		isClickPlaying = false;
 
@@ -313,12 +315,11 @@ void AudioEngine::SetBPM(int bpm)
 
 Platform::Array<short>^ AudioEngine::GetAudioData(int bank, int track)
 {
-	Platform::Array<short>^ data;
 	for (int i = 0; i < buffer_sizes[bank][track]; i++)
 	{
-		data[i] = audioData[bank][track][i];
+		pulledData[i] = audioData[bank][track][i];
 	}
-	return data;
+	return pulledData;
 }
 
 int AudioEngine::GetAudioDataSize(int bank, int track)

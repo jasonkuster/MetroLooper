@@ -5,7 +5,7 @@ namespace AudioComponent
 #define SAMPLE_RATE (16000)
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
-#define MAX_OFFSET 600*(SAMPLE_RATE/1000)
+#define MAX_OFFSET 1000*(SAMPLE_RATE/1000)
 #define LATENCY 140
 
 	[Windows::Foundation::Metadata::WebHostHidden]
@@ -37,6 +37,8 @@ namespace AudioComponent
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
 		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
 		short clickData[SAMPLE_RATE];
+
+		Platform::Array<short>^ pulledData;
 
 		XAUDIO2_BUFFER buffer2;
 		bool initialized;
