@@ -157,15 +157,14 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 	{
 		audioData[bank][track][index] = -1;
 	}
-	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size+MAX_OFFSET; sample++)
+	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size + MAX_OFFSET; sample++)
 	{
-		short value = data->get(sample-MAX_OFFSET);
+		short value = data->get(sample - MAX_OFFSET);
 		audioData[bank][track][sample] = value;
 	}
 
 	buffer_sizes[bank][track] = size;
-	latency_offsets[bank][track] = 0;
-	//latency_offsets[bank][track] = currentLatency + microphoneLatency;
+	latency_offsets[bank][track] = currentLatency;
 	CSCallback->PrintLatencyValue(currentLatency);
 	CSCallback->PrintLatencyValue(microphoneLatency);
 }
@@ -268,7 +267,7 @@ void AudioEngine::PlayTrack(int bank, int track)
 	buffer2.pAudioData = (byte *)audioData[bank][track];
 
 	int begin = MAX_OFFSET+offsets[bank][track];
-	begin -= latency_offsets[bank][track];
+	begin += latency_offsets[bank][track];
 	begin += LATENCY;
 
 	buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
@@ -397,7 +396,7 @@ void AudioEngine::MixDownBank(int bank)
 	{
 		for (int track = 0; track < numTracks; track++)
 		{
-			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]-latency_offsets[bank][track]+LATENCY];
+			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]+latency_offsets[bank][track]+LATENCY];
 			bankAudioData[bank][sample] += (sampleValue/numTracks);
 		}
 	}
