@@ -62,6 +62,10 @@ namespace MetroLooper
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
+            timer.Dispose();
+            recTimer.Dispose();
+            micTimer.Dispose();
+            viewModel.AudioMan.StopClick();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -72,10 +76,6 @@ namespace MetroLooper
             //{
             //    s.Write(new byte[1], 0, 0);
             //}
-            timer.Dispose();
-            recTimer.Dispose();
-            micTimer.Dispose();
-            viewModel.AudioMan.StopClick();
         }
 
         #endregion

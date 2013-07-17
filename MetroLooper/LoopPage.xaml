@@ -44,9 +44,9 @@
         		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loop List" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}"/>
         		<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" HorizontalAlignment="Left" Height="213" VerticalAlignment="Top" SelectionChanged="LongListSelector_SelectionChanged" Width="680" Margin="12,0" ItemTemplate="{StaticResource LoopItemTemplate}"/>
         		<StackPanel Height="100" Orientation="Horizontal" Margin="0">
-        			<Button x:Name="continueButton" IsEnabled="{Binding Instance.RecButtons,Source={StaticResource MainViewModel}}" Content="Cont" Click="continueButton_Click" Margin="{StaticResource PhoneMargin}"/>
-        			<Button x:Name="stopButton" IsEnabled="{Binding Instance.Stop,Source={StaticResource MainViewModel}}" Content="Stop" Click="stopButton_Click" Margin="{StaticResource PhoneMargin}"/>
-        			<Button x:Name="recOneButton" IsEnabled="{Binding Instance.RecButtons,Source={StaticResource MainViewModel}}" Content="One" Click="recOneButton_Click" Margin="{StaticResource PhoneMargin}"/>
+        			<Button x:Name="continueButton" Visibility="Collapsed" IsEnabled="{Binding Instance.RecButtons,Source={StaticResource MainViewModel}}" Content="Cont" Click="continueButton_Click" Margin="{StaticResource PhoneMargin}"/>
+        			<Button x:Name="stopButton" Visibility="Collapsed" IsEnabled="{Binding Instance.Stop,Source={StaticResource MainViewModel}}" Content="Stop" Click="stopButton_Click" Margin="{StaticResource PhoneMargin}"/>
+        			<Button x:Name="recOneButton" IsEnabled="{Binding Instance.RecButtons,Source={StaticResource MainViewModel}}" Content="Record" Click="recOneButton_Click" Margin="{StaticResource PhoneMargin}"/>
         			<Button x:Name="metronomeButton" Content="Metronome" Click="metronomeButton_Click" Margin="{StaticResource PhoneMargin}"/>
         			<Button x:Name="finalizeButton" IsEnabled="{Binding Instance.RecButtons,Source={StaticResource MainViewModel}}" Content="Finalize" Click="finalizeButton_Click" Margin="{StaticResource PhoneMargin}"/>
         		</StackPanel>
