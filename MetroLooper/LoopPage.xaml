@@ -16,7 +16,7 @@
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="LoopItemTemplate">
 			<Grid Width="647" Background="{Binding Finalized,Converter={StaticResource BoolBrushConverter}}">
-				<TextBlock x:Name="TrackName" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="26.667" Margin="0,2"/>
+				<TextBlock x:Name="TrackName" TextWrapping="Wrap" Text="{Binding trackID}" VerticalAlignment="Center" FontSize="26.667" Margin="0,2"/>
 				<TextBlock x:Name="finBlock" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized,Converter={StaticResource BoolVisConverter}}"/>
 			</Grid>
 		</DataTemplate>

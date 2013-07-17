@@ -59,7 +59,7 @@ namespace MetroLooper
                 {
                     starting = false;
                     recording = true;
-                    recTimer.Change(4300, System.Threading.Timeout.Infinite);
+                    recTimer.Change(4400, System.Threading.Timeout.Infinite);
                     Dispatcher.BeginInvoke(delegate
                     {
                         foreach (Track t in viewModel.SelectedBank.tracks)
@@ -82,8 +82,9 @@ namespace MetroLooper
                 {
                     Dispatcher.BeginInvoke(delegate
                     {
-                        viewModel.SelectedBank.tracks.Add(new Track(viewModel.SelectedBank.tracks.Count, null));
-                        viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, viewModel.SelectedBank.tracks.Count);
+                        int trackNum = viewModel.SelectedBank.tracks.Count;
+                        viewModel.SelectedBank.tracks.Add(new Track(trackNum, null));
+                        viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
                     });
                     recording = false;
                     //if (stop)
@@ -131,14 +132,14 @@ namespace MetroLooper
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
 
-            micTimer.Change(3800, System.Threading.Timeout.Infinite);
+            micTimer.Change(3700, System.Threading.Timeout.Infinite);
             
             //Music_Go(state);
             if (startTicking)
             {
                 Dispatcher.BeginInvoke(delegate
                 {
-                    ((MainViewModel)DataContext).AudioMan.PlayClick();
+                    viewModel.AudioMan.PlayClick();
                 });
                 startTicking = false;
                 ticking = true;
@@ -147,8 +148,8 @@ namespace MetroLooper
             {
                 Dispatcher.BeginInvoke(delegate
                 {
-                    ((MainViewModel)DataContext).AudioMan.StopClick();
-                    ((MainViewModel)DataContext).AudioMan.PlayClick();
+                    viewModel.AudioMan.StopClick();
+                    viewModel.AudioMan.PlayClick();
                 });
             }
         }
@@ -208,10 +209,9 @@ namespace MetroLooper
             {
                 timer.Change(4000, 4000);
                 timerRunning = true;
-                ((MainViewModel)DataContext).AudioMan.PlayClick();
                 ticking = true;
-                MeasureAnimation.Stop();
                 MeasureAnimation.Begin();
+                ((MainViewModel)DataContext).AudioMan.PlayClick();
             }
             else if (ticking)
             {
