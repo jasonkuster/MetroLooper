@@ -13,9 +13,9 @@ namespace AudioComponent
 	{
 	public:
 		virtual void BufferFinished(int bufferContext);
-		//virtual void PlaybackStarted();
-		virtual void PrintValue(int value);
+		virtual void PrintValue(double value);
 		virtual void PrintLatencyValue(int value);
+		virtual void PrintBankTrack(int bank, int track);
 	};
 
 	public ref class AudioEngine sealed
@@ -62,7 +62,7 @@ namespace AudioComponent
 
 		static void BufferFinished(int bufferContext);
 		static void BufferStarted(int bufferContext);
-		static void PrintValue(int value);
+		static void PrintValue(double value);
 
 		Platform::Array<short>^ GetAudioData(int bank, int track);
 		int GetAudioDataSize(int bank, int track);
