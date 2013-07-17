@@ -68,14 +68,18 @@ namespace MetroLooper
             viewModel.AudioMan.StopClick();
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
-            //using (var s = await file.OpenStreamForWriteAsync())
-            //{
-            //    s.Write(new byte[1], 0, 0);
-            //}
+            foreach (Track t in viewModel.SelectedBank.tracks)
+            {
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+                using (var s = await file.OpenStreamForWriteAsync())
+                {
+                    s.Write(new byte[1], 0, 0);
+                }
+                t.file = file;
+            }
         }
 
         #endregion
@@ -85,7 +89,6 @@ namespace MetroLooper
         private Timer timer;
         private Timer recTimer;
         private Timer micTimer;
-        private int timingLength = 3900;
         private bool ticking = false;
         private bool startTicking = false;
         private bool recording = false;
