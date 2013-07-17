@@ -153,14 +153,16 @@ namespace MetroLooper
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
         }
 
-        protected async override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
-            using (var s = await file.OpenStreamForWriteAsync())
-            {
-                s.Write(new byte[1], 0, 0);
-            }
+            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
+            //using (var s = await file.OpenStreamForWriteAsync())
+            //{
+            //    s.Write(new byte[1], 0, 0);
+            //}
+            MeasureAnimation.Stop();
+            viewModel.AudioMan.StopAll();
         }
 
 
@@ -220,10 +222,15 @@ namespace MetroLooper
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Code to show delete button
-            ((Model.Track)e.AddedItems[0]).IsSelected = true;
-            if (e.RemovedItems[0] != null)
+            //((Model.Track)e.AddedItems[0]).IsSelected = true;
+            //if (e.RemovedItems[0] != null)
+            //{
+            //    ((Model.Track)e.RemovedItems[0]).IsSelected = false;
+            //}
+            if (((Track)loopList.SelectedItem) != null)
             {
-                ((Model.Track)e.RemovedItems[0]).IsSelected = false;
+                viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
+                NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
             }
         }
 
