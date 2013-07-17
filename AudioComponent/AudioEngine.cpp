@@ -157,14 +157,15 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 	{
 		audioData[bank][track][index] = -1;
 	}
-	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size; sample++)
+	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size+MAX_OFFSET; sample++)
 	{
-		short value = data->get(sample);
+		short value = data->get(sample-MAX_OFFSET);
 		audioData[bank][track][sample] = value;
 	}
 
 	buffer_sizes[bank][track] = size;
-	latency_offsets[bank][track] = currentLatency + microphoneLatency + LATENCY;
+	latency_offsets[bank][track] = 0;
+	//latency_offsets[bank][track] = currentLatency + microphoneLatency;
 	CSCallback->PrintLatencyValue(currentLatency);
 	CSCallback->PrintLatencyValue(microphoneLatency);
 }
@@ -281,7 +282,7 @@ void AudioEngine::PlayTrack(int bank, int track)
 	if (size < BUFFER_LENGTH)
 	{
 		buffer2.PlayLength = size;
-		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
+		buffer2.AudioBytes = (2*size)+(2*buffer2.PlayBegin);
 	}
 
 	ThrowIfFailed(voices[bank][track]->FlushSourceBuffers());
