@@ -119,6 +119,12 @@ void AudioEngine::Initialize()
 				voices[i][j]->SetVolume(1.0);
 				buffer_sizes[i][j] = 0;
 			}
+
+			bankFinalized[i] = false;
+			ThrowIfFailed(pXAudio2->CreateSourceVoice(&(bankVoices[i]), &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
+			bankVoices[i]->SetFrequencyRatio(1);
+			bankVoices[i]->SetVolume(1.0);
+			bank_sizes[i] = 0;
 		}
 
 		ThrowIfFailed(pXAudio2->CreateSourceVoice(&clickVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
@@ -135,6 +141,8 @@ void AudioEngine::Initialize()
 		}
 
 		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
+
+		pulledData = ref new Platform::Array<short>(BUFFER_LENGTH);
 
 		initialized = true;
 		isClickPlaying = false;
@@ -188,16 +196,58 @@ void AudioEngine::PlayBank(int bank)
 		return;
 	}
 
-	for (int track = 0; track < MAX_TRACKS; track++)
+	if (!bankFinalized[bank])
 	{
-		int size = buffer_sizes[bank][track];
-		if (size > 0)
+		for (int track = 0; track < MAX_TRACKS; track++)
 		{
-			PlayTrack(bank, track);
+			int size = buffer_sizes[bank][track];
+			if (size > 0)
+			{
+				PlayTrack(bank, track);
+			}
 		}
+	}
+	else
+	{
+		PlayFullBank(bank);
 	}
 
 	currentLatency = GetLatency();
+}
+
+void AudioEngine::PlayFullBank(int bank)
+{
+	if (!initialized || !bankFinalized[bank])
+	{
+		return;
+	}
+
+	int size = bank_sizes[bank];
+	if (size == 0)
+	{
+		return;
+	}
+
+	buffer2.AudioBytes = 2*BUFFER_LENGTH;
+	buffer2.pAudioData = (byte *)bankAudioData[bank];
+
+	int begin = MAX_OFFSET;
+	buffer2.PlayBegin = begin;
+	buffer2.PlayLength = BUFFER_LENGTH;
+
+	buffer2.LoopBegin = XAUDIO2_NO_LOOP_REGION;
+	buffer2.LoopLength = 0;
+	buffer2.LoopCount = 0;
+
+	if (size < BUFFER_LENGTH)
+	{
+		buffer2.PlayLength = size;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
+	}
+
+	ThrowIfFailed(bankVoices[bank]->FlushSourceBuffers());
+	ThrowIfFailed(bankVoices[bank]->SubmitSourceBuffer(&buffer2));
+	ThrowIfFailed(bankVoices[bank]->Start());
 }
 
 void AudioEngine::PlayTrack(int bank, int track)
@@ -218,6 +268,7 @@ void AudioEngine::PlayTrack(int bank, int track)
 
 	int begin = MAX_OFFSET+offsets[bank][track];
 	begin -= latency_offsets[bank][track];
+	begin += LATENCY;
 
 	buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 	buffer2.PlayLength = BUFFER_LENGTH;
@@ -313,12 +364,11 @@ void AudioEngine::SetBPM(int bpm)
 
 Platform::Array<short>^ AudioEngine::GetAudioData(int bank, int track)
 {
-	Platform::Array<short>^ data;
 	for (int i = 0; i < buffer_sizes[bank][track]; i++)
 	{
-		data[i] = audioData[bank][track][i];
+		pulledData[i] = audioData[bank][track][i];
 	}
-	return data;
+	return pulledData;
 }
 
 int AudioEngine::GetAudioDataSize(int bank, int track)
@@ -329,22 +379,28 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 void AudioEngine::MixDownBank(int bank)
 {
 	int numTracks = 0;
+	int biggestSize = 0;
 	for (int track = 0; track < MAX_TRACKS; track++)
 	{
 		int size = buffer_sizes[bank][track];
 		if (size != 0)
 		{
 			numTracks++;
+			if (size > biggestSize)
+			{
+				biggestSize = size;
+			}
 		}
 	}
 	for (int sample = 0; sample < BUFFER_LENGTH-(2*MAX_OFFSET); sample++)
 	{
 		for (int track = 0; track < numTracks; track++)
 		{
-			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]];
+			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]-latency_offsets[bank][track]+LATENCY];
 			bankAudioData[bank][sample] += (sampleValue/numTracks);
 		}
 	}
+	bank_sizes[bank] = biggestSize;
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)

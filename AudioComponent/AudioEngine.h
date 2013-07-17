@@ -5,8 +5,8 @@ namespace AudioComponent
 #define SAMPLE_RATE (16000)
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
-#define MAX_OFFSET 600*(SAMPLE_RATE/1000)
-#define LATENCY 140
+#define MAX_OFFSET 1000*(SAMPLE_RATE/1000)
+#define LATENCY 400
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public interface class ICallback
@@ -26,9 +26,11 @@ namespace AudioComponent
 		interface IXAudio2*  pXAudio2;
 		IXAudio2MasteringVoice * pMasteringVoice;
 		IXAudio2SourceVoice *voices[MAX_BANKS][MAX_TRACKS];
+		IXAudio2SourceVoice *bankVoices[MAX_BANKS];
 		IXAudio2SourceVoice *clickVoice;
 
 		int buffer_sizes[MAX_BANKS][MAX_TRACKS];
+		int bank_sizes[MAX_BANKS];
 		int offsets[MAX_BANKS][MAX_TRACKS];
 		int latency_offsets[MAX_BANKS][MAX_TRACKS];
 		int beatsPerMinute;
@@ -36,7 +38,10 @@ namespace AudioComponent
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
 		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
+		bool bankFinalized[MAX_BANKS];
 		short clickData[SAMPLE_RATE];
+
+		Platform::Array<short>^ pulledData;
 
 		XAUDIO2_BUFFER buffer2;
 		bool initialized;
@@ -76,6 +81,7 @@ namespace AudioComponent
 		void Resume();
 
 		void PlaySound();
+		void PlayFullBank(int bank);
 		void PlayTrack(int bank, int track);
 		void PlayBank(int bank);
 		void StopSound();
