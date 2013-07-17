@@ -74,10 +74,7 @@ void AudioEngine::PrintValue(double value)
 
 void AudioEngine::ReadPerformanceData()
 {
-	//CSCallback->PrintLatencyValue(GetLatency());
-	float vol;
-	voices[0][0]->GetVolume(&vol);
-	CSCallback->PrintValue(vol);
+	CSCallback->PrintLatencyValue(GetLatency());
 }
 
 void AudioEngine::SetVolume(int bank, int track, double volume_db)
@@ -201,7 +198,6 @@ void AudioEngine::PlayBank(int bank)
 	}
 
 	currentLatency = GetLatency();
-	ReadPerformanceData();
 }
 
 void AudioEngine::PlayTrack(int bank, int track)

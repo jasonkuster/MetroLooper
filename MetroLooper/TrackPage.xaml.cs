@@ -29,7 +29,12 @@ namespace MetroLooper
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            viewModel.AudioMan.SetVolume(this.BankNumber, this.TrackNumber, e.NewValue);
+            double value = e.NewValue;
+            if (value < -35.0)
+            {
+                value = -120;
+            }
+            viewModel.AudioMan.SetVolume(this.BankNumber, this.TrackNumber, value);
         }
 
         private void PlayBank(object sender, RoutedEventArgs e)
@@ -46,17 +51,23 @@ namespace MetroLooper
         private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
         {
             double value = Convert.ToDouble(OffsetText.Text);
-            value -= 20.0;
-            OffsetText.Text = value.ToString();
-            viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+            if (value > -200)
+            {
+                value -= 20.0;
+                OffsetText.Text = value.ToString();
+                viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+            }
         }
 
         private void OffsetIncreaseButton_Click(object sender, RoutedEventArgs e)
         {
             double value = Convert.ToDouble(OffsetText.Text);
-            value += 20.0;
-            OffsetText.Text = value.ToString();
-            viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+            if (value < 200)
+            {
+                value += 20.0;
+                OffsetText.Text = value.ToString();
+                viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+            }
         }
     }
 }
