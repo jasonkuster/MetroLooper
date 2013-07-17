@@ -213,9 +213,14 @@ namespace MetroLooper
         /// Print Value
         /// </summary>
         /// <param name="value">Value to print</param>
-        public void PrintValue(int value)
+        public void PrintValue(double value)
         {
             System.Diagnostics.Debug.WriteLine("Value reported:" + value);
+        }
+
+        public void PrintBankTrack(int bank, int track)
+        {
+            System.Diagnostics.Debug.WriteLine("Bank:" + bank + ", Track:" + track);
         }
 
         /// <summary>

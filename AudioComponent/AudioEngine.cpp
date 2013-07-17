@@ -67,14 +67,17 @@ void AudioEngine::BufferStarted(int bufferContext)
 		numBuffersPlaying++;
 	}
 }
-void AudioEngine::PrintValue(int value)
+void AudioEngine::PrintValue(double value)
 {
 	CSCallback->PrintValue(value);
 }
 
 void AudioEngine::ReadPerformanceData()
 {
-	CSCallback->PrintLatencyValue(GetLatency());
+	//CSCallback->PrintLatencyValue(GetLatency());
+	float vol;
+	voices[0][0]->GetVolume(&vol);
+	CSCallback->PrintValue(vol);
 }
 
 void AudioEngine::SetVolume(int bank, int track, double volume_db)
@@ -196,6 +199,9 @@ void AudioEngine::PlayBank(int bank)
 			PlayTrack(bank, track);
 		}
 	}
+
+	currentLatency = GetLatency();
+	ReadPerformanceData();
 }
 
 void AudioEngine::PlayTrack(int bank, int track)

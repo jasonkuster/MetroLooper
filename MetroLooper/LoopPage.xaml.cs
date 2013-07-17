@@ -226,7 +226,7 @@ namespace MetroLooper
 
         private void finalizeButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
+            /*MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
             if (sure == MessageBoxResult.OK)
             {
                 //Mix-down and deletion code
@@ -234,6 +234,13 @@ namespace MetroLooper
                 {
                     NavigationService.GoBack();
                 }
+            }*/
+
+            short[] data;
+            int size = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, out data);
+            for (int sample = 0; sample < size; sample++)
+            {
+                System.Diagnostics.Debug.WriteLine(data[sample]);
             }
         }
 
