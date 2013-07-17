@@ -14,8 +14,6 @@ namespace MetroLooper
         private Recorder _recorder;
         private AudioEngine _engine;
 
-        private bool recordOnPlaybackCallback;
-
         /// <summary>
         /// Is Playing
         /// </summary>
@@ -36,7 +34,6 @@ namespace MetroLooper
             _engine.SetCallback(this); //Do this before anything else!
 
             isPlaying = false;
-            this.recordOnPlaybackCallback = false;
 
             _engine.SetBPM(120);
         }
@@ -50,9 +47,12 @@ namespace MetroLooper
             this.isRecording = true;
         }
 
+        /// <summary>
+        /// Record while Playing bank
+        /// </summary>
+        /// <param name="bank">Bank number</param>
         public void RecordAndPlay(int bank)
         {
-            this.recordOnPlaybackCallback = true;
             _engine.PlayBank(bank);
             _recorder.StartRecording();
             this.isPlaying = true;
@@ -76,7 +76,20 @@ namespace MetroLooper
 
             isRecording = false;
             isPlaying = false;
-            this.recordOnPlaybackCallback = false;
+        }
+
+        /// <summary>
+        /// Record Stop, no publishing. Use in bad cases.
+        /// </summary>
+        public void RecordStop()
+        {
+            short[] dataDump;
+            int sizeDump;
+
+            _engine.StopSound();
+            _recorder.StopRecording(out dataDump, out sizeDump);
+            isRecording = false;
+            isPlaying = false;
         }
 
         /// <summary>
@@ -105,16 +118,34 @@ namespace MetroLooper
             _engine.ReadPerformanceData();
         }
 
+        /// <summary>
+        /// Set Volume
+        /// </summary>
+        /// <param name="bank">Bank Number</param>
+        /// <param name="track">Track Number</param>
+        /// <param name="volume_db">Volume in dB (20log10(gain))</param>
         public void SetVolume(int bank, int track, double volume_db)
         {
             _engine.SetVolume(bank, track, volume_db);
         }
 
+        /// <summary>
+        /// Set Pitch in Semitones
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        /// <param name="pitchRatio">Pitch Ratio</param>
         public void SetPitchSemitones(int bank, int track, double pitchRatio)
         {
             _engine.SetPitch(bank, track, pitchRatio);
         }
 
+        /// <summary>
+        /// Set Offset in milliseconds
+        /// </summary>
+        /// <param name="bank">bank</param>
+        /// <param name="track">track</param>
+        /// <param name="offset_ms">offset in ms</param>
         public void SetOffsetMS(int bank, int track, double offset_ms)
         {
             _engine.SetOffset((int)offset_ms, bank, track);
@@ -187,6 +218,11 @@ namespace MetroLooper
             isPlaying = true;
         }
 
+        public int GetOffsetMS(int bank, int track)
+        {
+            return _engine.GetOffsetMS(bank, track);
+        }
+
         /// <summary>
         /// Callback method when a buffer (track) finishes
         /// </summary>
@@ -195,19 +231,6 @@ namespace MetroLooper
         {
             //System.Diagnostics.Debug.WriteLine("Callback called:" + (bufferContext).ToString());
         }
-
-        /*/// <summary>
-        /// Callback method for playback starting
-        /// </summary>
-        public void PlaybackStarted()
-        {
-            if (this.recordOnPlaybackCallback && !_recorder.isRecording)
-            {
-                _recorder.StartRecording();
-                System.Diagnostics.Debug.WriteLine("Playback started, recording now");
-                this.isRecording = true;
-            }
-        }*/
 
         /// <summary>
         /// Print Value
@@ -218,6 +241,11 @@ namespace MetroLooper
             System.Diagnostics.Debug.WriteLine("Value reported:" + value);
         }
 
+        /// <summary>
+        /// Print Bank and Track Numbers
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
         public void PrintBankTrack(int bank, int track)
         {
             System.Diagnostics.Debug.WriteLine("Bank:" + bank + ", Track:" + track);
