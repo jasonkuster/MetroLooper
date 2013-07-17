@@ -22,6 +22,8 @@ namespace MetroLooper
         {
             InitializeComponent();
             viewModel = MainViewModel.Instance;
+            this.BankNumber = viewModel.SelectedBank.bankID;
+            this.TrackNumber = viewModel.SelectedTrack.trackID;
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -38,6 +40,22 @@ namespace MetroLooper
         private void PitchRatioSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             viewModel.AudioMan.SetPitchSemitones(this.BankNumber, this.TrackNumber, e.NewValue);
+        }
+
+        private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            double value = Convert.ToDouble(OffsetText.Text);
+            value -= 20.0;
+            OffsetText.Text = value.ToString();
+            viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+        }
+
+        private void OffsetIncreaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            double value = Convert.ToDouble(OffsetText.Text);
+            value += 20.0;
+            OffsetText.Text = value.ToString();
+            viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
         }
     }
 }
