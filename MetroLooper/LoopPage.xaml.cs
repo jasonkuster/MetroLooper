@@ -28,7 +28,7 @@ namespace MetroLooper
         private Timer timer;
         private Timer recTimer;
         private Timer micTimer;
-        private int timingLength = 4000;
+        private int timingLength = 3900;
         private bool ticking = false;
         private bool startTicking = false;
         private bool recording = false;
@@ -52,12 +52,14 @@ namespace MetroLooper
 
         private void StartMic(object state)
         {
+            System.Diagnostics.Debug.WriteLine("StartMic ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             if (recording)
             {
                 if (starting) //!stop ||  <--continuous play scenario, remove else
                 {
                     starting = false;
                     recording = true;
+                    recTimer.Change(4300, System.Threading.Timeout.Infinite);
                     Dispatcher.BeginInvoke(delegate
                     {
                         foreach (Track t in viewModel.SelectedBank.tracks)
@@ -73,6 +75,7 @@ namespace MetroLooper
 
         private void CompleteRecord(object state)
         {
+            System.Diagnostics.Debug.WriteLine("CompleteRecord ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             if (recording)
             {
                 if (!starting)
@@ -94,38 +97,42 @@ namespace MetroLooper
             }
         }
         
-        private void Music_Go(object state)
-        {
-            System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
+        //private void Music_Go(object state)
+        //{
+        //    System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             
             
-            {
-                Dispatcher.BeginInvoke(delegate
-                {
-                    foreach (Track t in viewModel.SelectedBank.tracks)
-                    {
-                        t.Finalized = true;
-                    }
-                    viewModel.AudioMan.StopAll();
-                    viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
-                    viewModel.lockUI(MainViewModel.LOCK_STATE.NONE);
-                });
-            }
-        }
+        //    {
+        //        Dispatcher.BeginInvoke(delegate
+        //        {
+        //            foreach (Track t in viewModel.SelectedBank.tracks)
+        //            {
+        //                t.Finalized = true;
+        //            }
+        //            viewModel.AudioMan.StopAll();
+        //            viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
+        //            viewModel.lockUI(MainViewModel.LOCK_STATE.NONE);
+        //        });
+        //    }
+        //}
         
         private void Progress_Go(object state)
         {
+            System.Diagnostics.Debug.WriteLine("Progress_go ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             Dispatcher.BeginInvoke(delegate
             {
                 foreach (Track t in viewModel.SelectedBank.tracks)
                 {
                     t.Finalized = true;
                 }
-                viewModel.AudioMan.StopAll();
-                viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
                 MeasureAnimation.Stop();
                 MeasureAnimation.Begin();
+                viewModel.AudioMan.StopAll();
+                viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
+
+            micTimer.Change(3800, System.Threading.Timeout.Infinite);
+            
             //Music_Go(state);
             if (startTicking)
             {
@@ -151,6 +158,15 @@ namespace MetroLooper
         {
             base.OnNavigatedTo(e);
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+            if (viewModel.SelectedBank.tracks.Count > 0)
+            {
+                timer = new Timer(Progress_Go, new object(), 0, 4000);
+            }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -161,8 +177,8 @@ namespace MetroLooper
             //{
             //    s.Write(new byte[1], 0, 0);
             //}
-            MeasureAnimation.Stop();
-            viewModel.AudioMan.StopAll();
+            timer.Dispose();
+            recTimer.Dispose();
         }
 
 
@@ -190,10 +206,12 @@ namespace MetroLooper
         {
             if (!timerRunning)
             {
-                timer.Change(0, 4000);
+                timer.Change(4000, 4000);
                 timerRunning = true;
                 ((MainViewModel)DataContext).AudioMan.PlayClick();
                 ticking = true;
+                MeasureAnimation.Stop();
+                MeasureAnimation.Begin();
             }
             else if (ticking)
             {
@@ -229,6 +247,8 @@ namespace MetroLooper
             //}
             if (((Track)loopList.SelectedItem) != null)
             {
+                MeasureAnimation.Stop();
+                viewModel.AudioMan.StopAll();
                 viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
                 NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
             }
@@ -261,12 +281,12 @@ namespace MetroLooper
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
+            return (value is bool && (bool)value) ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return value is Visibility && (Visibility)value == Visibility.Visible;
+            return value is Visibility && (Visibility)value == Visibility.Collapsed;
         }
     }
 

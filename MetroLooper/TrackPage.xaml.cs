@@ -39,7 +39,7 @@ namespace MetroLooper
 
         private void PitchRatioSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            viewModel.AudioMan.SetPitchSemitones(this.BankNumber, this.TrackNumber, e.NewValue);
+            //viewModel.AudioMan.SetPitchSemitones(this.BankNumber, this.TrackNumber, e.NewValue);
         }
 
         private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
