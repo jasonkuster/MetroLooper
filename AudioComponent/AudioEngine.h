@@ -6,7 +6,7 @@ namespace AudioComponent
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
 #define MAX_OFFSET 1000*(SAMPLE_RATE/1000)
-#define LATENCY 540
+#define LATENCY 400
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public interface class ICallback

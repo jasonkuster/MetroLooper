@@ -119,7 +119,12 @@ void AudioEngine::Initialize()
 				voices[i][j]->SetVolume(1.0);
 				buffer_sizes[i][j] = 0;
 			}
+
 			bankFinalized[i] = false;
+			ThrowIfFailed(pXAudio2->CreateSourceVoice(&(bankVoices[i]), &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
+			bankVoices[i]->SetFrequencyRatio(1);
+			bankVoices[i]->SetVolume(1.0);
+			bank_sizes[i] = 0;
 		}
 
 		ThrowIfFailed(pXAudio2->CreateSourceVoice(&clickVoice, &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
@@ -263,6 +268,7 @@ void AudioEngine::PlayTrack(int bank, int track)
 
 	int begin = MAX_OFFSET+offsets[bank][track];
 	begin -= latency_offsets[bank][track];
+	begin += LATENCY;
 
 	buffer2.PlayBegin = begin; //if no offset given, will start after the 200ms delay inserted at the beginning, and then skip latency
 	buffer2.PlayLength = BUFFER_LENGTH;
@@ -390,7 +396,7 @@ void AudioEngine::MixDownBank(int bank)
 	{
 		for (int track = 0; track < numTracks; track++)
 		{
-			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]];
+			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]-latency_offsets[bank][track]+LATENCY];
 			bankAudioData[bank][sample] += (sampleValue/numTracks);
 		}
 	}
