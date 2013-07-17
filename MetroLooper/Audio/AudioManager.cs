@@ -115,6 +115,11 @@ namespace MetroLooper
             _engine.SetPitch(bank, track, pitchRatio);
         }
 
+        public void SetOffsetMS(int bank, int track, double offset_ms)
+        {
+            _engine.SetOffset((int)offset_ms, bank, track);
+        }
+
         /// <summary>
         /// Start playing click track
         /// </summary>
