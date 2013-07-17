@@ -187,6 +187,11 @@ namespace MetroLooper
             isPlaying = true;
         }
 
+        public int GetOffsetMS(int bank, int track)
+        {
+            return _engine.GetOffsetMS(bank, track);
+        }
+
         /// <summary>
         /// Callback method when a buffer (track) finishes
         /// </summary>

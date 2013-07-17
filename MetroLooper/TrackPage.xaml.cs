@@ -25,6 +25,8 @@ namespace MetroLooper
             this.TrackNumber = viewModel.SelectedTrack.trackID;
 
             InitializeComponent();
+
+            OffsetText.Text = viewModel.AudioMan.GetOffsetMS(this.BankNumber, this.TrackNumber).ToString();
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
