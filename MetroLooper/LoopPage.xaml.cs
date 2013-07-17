@@ -24,6 +24,63 @@ namespace MetroLooper
 {
     public partial class LoopPage : PhoneApplicationPage
     {
+        public enum LOCK_STATE { RECORDING, ALL, NONE };
+        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+
+        #region Constructors
+
+        public LoopPage()
+        {
+            InitializeComponent();
+            viewModel = MainViewModel.Instance;
+            this.DataContext = viewModel;
+            timerRunning = false;
+        }
+
+        #endregion
+
+        #region Public and Protected Members
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+            if (viewModel.SelectedBank.tracks.Count > 0)
+            {
+                timer = new Timer(Progress_Go, new object(), 0, 4000);
+                timerRunning = true;
+            }
+            else
+            {
+                this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                timerRunning = false;
+            }
+            this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
+            //using (var s = await file.OpenStreamForWriteAsync())
+            //{
+            //    s.Write(new byte[1], 0, 0);
+            //}
+            timer.Dispose();
+            recTimer.Dispose();
+            micTimer.Dispose();
+            viewModel.AudioMan.StopClick();
+        }
+
+        #endregion
+
+        #region Private Members
 
         private Timer timer;
         private Timer recTimer;
@@ -34,21 +91,10 @@ namespace MetroLooper
         private bool recording = false;
         private bool stop = true;
         private bool starting = false;
-        public enum LOCK_STATE { RECORDING, ALL, NONE };
-        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
         private bool timerRunning;
         private MainViewModel viewModel;
 
-        public LoopPage()
-        {
-            InitializeComponent();
-            viewModel = MainViewModel.Instance;
-            this.DataContext = viewModel;
-            this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            timerRunning = false;
-        }
+        #region Start/Stop Recording
 
         private void StartMic(object state)
         {
@@ -59,7 +105,7 @@ namespace MetroLooper
                 {
                     starting = false;
                     recording = true;
-                    recTimer.Change(4500, System.Threading.Timeout.Infinite);
+                    recTimer.Change(4600, System.Threading.Timeout.Infinite);
                     Dispatcher.BeginInvoke(delegate
                     {
                         foreach (Track t in viewModel.SelectedBank.tracks)
@@ -97,25 +143,8 @@ namespace MetroLooper
                 }
             }
         }
-        
-        //private void Music_Go(object state)
-        //{
-        //    System.Diagnostics.Debug.WriteLine("Timer ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
-            
-            
-        //    {
-        //        Dispatcher.BeginInvoke(delegate
-        //        {
-        //            foreach (Track t in viewModel.SelectedBank.tracks)
-        //            {
-        //                t.Finalized = true;
-        //            }
-        //            viewModel.AudioMan.StopAll();
-        //            viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
-        //            viewModel.lockUI(MainViewModel.LOCK_STATE.NONE);
-        //        });
-        //    }
-        //}
+
+        #endregion
         
         private void Progress_Go(object state)
         {
@@ -132,7 +161,7 @@ namespace MetroLooper
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
 
-            micTimer.Change(3600, System.Threading.Timeout.Infinite);
+            micTimer.Change(3500, System.Threading.Timeout.Infinite);
             
             //Music_Go(state);
             if (startTicking)
@@ -153,35 +182,8 @@ namespace MetroLooper
                 });
             }
         }
-         
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
-            if (viewModel.SelectedBank.tracks.Count > 0)
-            {
-                timer = new Timer(Progress_Go, new object(), 0, 4000);
-            }
-        }
-
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track", CreationCollisionOption.ReplaceExisting);
-            //using (var s = await file.OpenStreamForWriteAsync())
-            //{
-            //    s.Write(new byte[1], 0, 0);
-            //}
-            timer.Dispose();
-            recTimer.Dispose();
-        }
-
+        #region Button Events
 
         private void continueButton_Click(object sender, RoutedEventArgs e)
         {
@@ -244,14 +246,10 @@ namespace MetroLooper
             }
         }
 
+        #endregion
+
         private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //Code to show delete button
-            //((Model.Track)e.AddedItems[0]).IsSelected = true;
-            //if (e.RemovedItems[0] != null)
-            //{
-            //    ((Model.Track)e.RemovedItems[0]).IsSelected = false;
-            //}
             if (((Track)loopList.SelectedItem) != null)
             {
                 MeasureAnimation.Stop();
@@ -264,7 +262,6 @@ namespace MetroLooper
 
         private void startRecord(bool one)
         {
-            //Start timer here
             if (!timerRunning)
             {
                 timer.Change(0, 4000);
@@ -283,8 +280,14 @@ namespace MetroLooper
             starting = false;
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.ALL);
         }
+
+        #endregion
     }
 
+
+    /// <summary>
+    /// Converter which turns True -> Collapsed, False -> Visible
+    /// </summary>
     public sealed class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
@@ -298,6 +301,9 @@ namespace MetroLooper
         }
     }
 
+    /// <summary>
+    /// Converter which turns True -> Green, False -> Orange
+    /// </summary>
     public sealed class BooleanToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
