@@ -105,7 +105,7 @@ namespace MetroLooper
                 {
                     starting = false;
                     recording = true;
-                    recTimer.Change(4600, System.Threading.Timeout.Infinite);
+                    recTimer.Change(4100, System.Threading.Timeout.Infinite);
                     Dispatcher.BeginInvoke(delegate
                     {
                         foreach (Track t in viewModel.SelectedBank.tracks)
@@ -161,7 +161,7 @@ namespace MetroLooper
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
 
-            micTimer.Change(3500, System.Threading.Timeout.Infinite);
+            micTimer.Change(4000, System.Threading.Timeout.Infinite);
             
             //Music_Go(state);
             if (startTicking)
