@@ -237,7 +237,7 @@ namespace MetroLooper
             }*/
 
             short[] data;
-            int size = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, out data);
+            int size = viewModel.AudioMan.GetAudioData(0, 0, out data);
             for (int sample = 0; sample < size; sample++)
             {
                 System.Diagnostics.Debug.WriteLine(data[sample]);
