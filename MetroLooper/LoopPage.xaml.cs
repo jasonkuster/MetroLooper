@@ -125,23 +125,14 @@ namespace MetroLooper
         {
             if (!viewModel.SelectedBank.Finalized)
             {
-                var result = MessageBox.Show("You haven't finalized yet - do you want to cancel and hit save?", "Warning", MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.Cancel)
+                if (!viewModel.SelectedBank.Finalized)
                 {
-                    e.Cancel = true;
+                    timer.Dispose();
+                    recTimer.Dispose();
+                    micTimer.Dispose();
                 }
-                else
-                {
-                    if (!viewModel.SelectedBank.Finalized)
-                    {
-                        timer.Dispose();
-                        recTimer.Dispose();
-                        micTimer.Dispose();
-                    }
-                    viewModel.AudioMan.StopAll();
-                    viewModel.AudioMan.StopClick();
-                    IsolatedStorageSettings.ApplicationSettings.Save();
-                }
+                viewModel.AudioMan.StopAll();
+                viewModel.AudioMan.StopClick();
             }
             else
             {
@@ -153,7 +144,6 @@ namespace MetroLooper
                     viewModel.AudioMan.StopClick();
                 }
                 viewModel.AudioMan.StopAll();
-                IsolatedStorageSettings.ApplicationSettings.Save();
             }
             base.OnNavigatingFrom(e);
         }
