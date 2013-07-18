@@ -23,7 +23,13 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="MetroLooper" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}">
+                <Run>Bank: </Run>
+                <Run Text="{Binding SelectedBank.bankID}"> </Run>
+                <Run Text="  "></Run>
+                <Run>Track:</Run>
+                <Run Text="{Binding SelectedTrack.trackID}"> </Run>
+            </TextBlock>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
