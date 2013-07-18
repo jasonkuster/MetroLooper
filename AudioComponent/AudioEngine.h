@@ -99,6 +99,9 @@ namespace AudioComponent
 		void StopSound();
 		void ReadPerformanceData();
 
+		void deleteTrack(int bank, int track);
+		void deleteFinalizedBank(int bank);
+
 		void SetVolumeDB(int bank, int track, double volume_db);
 		double GetVolumeDB(int bank, int track)
 		{

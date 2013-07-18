@@ -472,5 +472,24 @@ namespace MetroLooper
 
             _engine.LoadBank(bank, audioData, size, offset_ms, volumeDB, pitch);
         }
+
+        /// <summary>
+        /// Delete Track from engine
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        public void DeleteTrack(int bank, int track)
+        {
+            _engine.deleteTrack(bank, track);
+        }
+
+        /// <summary>
+        /// Delete finalized bank
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        public void DeleteFinalizedBank(int bank)
+        {
+            _engine.deleteFinalizedBank(bank);
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace MetroLooper
             InitializeComponent();
 
             OffsetText.Text = viewModel.AudioMan.GetOffsetMS(this.BankNumber, this.TrackNumber).ToString();
+            VolumeSlider.Value = viewModel.SelectedTrack.Volume;
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -38,6 +39,7 @@ namespace MetroLooper
                 value = -120;
             }
             viewModel.AudioMan.SetVolumeDB(this.BankNumber, this.TrackNumber, value);
+            viewModel.SelectedTrack.Volume = value;
         }
 
         private void PlayBank(object sender, RoutedEventArgs e)
@@ -54,6 +56,7 @@ namespace MetroLooper
                 value -= 20.0;
                 OffsetText.Text = value.ToString();
                 viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+                viewModel.SelectedTrack.Offset = (int)value;
             }
         }
 
@@ -65,7 +68,17 @@ namespace MetroLooper
                 value += 20.0;
                 OffsetText.Text = value.ToString();
                 viewModel.AudioMan.SetOffsetMS(this.BankNumber, this.TrackNumber, value);
+                viewModel.SelectedTrack.Offset = (int)value;
             }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.AudioMan.DeleteTrack(this.BankNumber, this.TrackNumber);
+
+            viewModel.SelectedBank.tracks.Remove(viewModel.SelectedTrack);
+
+            NavigationService.GoBack();
         }
     }
 }
