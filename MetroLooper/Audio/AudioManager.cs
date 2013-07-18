@@ -348,10 +348,11 @@ namespace MetroLooper
         public int GetAudioData(int bank, int track, out byte[] audioDataInBytes)
         {
             short[] shortAudioData = _engine.GetAudioData(bank, track);
-            audioDataInBytes = new byte[shortAudioData.Length * sizeof(short)];
+            int sizeInSamples = _engine.GetAudioDataSize(bank, track);
+            audioDataInBytes = new byte[sizeInSamples * sizeof(short)];
             Buffer.BlockCopy(shortAudioData, 0, audioDataInBytes, 0, audioDataInBytes.Length);
 
-            return shortAudioData.Length*2;
+            return sizeInSamples * 2;
         }
 
         /// <summary>
@@ -363,10 +364,11 @@ namespace MetroLooper
         public int GetBankAudioData(int bank, out byte[] audioDataInBytes)
         {
             short[] shortAudioData = _engine.GetBankAudioData(bank);
-            audioDataInBytes = new byte[shortAudioData.Length * sizeof(short)];
+            int sizeInSamples = _engine.GetBankSize(bank);
+            audioDataInBytes = new byte[sizeInSamples * sizeof(short)];
             Buffer.BlockCopy(shortAudioData, 0, audioDataInBytes, 0, audioDataInBytes.Length);
 
-            return shortAudioData.Length * 2;
+            return sizeInSamples * 2;
         }
 
         /// <summary>

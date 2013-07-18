@@ -28,5 +28,9 @@ namespace MetroLooper.Model
         public bool Finalized { get; set; }
         public ObservableCollection<Track> tracks { get; set; }
         public string finalTrack { get; set; }
+        public int Size { get; set; }
+        public int Offset { get; set; }
+        public double Pitch { get; set; }
+        public double Volume { get; set; }
     }
 }
