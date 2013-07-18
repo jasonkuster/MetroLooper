@@ -7,6 +7,7 @@ namespace AudioComponent
 #define MAX_BANKS 6
 #define MAX_OFFSET 1000*(SAMPLE_RATE/1000)
 #define LATENCY 0*(SAMPLE_RATE/1000)
+#define LOG2(x) log10(x)/log10(2.0)
 
 	[Windows::Foundation::Metadata::WebHostHidden]
 	public interface class ICallback
@@ -70,6 +71,9 @@ namespace AudioComponent
 		static void BufferStarted(int bufferContext);
 		static void PrintValue(double value);
 
+		void LoadTrack(int bank, int track, const Platform::Array<short>^ data, int size, int offset_ms, int latency_samples, double volume);
+		void LoadBank(int bank, const Platform::Array<short>^ data, int size, int offset_ms, double volume, double pitch);
+
 		Platform::Array<short>^ GetAudioData(int bank, int track);
 		Platform::Array<short>^ GetBankAudioData(int bank);
 		int GetAudioDataSize(int bank, int track);
@@ -82,6 +86,7 @@ namespace AudioComponent
 		{
 			microphoneLatency = (int)(value*(SAMPLE_RATE/1000));
 		}
+		int GetTrackLatency(int bank, int track) { return latency_offsets[bank][track]; }
 
 		void Suspend();
 		void Resume();
@@ -93,9 +98,28 @@ namespace AudioComponent
 		void StopSound();
 		void ReadPerformanceData();
 
-		void SetVolume(int bank, int track, double volume_db);
-		void SetBankVolume(int bank, double volume_db);
+		void SetVolumeDB(int bank, int track, double volume_db);
+		double GetVolumeDB(int bank, int track)
+		{
+			float gain;
+			voices[bank][track]->GetVolume(&gain);
+			return 20*log10(gain);
+		}
+		void SetBankVolumeDB(int bank, double volume_db);
+		double GetBankVolumeDB(int bank)
+		{
+			float gain;
+			bankVoices[bank]->GetVolume(&gain);
+			return 20*log10(gain);
+		}
+
 		void SetBankPitch(int bank, double pitch);
+		double GetBankPitch(int bank)
+		{
+			float ratio;
+			bankVoices[bank]->GetFrequencyRatio(&ratio);
+			return 10*LOG2(ratio);
+		}
 			
 		void PlayClickTrack();
 		void StopClickTrack();
