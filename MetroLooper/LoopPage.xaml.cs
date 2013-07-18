@@ -35,7 +35,7 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             timerRunning = false;
-            //if (!settings.Contains("projects"))
+            if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
@@ -54,59 +54,97 @@ namespace MetroLooper
         {
             base.OnNavigatedTo(e);
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
-            if (viewModel.SelectedBank.tracks.Count > 0)
+            if (!viewModel.SelectedBank.Finalized)
             {
-                ProgressBar.IsVisible = true;
-                ProgressBar.Text = "Loading...";
-                foreach (Track t in viewModel.SelectedBank.tracks)
+                trackPanel.Visibility = Visibility.Visible;
+                BankPanel.Visibility = Visibility.Collapsed;
+                if (viewModel.SelectedBank.tracks.Count > 0)
                 {
-                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                    if (isoStore.FileExists(t.fileName))
+                    ProgressBar.IsVisible = true;
+                    ProgressBar.Text = "Loading...";
+                    foreach (Track t in viewModel.SelectedBank.tracks)
                     {
-                        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
-                        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
-                        byte[] buffer;
-                        using (BinaryReader r = new BinaryReader(file))
+                        IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                        if (isoStore.FileExists(t.fileName))
                         {
-                            buffer = r.ReadBytes(t.Size);
+                            System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                            IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                            byte[] buffer;
+                            using (BinaryReader r = new BinaryReader(file))
+                            {
+                                buffer = r.ReadBytes(t.Size);
+                            }
+                            viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
                         }
                     }
+                    timer = new Timer(Progress_Go, new object(), 0, 4000);
+                    timerRunning = true;
                 }
-                timer = new Timer(Progress_Go, new object(), 0, 4000);
-                timerRunning = true;
+                else
+                {
+                    this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    timerRunning = false;
+                }
+                this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                ProgressBar.IsVisible = false;
             }
             else
             {
-                this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                timerRunning = false;
+                trackPanel.Visibility = Visibility.Collapsed;
+                BankPanel.Visibility = Visibility.Visible;
+
+                IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                if (isoStore.FileExists(viewModel.SelectedBank.finalTrack))
+                {
+                    System.Diagnostics.Debug.WriteLine("File " + viewModel.SelectedBank.finalTrack + " exists! t's size is " + viewModel.SelectedBank.Size);
+                    IsolatedStorageFileStream file = isoStore.OpenFile(viewModel.SelectedBank.finalTrack, FileMode.Open);
+                    byte[] buffer;
+                    using (BinaryReader r = new BinaryReader(file))
+                    {
+                        buffer = r.ReadBytes(viewModel.SelectedBank.Size);
+                    }
+                    viewModel.AudioMan.LoadBank(viewModel.SelectedBank.bankID, buffer, viewModel.SelectedBank.Size, viewModel.SelectedBank.Offset, viewModel.SelectedBank.Volume, viewModel.SelectedBank.Pitch);
+                }
             }
-            this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            ProgressBar.IsVisible = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            timer.Dispose();
-            recTimer.Dispose();
-            micTimer.Dispose();
-            viewModel.AudioMan.StopClick();
+            if (!viewModel.SelectedBank.Finalized)
+            {
+                timer.Dispose();
+                recTimer.Dispose();
+                micTimer.Dispose();
+                viewModel.AudioMan.StopClick();
+            }
+            viewModel.AudioMan.StopAll();
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            //foreach (Track t in viewModel.SelectedBank.tracks)
-            //{
-            //    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
-            //    using (var s = await file.OpenStreamForWriteAsync())
-            //    {
-            //        s.Write(new byte[1], 0, 0);
-            //    }
-            //    t.file = file;
-            //}
+            if (viewModel.SelectedBank.tracks.Count > 0)
+            {
+                int selBank = viewModel.SelectedBank.bankID;
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+                    byte[] trackData;
+                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
+                    using (var s = await file.OpenStreamForWriteAsync())
+                    {
+                        s.Write(trackData, 0, trackLength);
+                    }
+                    t.fileName = file.Path;
+                    t.Size = trackLength;
+                    t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
+                    t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
+                    t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
+                }
+            }
         }
 
         #endregion
@@ -237,21 +275,8 @@ namespace MetroLooper
 
         private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (viewModel.SelectedBank.tracks.Count > 0)
-            {
-                foreach (Track t in viewModel.SelectedBank.tracks)
-                {
-                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
-                    byte[] trackData;
-                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
-                    using (var s = await file.OpenStreamForWriteAsync())
-                    {
-                        s.Write(trackData, 0, trackLength);
-                    }
-                    t.fileName = file.Path;
-                    t.Size = trackLength;
-                }
-            }
+            FinalizeAnimation.Begin();
+
         }
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
@@ -277,27 +302,41 @@ namespace MetroLooper
             }
         }
 
-        private void finalizeButton_Click(object sender, RoutedEventArgs e)
+        private async void finalizeButton_Click(object sender, RoutedEventArgs e)
         {
-            /*MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
+            timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
             if (sure == MessageBoxResult.OK)
             {
                 //Mix-down and deletion code
-                if (NavigationService.CanGoBack)
+                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
+                viewModel.SelectedBank.Finalized = true;
+                timer.Dispose();
+                recTimer.Dispose();
+                micTimer.Dispose();
+                FinalizeAnimation.Begin();
+
+                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_final", CreationCollisionOption.ReplaceExisting);
+                byte[] trackData;
+                int trackLength = viewModel.AudioMan.GetBankAudioData(viewModel.SelectedBank.bankID, out trackData);
+                using (var s = await file.OpenStreamForWriteAsync())
                 {
-                    NavigationService.GoBack();
+                    s.Write(trackData, 0, trackLength);
                 }
-            }*/
-
-            viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
-            trackPanel.Visibility = Visibility.Collapsed;
-            BankPanel.Visibility = Visibility.Visible;
-
-            timer.Dispose();
-            recTimer.Dispose();
-            micTimer.Dispose();
-            viewModel.AudioMan.StopClick();
-            viewModel.AudioMan.StopAll();
+                viewModel.SelectedBank.finalTrack = file.Path;
+                viewModel.SelectedBank.Size = trackLength;
+                viewModel.SelectedBank.Pitch = viewModel.AudioMan.GetPitchSemitones(viewModel.SelectedBank.bankID);
+                viewModel.SelectedBank.Offset = viewModel.AudioMan.GetBankOffsetMS(viewModel.SelectedBank.bankID);
+                viewModel.SelectedBank.Volume = viewModel.AudioMan.GetBankVolumeDB(viewModel.SelectedBank.bankID);
+                viewModel.AudioMan.StopClick();
+                viewModel.AudioMan.StopAll();
+            }
+            else
+            {
+                timer.Change(0, 4000);
+            }
         }
 
         private void PlayBankButton_Click(object sender, RoutedEventArgs e)

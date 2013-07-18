@@ -27,7 +27,6 @@ namespace MetroLooper.Model
         public int Size { get; set; }
         public int Latency { get; set; }
         public int Offset { get; set; }
-        public double Pitch { get; set; }
         public double Volume { get; set; }
         public string fileName { get; set; }
         public bool _Finalized;
