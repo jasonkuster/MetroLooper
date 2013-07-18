@@ -54,35 +54,46 @@ namespace MetroLooper
         {
             base.OnNavigatedTo(e);
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
-            if (viewModel.SelectedBank.tracks.Count > 0)
+            if (!viewModel.SelectedBank.Finalized)
             {
-                ProgressBar.IsVisible = true;
-                ProgressBar.Text = "Loading...";
-                foreach (Track t in viewModel.SelectedBank.tracks)
+                trackPanel.Visibility = Visibility.Visible;
+                BankPanel.Visibility = Visibility.Collapsed;
+                if (viewModel.SelectedBank.tracks.Count > 0)
                 {
-                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                    if (isoStore.FileExists(t.fileName))
+                    ProgressBar.IsVisible = true;
+                    ProgressBar.Text = "Loading...";
+                    foreach (Track t in viewModel.SelectedBank.tracks)
                     {
-                        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
-                        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
-                        byte[] buffer;
-                        using (BinaryReader r = new BinaryReader(file))
+                        IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                        if (isoStore.FileExists(t.fileName))
                         {
-                            buffer = r.ReadBytes(t.Size);
+                            System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                            IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                            byte[] buffer;
+                            using (BinaryReader r = new BinaryReader(file))
+                            {
+                                buffer = r.ReadBytes(t.Size);
+                            }
+                            viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
                         }
                     }
+                    timer = new Timer(Progress_Go, new object(), 0, 4000);
+                    timerRunning = true;
                 }
-                timer = new Timer(Progress_Go, new object(), 0, 4000);
-                timerRunning = true;
+                else
+                {
+                    this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                    timerRunning = false;
+                }
+                this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                ProgressBar.IsVisible = false;
             }
             else
             {
-                this.timer = new Timer(Progress_Go, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                timerRunning = false;
+                trackPanel.Visibility = Visibility.Collapsed;
+                BankPanel.Visibility = Visibility.Visible;
             }
-            this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            ProgressBar.IsVisible = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -239,9 +250,10 @@ namespace MetroLooper
         {
             if (viewModel.SelectedBank.tracks.Count > 0)
             {
+                int selBank = viewModel.SelectedBank.bankID;
                 foreach (Track t in viewModel.SelectedBank.tracks)
                 {
-                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
                     byte[] trackData;
                     int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
                     using (var s = await file.OpenStreamForWriteAsync())
@@ -250,6 +262,9 @@ namespace MetroLooper
                     }
                     t.fileName = file.Path;
                     t.Size = trackLength;
+                    t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
+                    t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
+                    t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
                 }
             }
         }
@@ -279,25 +294,21 @@ namespace MetroLooper
 
         private void finalizeButton_Click(object sender, RoutedEventArgs e)
         {
-            /*MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
+            MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
             if (sure == MessageBoxResult.OK)
             {
                 //Mix-down and deletion code
-                if (NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack();
-                }
-            }*/
+                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
+                viewModel.SelectedBank.Finalized = true;
+                trackPanel.Visibility = Visibility.Collapsed;
+                BankPanel.Visibility = Visibility.Visible;
 
-            viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
-            trackPanel.Visibility = Visibility.Collapsed;
-            BankPanel.Visibility = Visibility.Visible;
-
-            timer.Dispose();
-            recTimer.Dispose();
-            micTimer.Dispose();
-            viewModel.AudioMan.StopClick();
-            viewModel.AudioMan.StopAll();
+                timer.Dispose();
+                recTimer.Dispose();
+                micTimer.Dispose();
+                viewModel.AudioMan.StopClick();
+                viewModel.AudioMan.StopAll();
+            }
         }
 
         private void PlayBankButton_Click(object sender, RoutedEventArgs e)

@@ -25,7 +25,7 @@ namespace MetroLooper.Model
             }
         }
         public int bankID { get; set; }
-        public bool Finalized { get; private set; }
+        public bool Finalized { get; set; }
         public ObservableCollection<Track> tracks { get; set; }
         public string finalTrack { get; set; }
     }
