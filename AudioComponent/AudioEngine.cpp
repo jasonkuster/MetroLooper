@@ -166,7 +166,7 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 	buffer_sizes[bank][track] = size;
 	latency_offsets[bank][track] = currentLatency;
 	CSCallback->PrintLatencyValue(currentLatency);
-	CSCallback->PrintLatencyValue(microphoneLatency);
+	//CSCallback->PrintLatencyValue(microphoneLatency);
 }
 
 void AudioEngine::Suspend()
@@ -378,8 +378,15 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 
 void AudioEngine::MixDownBank(int bank)
 {
+	if (bankFinalized[bank])
+	{
+		return;
+	}
+
 	int numTracks = 0;
 	int biggestSize = 0;
+	double trackVolumes[MAX_TRACKS];
+
 	for (int track = 0; track < MAX_TRACKS; track++)
 	{
 		int size = buffer_sizes[bank][track];
@@ -391,16 +398,26 @@ void AudioEngine::MixDownBank(int bank)
 				biggestSize = size;
 			}
 		}
+		float gain;
+		voices[bank][track]->GetVolume(&gain);
+		trackVolumes[track] = gain;
 	}
-	for (int sample = 0; sample < BUFFER_LENGTH-(2*MAX_OFFSET); sample++)
+
+	for (int i = 0; i < MAX_OFFSET; i++)
+	{
+		bankAudioData[bank][i] = -1;
+	}
+	for (int sample = 0; sample < BUFFER_LENGTH; sample++)
 	{
 		for (int track = 0; track < numTracks; track++)
 		{
 			short sampleValue = audioData[bank][track][sample+MAX_OFFSET+offsets[bank][track]+latency_offsets[bank][track]+LATENCY];
-			bankAudioData[bank][sample] += (sampleValue/numTracks);
+			bankAudioData[bank][sample+MAX_OFFSET] += trackVolumes[track]*(sampleValue/numTracks);
 		}
 	}
+
 	bank_sizes[bank] = biggestSize;
+	bankFinalized[bank] = true;
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)

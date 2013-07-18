@@ -268,9 +268,12 @@ namespace MetroLooper
         /// <param name="track">Track number</param>
         /// <param name="audioData">array of audioData to be filled</param>
         /// <returns>Number of samples returned</returns>
-        public int GetAudioData(int bank, int track, out short[] audioData)
+        public int GetAudioData(int bank, int track, out byte[] audioDataInBytes)
         {
-            audioData = _engine.GetAudioData(bank, track);
+            short[] shortAudioData = _engine.GetAudioData(bank, track);
+            audioDataInBytes = new byte[shortAudioData.Length * sizeof(short)];
+            Buffer.BlockCopy(shortAudioData, 0, audioDataInBytes, 0, audioDataInBytes.Length);
+
             return _engine.GetAudioDataSize(bank, track);
         }
 
