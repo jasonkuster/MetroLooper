@@ -37,7 +37,7 @@ namespace MetroLooper
             {
                 value = -120;
             }
-            viewModel.AudioMan.SetVolume(this.BankNumber, this.TrackNumber, value);
+            viewModel.AudioMan.SetVolumeDB(this.BankNumber, this.TrackNumber, value);
         }
 
         private void PlayBank(object sender, RoutedEventArgs e)
