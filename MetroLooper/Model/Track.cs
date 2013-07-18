@@ -10,10 +10,8 @@ namespace MetroLooper.Model
 {
     public class Track : INotifyPropertyChanged
     {
-        public Track(int trackID, StorageFile file)
+        public Track()
         {
-            this.trackID = trackID;
-            this.file = file;
             isSelected = false;
             Finalized = false;
         }
@@ -23,7 +21,7 @@ namespace MetroLooper.Model
         public int Offset { get; set; }
         public double Pitch { get; set; }
         public double Volume { get; set; }
-        public StorageFile file { get; set; }
+        public string fileName { get; set; }
         public bool _Finalized;
         public bool Finalized {
             get

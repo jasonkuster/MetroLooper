@@ -11,16 +11,15 @@ namespace MetroLooper.Model
 {
     public class Bank
     {
-        public Bank(int id)
+        public Bank()
         {
-            bankID = id;
             Finalized = false;
             tracks = new ObservableCollection<Track>();
         }
 
         public int bankID { get; set; }
         public bool Finalized { get; private set; }
-        public ObservableCollection<Track> tracks { get; private set; }
-        public StorageFile finalTrack { get; set; }
+        public ObservableCollection<Track> tracks { get; set; }
+        public string finalTrack { get; set; }
     }
 }
