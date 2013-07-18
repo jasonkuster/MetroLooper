@@ -18,6 +18,11 @@ namespace MetroLooper.Model
             Finalized = false;
         }
         public int trackID { get; set; }
+        public int Size { get; set; }
+        public int Latency { get; set; }
+        public int Offset { get; set; }
+        public double Pitch { get; set; }
+        public double Volume { get; set; }
         public StorageFile file { get; set; }
         public bool _Finalized;
         public bool Finalized {

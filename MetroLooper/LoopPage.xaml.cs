@@ -41,12 +41,24 @@ namespace MetroLooper
 
         #region Public and Protected Members
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
             if (viewModel.SelectedBank.tracks.Count > 0)
             {
+                ProgressBar.IsVisible = true;
+                ProgressBar.Text = "Loading...";
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    StorageFile file = t.file;
+                    byte[] buffer = new byte[1024];
+                    using (var s = await file.OpenStreamForReadAsync())
+                    {
+                        s.Read(buffer, 0, (int)s.Length);
+                    }
+                    t.file = file;
+                }
                 timer = new Timer(Progress_Go, new object(), 0, 4000);
                 timerRunning = true;
             }
