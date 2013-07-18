@@ -77,12 +77,12 @@ void AudioEngine::ReadPerformanceData()
 	CSCallback->PrintLatencyValue(GetLatency());
 }
 
-void AudioEngine::SetVolume(int bank, int track, double volume_db)
+void AudioEngine::SetVolumeDB(int bank, int track, double volume_db)
 {
 	voices[bank][track]->SetVolume(pow(10,(volume_db/20.0)));
 }
 
-void AudioEngine::SetBankVolume(int bank, double volume_db)
+void AudioEngine::SetBankVolumeDB(int bank, double volume_db)
 {
 	bankVoices[bank]->SetVolume(pow(10,(volume_db/20.0)));
 }
@@ -147,6 +147,9 @@ void AudioEngine::Initialize()
 
 		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
 		ZeroMemory(bank_offsets, sizeof(int)*MAX_BANKS);
+
+		ZeroMemory(audioData, sizeof(short)*MAX_BANKS*MAX_TRACKS*BUFFER_LENGTH);
+		ZeroMemory(bankAudioData, sizeof(short)*MAX_BANKS*BUFFER_LENGTH);
 
 		pulledData = ref new Platform::Array<short>(BUFFER_LENGTH);
 
@@ -375,7 +378,7 @@ Platform::Array<short>^ AudioEngine::GetAudioData(int bank, int track)
 {
 	for (int i = 0; i < buffer_sizes[bank][track]; i++)
 	{
-		pulledData[i] = audioData[bank][track][i];
+		pulledData[i] = audioData[bank][track][i+MAX_OFFSET];
 	}
 	return pulledData;
 }
@@ -383,7 +386,7 @@ Platform::Array<short>^ AudioEngine::GetBankAudioData(int bank)
 {
 	for (int i = 0; i < bank_sizes[bank]; i++)
 	{
-		pulledData[i] = bankAudioData[bank][i];
+		pulledData[i] = bankAudioData[bank][i+MAX_OFFSET];
 	}
 	return pulledData;
 }
@@ -444,4 +447,34 @@ inline void AudioEngine::ThrowIfFailed(HRESULT hr)
 		// Set a breakpoint on this line to catch DX API errors.
 		throw Platform::Exception::CreateException(hr); 
 	}
+}
+
+void AudioEngine::LoadTrack(int bank, int track, const Platform::Array<short>^ data, int size, int offset_ms, int latency_samples, double volume_db)
+{
+	buffer_sizes[bank][track] = size;
+	SetOffset(offset_ms, bank, track);
+	latency_offsets[bank][size] = latency_samples;
+
+	for (int sample = 0; sample < size; sample++)
+	{
+		short value = data->get(sample);
+		audioData[bank][track][sample+MAX_OFFSET] = value;
+	}
+
+	SetVolumeDB(bank, track, volume_db);
+}
+void AudioEngine::LoadBank(int bank, const Platform::Array<short>^ data, int size, int offset_ms, double volume_db, double pitch)
+{
+	bank_sizes[bank] = size;
+	SetBankOffset(offset_ms, bank);
+
+	for (int sample = 0; sample < size; sample++)
+	{
+		short value = data->get(sample);
+		bankAudioData[bank][sample+MAX_OFFSET] = value;
+	}
+
+	SetBankVolumeDB(bank, volume_db);
+	SetBankPitch(bank, pitch);
+	bankFinalized[bank] = true;
 }

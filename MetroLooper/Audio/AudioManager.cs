@@ -126,7 +126,7 @@ namespace MetroLooper
         /// <param name="volume_db">Volume in dB (20log10(gain))</param>
         public void SetVolume(int bank, int track, double volume_db)
         {
-            _engine.SetVolume(bank, track, volume_db);
+            _engine.SetVolumeDB(bank, track, volume_db);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace MetroLooper
         /// <param name="volume_db">Volume in dB</param>
         public void SetBankVolume(int bank, double volume_db)
         {
-            _engine.SetBankVolume(bank, volume_db);
+            _engine.SetBankVolumeDB(bank, volume_db);
         }
 
         /// <summary>
