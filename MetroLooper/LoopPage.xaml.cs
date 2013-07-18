@@ -324,7 +324,7 @@ namespace MetroLooper
             {
                 value = -120;
             }
-            viewModel.AudioMan.SetBankVolume(viewModel.SelectedBank.bankID, value);
+            viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, value);
         }
 
         private void PitchRatioSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -362,7 +362,7 @@ namespace MetroLooper
             PitchRatioSlider.Value = zero;
             OffsetText.Text = zero.ToString();
 
-            viewModel.AudioMan.SetBankVolume(viewModel.SelectedBank.bankID, zero);
+            viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, zero);
             viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, zero);
             viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, zero);
         }
