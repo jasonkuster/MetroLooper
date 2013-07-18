@@ -137,9 +137,9 @@ namespace MetroLooper
                         timer.Dispose();
                         recTimer.Dispose();
                         micTimer.Dispose();
-                        viewModel.AudioMan.StopClick();
                     }
                     viewModel.AudioMan.StopAll();
+                    viewModel.AudioMan.StopClick();
                     IsolatedStorageSettings.ApplicationSettings.Save();
                 }
             }
