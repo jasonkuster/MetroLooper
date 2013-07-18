@@ -344,14 +344,29 @@ namespace MetroLooper
         /// <param name="bank">Bank number</param>
         /// <param name="track">Track number</param>
         /// <param name="audioData">array of audioData to be filled</param>
-        /// <returns>Number of samples returned</returns>
+        /// <returns>Number of bytes returned</returns>
         public int GetAudioData(int bank, int track, out byte[] audioDataInBytes)
         {
             short[] shortAudioData = _engine.GetAudioData(bank, track);
             audioDataInBytes = new byte[shortAudioData.Length * sizeof(short)];
             Buffer.BlockCopy(shortAudioData, 0, audioDataInBytes, 0, audioDataInBytes.Length);
 
-            return _engine.GetAudioDataSize(bank, track);
+            return shortAudioData.Length*2;
+        }
+
+        /// <summary>
+        /// Retrieves Bank Audio Data from engine
+        /// </summary>
+        /// <param name="bank">Bank number</param>
+        /// <param name="audioData">Array of Bank audioData to be filled</param>
+        /// <returns>Number of bytes returned</returns>
+        public int GetBankAudioData(int bank, out byte[] audioDataInBytes)
+        {
+            short[] shortAudioData = _engine.GetBankAudioData(bank);
+            audioDataInBytes = new byte[shortAudioData.Length * sizeof(short)];
+            Buffer.BlockCopy(shortAudioData, 0, audioDataInBytes, 0, audioDataInBytes.Length);
+
+            return shortAudioData.Length * 2;
         }
 
         /// <summary>
@@ -387,12 +402,13 @@ namespace MetroLooper
         /// <param name="bank">Bank</param>
         /// <param name="track">Track</param>
         /// <param name="data">Byte array of data</param>
-        /// <param name="size">Size in samples</param>
+        /// <param name="size">Size in bytes</param>
         /// <param name="offset_ms">Offset in ms</param>
         /// <param name="latency_samples">Latency in samples</param>
         /// <param name="volume">Volume in DB</param>
-        public void LoadTrack(int bank, int track, byte[] data, int size, int offset_ms, int latency_samples, double volumeDB)
+        public void LoadTrack(int bank, int track, byte[] data, int sizeBytes, int offset_ms, int latency_samples, double volumeDB)
         {
+            int size = sizeBytes / 2;
             short[] audioData = new short[size];
             for (int i = 0; i < size*2; i += 2)
             {
@@ -407,12 +423,13 @@ namespace MetroLooper
         /// </summary>
         /// <param name="bank">Bank</param>
         /// <param name="data">Byte array of data</param>
-        /// <param name="size">Size ins amples</param>
+        /// <param name="size">Size in bytes</param>
         /// <param name="offset_ms">Offset in ms</param>
         /// <param name="volumeDB">Volume in DB</param>
         /// <param name="pitch">Pitch Value (Semitones)</param>
-        public void LoadBank(int bank, byte[] data, int size, int offset_ms, double volumeDB, double pitch)
+        public void LoadBank(int bank, byte[] data, int sizeBytes, int offset_ms, double volumeDB, double pitch)
         {
+            int size = sizeBytes / 2;
             short[] audioData = new short[size];
             for (int i = 0; i < size * 2; i += 2)
             {
