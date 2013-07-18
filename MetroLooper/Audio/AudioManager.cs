@@ -37,7 +37,7 @@ namespace MetroLooper
 
             _engine.SetBPM(120);
         }
-        
+
         /// <summary>
         /// Start Recording Track
         /// </summary>
@@ -337,6 +337,47 @@ namespace MetroLooper
         public void SetClickVolume(float gain)
         {
             _engine.SetClickVolume(gain);
+        }
+
+        /// <summary>
+        /// Load Track Data
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        /// <param name="data">Byte array of data</param>
+        /// <param name="size">Size in samples</param>
+        /// <param name="offset_ms">Offset in ms</param>
+        /// <param name="latency_samples">Latency in samples</param>
+        /// <param name="volume">Volume in DB</param>
+        public void LoadTrack(int bank, int track, byte[] data, int size, int offset_ms, int latency_samples, double volumeDB)
+        {
+            short[] audioData = new short[size];
+            for (int i = 0; i < size*2; i += 2)
+            {
+                audioData[i / 2] = BitConverter.ToInt16(data, i);
+            }
+
+            _engine.LoadTrack(bank, track, audioData, size, offset_ms, latency_samples, volumeDB);
+        }
+
+        /// <summary>
+        /// Load Bank Data
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="data">Byte array of data</param>
+        /// <param name="size">Size ins amples</param>
+        /// <param name="offset_ms">Offset in ms</param>
+        /// <param name="volumeDB">Volume in DB</param>
+        /// <param name="pitch">Pitch Value (Semitones)</param>
+        public void LoadBank(int bank, byte[] data, int size, int offset_ms, double volumeDB, double pitch)
+        {
+            short[] audioData = new short[size];
+            for (int i = 0; i < size * 2; i += 2)
+            {
+                audioData[i / 2] = BitConverter.ToInt16(data, i);
+            }
+
+            _engine.LoadBank(bank, audioData, size, offset_ms, volumeDB, pitch);
         }
     }
 }
