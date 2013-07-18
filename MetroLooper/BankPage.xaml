@@ -162,6 +162,7 @@
                     <Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>
                     <Button x:Name="stopAllButton" Click="stopAllButton_Click" Content="Stop All" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Center"/>
                     <Button Content="Play Recording" Visibility="Collapsed" Margin="422,0,282,0"/>
+                    <Button x:Name="ResetButton" Click="ResetButton_Click"  Content="Reset" VerticalAlignment="Center" Margin="598,0,0,0" HorizontalAlignment="Center"/>
                 </Grid>
                 <Grid Margin="0,0,0,-55">
                     <Rectangle x:Name="boundingBox" Stroke="{StaticResource PhoneBorderBrush}" StrokeThickness="3"/>

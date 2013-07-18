@@ -163,5 +163,17 @@ namespace AudioComponent
 
 		void SetClickVolume(float gain) { clickVoice->SetVolume(gain); }
 		float GetClickVolume() { float gain; clickVoice->GetVolume(&gain); return gain; }
+
+		void ResetAll()
+		{
+			for (int bank = 0; bank < MAX_BANKS; bank++)
+			{
+				for (int track = 0; track < MAX_TRACKS; track++)
+				{
+					deleteTrack(bank, track);
+				}
+				deleteFinalizedBank(bank);
+			}
+		}
 	};
 }

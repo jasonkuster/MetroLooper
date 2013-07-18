@@ -491,5 +491,13 @@ namespace MetroLooper
         {
             _engine.deleteFinalizedBank(bank);
         }
+
+        /// <summary>
+        /// Reset All
+        /// </summary>
+        public void ResetAll()
+        {
+            _engine.ResetAll();
+        }
     }
 }
