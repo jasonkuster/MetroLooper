@@ -119,14 +119,36 @@ namespace MetroLooper
         }
 
         /// <summary>
+        /// Get Track Latency
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        /// <returns>Latency in Samples</returns>
+        public int GetTrackLatency(int bank, int track)
+        {
+            return _engine.GetTrackLatency(bank, track);
+        }
+
+        /// <summary>
         /// Set Track Volume
         /// </summary>
         /// <param name="bank">Bank Number</param>
         /// <param name="track">Track Number</param>
         /// <param name="volume_db">Volume in dB (20log10(gain))</param>
-        public void SetVolume(int bank, int track, double volume_db)
+        public void SetVolumeDB(int bank, int track, double volume_db)
         {
             _engine.SetVolumeDB(bank, track, volume_db);
+        }
+
+        /// <summary>
+        /// Get Track Volume
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        /// <returns>Volume in dB</returns>
+        public double GetVolumeDB(int bank, int track)
+        {
+            return _engine.GetVolumeDB(bank, track);
         }
 
         /// <summary>
@@ -134,9 +156,19 @@ namespace MetroLooper
         /// </summary>
         /// <param name="bank">Bank</param>
         /// <param name="volume_db">Volume in dB</param>
-        public void SetBankVolume(int bank, double volume_db)
+        public void SetBankVolumeDB(int bank, double volume_db)
         {
             _engine.SetBankVolumeDB(bank, volume_db);
+        }
+
+        /// <summary>
+        /// Get bank volume
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <returns>Volume in dB</returns>
+        public double GetBankVolumeDB(int bank)
+        {
+            return _engine.GetBankVolumeDB(bank);
         }
 
         /// <summary>
@@ -147,6 +179,16 @@ namespace MetroLooper
         public void SetPitchSemitones(int bank, double pitchSemitones)
         {
             _engine.SetBankPitch(bank, pitchSemitones);
+        }
+
+        /// <summary>
+        /// Get Bank Pitch in Semitones
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <returns>Pitch (semitones)</returns>
+        public double GetPitchSemitones(int bank)
+        {
+            return _engine.GetBankPitch(bank);
         }
 
         /// <summary>
