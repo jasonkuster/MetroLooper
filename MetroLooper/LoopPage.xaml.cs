@@ -35,6 +35,14 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             timerRunning = false;
+            if (!settings.Contains("projects"))
+            {
+                settings["projects"] = new ObservableCollection<Project>();
+                ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
+                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank(0));
+            }
+            //viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
         }
 
         #endregion
@@ -164,7 +172,7 @@ namespace MetroLooper
         
         private void Progress_Go(object state)
         {
-            System.Diagnostics.Debug.WriteLine("Progress_go ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
+            System.Diagnostics.Debug.WriteLine("Progress_go ticked, there are  " + viewModel.SelectedBank.tracks.Count + " tracks in bank " + viewModel.SelectedBank.bankID + ".");
             Dispatcher.BeginInvoke(delegate
             {
                 foreach (Track t in viewModel.SelectedBank.tracks)
@@ -177,7 +185,7 @@ namespace MetroLooper
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
 
-            micTimer.Change(4000, System.Threading.Timeout.Infinite);
+            micTimer.Change(3950, System.Threading.Timeout.Infinite);
             
             //Music_Go(state);
             if (startTicking)
@@ -219,6 +227,24 @@ namespace MetroLooper
                 timerRunning = true;
             }
             startRecord(true);
+        }
+
+        private async void saveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (viewModel.SelectedBank.tracks.Count > 0)
+            {
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+                    byte[] trackData;
+                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
+                    using (var s = await file.OpenStreamForWriteAsync())
+                    {
+                        s.Write(trackData, 0, trackLength);
+                    }
+                    t.file = file;
+                }
+            }
         }
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)

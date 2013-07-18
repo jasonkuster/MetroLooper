@@ -19,7 +19,7 @@ namespace MetroLooper.Model
         }
 
         public int bankID { get; set; }
-        public bool finalized { get; private set; }
+        public bool Finalized { get; private set; }
         public ObservableCollection<Track> tracks { get; private set; }
         public StorageFile finalTrack { get; set; }
     }
