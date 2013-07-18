@@ -109,6 +109,8 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = false;
                     bankSlider3.IsEnabled = false;
                     break;
@@ -116,10 +118,20 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
+                    bankPlay3.IsEnabled = true;
+                    bankSlider3.IsEnabled = true;
                     bankPlay4.IsEnabled = false;
                     bankSlider4.IsEnabled = false;
                     break;
                 case 4:
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
+                    bankPlay3.IsEnabled = true;
+                    bankSlider3.IsEnabled = true;
+                    bankPlay4.IsEnabled = true;
+                    bankSlider4.IsEnabled = true;
                     break;
                 default:
                     break;
