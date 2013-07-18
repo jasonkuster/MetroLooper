@@ -352,7 +352,7 @@ void AudioEngine::StopSound()
 			ThrowIfFailed(voices[i][j]->Stop());
 		}
 
-		ThrowIfFailed(bankVoices[i][j]->Stop());
+		ThrowIfFailed(bankVoices[i]->Stop());
 	}
 
 	numBuffersPlaying = 0;
