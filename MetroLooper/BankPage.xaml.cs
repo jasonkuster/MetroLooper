@@ -52,6 +52,7 @@ namespace MetroLooper
             {
                 MainProgress.Stop();
                 MainProgress.Begin();
+                viewModel.AudioMan.StopAll();
                 if (play1)
                 {
                     viewModel.AudioMan.PlayBank(0);
@@ -92,17 +93,23 @@ namespace MetroLooper
                     break;
                 case 1:
                     //Code to handle one bank
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
                     bankPlay2.IsEnabled = false;
                     bankSlider2.IsEnabled = false;
                     break;
                 case 2:
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
                     bankPlay3.IsEnabled = false;
                     bankSlider3.IsEnabled = false;
                     break;
                 case 3:
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
                     bankPlay4.IsEnabled = false;
                     bankSlider4.IsEnabled = false;
                     break;
