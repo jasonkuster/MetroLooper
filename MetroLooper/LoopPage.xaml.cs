@@ -41,7 +41,7 @@ namespace MetroLooper
 
         #region Public and Protected Members
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
@@ -49,16 +49,16 @@ namespace MetroLooper
             {
                 ProgressBar.IsVisible = true;
                 ProgressBar.Text = "Loading...";
-                foreach (Track t in viewModel.SelectedBank.tracks)
-                {
-                    StorageFile file = t.file;
-                    byte[] buffer = new byte[1024];
-                    using (var s = await file.OpenStreamForReadAsync())
-                    {
-                        s.Read(buffer, 0, (int)s.Length);
-                    }
-                    t.file = file;
-                }
+                //foreach (Track t in viewModel.SelectedBank.tracks)
+                //{
+                //    StorageFile file = t.file;
+                //    byte[] buffer = new byte[1024];
+                //    using (var s = await file.OpenStreamForReadAsync())
+                //    {
+                //        s.Read(buffer, 0, (int)s.Length);
+                //    }
+                //    t.file = file;
+                //}
                 timer = new Timer(Progress_Go, new object(), 0, 4000);
                 timerRunning = true;
             }
@@ -69,6 +69,7 @@ namespace MetroLooper
             }
             this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            ProgressBar.IsVisible = false;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -83,15 +84,15 @@ namespace MetroLooper
         protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            foreach (Track t in viewModel.SelectedBank.tracks)
-            {
-                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
-                using (var s = await file.OpenStreamForWriteAsync())
-                {
-                    s.Write(new byte[1], 0, 0);
-                }
-                t.file = file;
-            }
+            //foreach (Track t in viewModel.SelectedBank.tracks)
+            //{
+            //    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("track_bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+            //    using (var s = await file.OpenStreamForWriteAsync())
+            //    {
+            //        s.Write(new byte[1], 0, 0);
+            //    }
+            //    t.file = file;
+            //}
         }
 
         #endregion
