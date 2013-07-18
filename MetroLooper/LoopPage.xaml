@@ -42,9 +42,13 @@
 
     <phone:PhoneApplicationPage.Resources>
         <DataTemplate x:Key="LoopItemTemplate">
-            <Grid Width="647" Background="{Binding Finalized,Converter={StaticResource BoolBrushConverter}}">
-                <TextBlock x:Name="TrackName" TextWrapping="Wrap" Text="{Binding trackID}" VerticalAlignment="Center" FontSize="26.667" Margin="0,2"/>
-                <TextBlock x:Name="finBlock" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized,Converter={StaticResource BoolVisConverter}}"/>
+            <Grid Width="647">
+                <Border BorderThickness="3" Background="{Binding Finalized,Converter={StaticResource BoolBrushConverter}}" BorderBrush="{StaticResource PhoneBorderBrush}">
+                    <StackPanel>
+                        <TextBlock x:Name="TrackName" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="26.667"/>
+                        <TextBlock x:Name="finBlock" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized,Converter={StaticResource BoolVisConverter}}"/>
+                    </StackPanel>
+                </Border>
             </Grid>
         </DataTemplate>
         <Storyboard x:Name="MeasureAnimation">
@@ -63,16 +67,15 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="METROLOOPER" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle2Style}">
-                <Run>Bank: </Run>
-                <Run Text="{Binding SelectedBank.bankID}"> </Run>
-            </TextBlock>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel x:Name="trackPanel" Visibility="Visible" Margin="0,-33,0,14">
-       		<TextBlock x:Name="loopListBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loop List" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}"/>
+                <Grid>
+                    <TextBlock x:Name="loopListBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loop List" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}"/>
+                    <TextBlock Text="{Binding SelectedBank.BankName}" HorizontalAlignment="Right" Margin="{StaticResource PhoneMargin}"/>
+                </Grid>
                 <phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" HorizontalAlignment="Left" Height="195" VerticalAlignment="Top" SelectionChanged="LongListSelector_SelectionChanged" Width="680" Margin="12,0,0,0" ItemTemplate="{StaticResource LoopItemTemplate}"/>
                 <StackPanel Height="100" Orientation="Horizontal" Margin="0">
                     <Button x:Name="continueButton" Visibility="Collapsed" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Cont" Click="continueButton_Click" Margin="{StaticResource PhoneMargin}"/>

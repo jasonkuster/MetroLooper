@@ -17,6 +17,13 @@ namespace MetroLooper.Model
             tracks = new ObservableCollection<Track>();
         }
 
+        public string BankName
+        {
+            get
+            {
+                return "Bank " + (bankID + 1);
+            }
+        }
         public int bankID { get; set; }
         public bool Finalized { get; private set; }
         public ObservableCollection<Track> tracks { get; set; }

@@ -15,6 +15,14 @@ namespace MetroLooper.Model
             isSelected = false;
             Finalized = false;
         }
+
+        public string trackName
+        {
+            get
+            {
+                return "Track " + (trackID + 1);
+            }
+        }
         public int trackID { get; set; }
         public int Size { get; set; }
         public int Latency { get; set; }

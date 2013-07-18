@@ -58,16 +58,20 @@ namespace MetroLooper
             {
                 ProgressBar.IsVisible = true;
                 ProgressBar.Text = "Loading...";
-                //foreach (Track t in viewModel.SelectedBank.tracks)
-                //{
-                //    StorageFile file = t.file;
-                //    byte[] buffer = new byte[1024];
-                //    using (var s = await file.OpenStreamForReadAsync())
-                //    {
-                //        s.Read(buffer, 0, (int)s.Length);
-                //    }
-                //    t.file = file;
-                //}
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                    if (isoStore.FileExists(t.fileName))
+                    {
+                        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                        byte[] buffer;
+                        using (BinaryReader r = new BinaryReader(file))
+                        {
+                            buffer = r.ReadBytes(t.Size);
+                        }
+                    }
+                }
                 timer = new Timer(Progress_Go, new object(), 0, 4000);
                 timerRunning = true;
             }
@@ -245,6 +249,7 @@ namespace MetroLooper
                         s.Write(trackData, 0, trackLength);
                     }
                     t.fileName = file.Path;
+                    t.Size = trackLength;
                 }
             }
         }
@@ -294,43 +299,6 @@ namespace MetroLooper
             viewModel.AudioMan.StopClick();
             viewModel.AudioMan.StopAll();
         }
-
-        #endregion
-
-        private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (((Track)loopList.SelectedItem) != null)
-            {
-                MeasureAnimation.Stop();
-                viewModel.AudioMan.StopAll();
-                viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
-                loopList.SelectedItem = null;
-                NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
-            }
-        }
-
-        private void startRecord(bool one)
-        {
-            if (!timerRunning)
-            {
-                timer.Change(0, 4000);
-                timerRunning = true;
-            }
-            recording = true;
-            starting = true;
-            stop = one;
-            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.PPREC);
-        }
-
-        private void stopRecord()
-        {
-            recording = false;
-            stop = true;
-            starting = false;
-            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.ALL);
-        }
-
-        #endregion
 
         private void PlayBankButton_Click(object sender, RoutedEventArgs e)
         {
@@ -387,6 +355,43 @@ namespace MetroLooper
             viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, zero);
             viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, zero);
         }
+
+        #endregion
+
+        private void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((Track)loopList.SelectedItem) != null)
+            {
+                MeasureAnimation.Stop();
+                viewModel.AudioMan.StopAll();
+                viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
+                loopList.SelectedItem = null;
+                NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
+            }
+        }
+
+        private void startRecord(bool one)
+        {
+            if (!timerRunning)
+            {
+                timer.Change(0, 4000);
+                timerRunning = true;
+            }
+            recording = true;
+            starting = true;
+            stop = one;
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.PPREC);
+        }
+
+        private void stopRecord()
+        {
+            recording = false;
+            stop = true;
+            starting = false;
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.ALL);
+        }
+
+        #endregion
     }
 
 
