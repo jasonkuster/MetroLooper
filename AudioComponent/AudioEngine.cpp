@@ -141,6 +141,7 @@ void AudioEngine::Initialize()
 		}
 
 		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
+		ZeroMemory(bank_offsets, sizeof(int)*MAX_BANKS);
 
 		pulledData = ref new Platform::Array<short>(BUFFER_LENGTH);
 
@@ -232,6 +233,9 @@ void AudioEngine::PlayFullBank(int bank)
 	buffer2.pAudioData = (byte *)bankAudioData[bank];
 
 	int begin = MAX_OFFSET;
+	begin += bank_offsets[bank];
+	begin += LATENCY;
+
 	buffer2.PlayBegin = begin;
 	buffer2.PlayLength = BUFFER_LENGTH;
 
@@ -370,6 +374,14 @@ Platform::Array<short>^ AudioEngine::GetAudioData(int bank, int track)
 	}
 	return pulledData;
 }
+Platform::Array<short>^ AudioEngine::GetBankAudioData(int bank)
+{
+	for (int i = 0; i < bank_sizes[bank]; i++)
+	{
+		pulledData[i] = bankAudioData[bank][i];
+	}
+	return pulledData;
+}
 
 int AudioEngine::GetAudioDataSize(int bank, int track)
 {
@@ -378,7 +390,7 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 
 void AudioEngine::MixDownBank(int bank)
 {
-	if (bankFinalized[bank])
+	if (bankFinalized[bank] || !initialized)
 	{
 		return;
 	}

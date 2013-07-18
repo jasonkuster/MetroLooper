@@ -32,6 +32,7 @@ namespace AudioComponent
 		int buffer_sizes[MAX_BANKS][MAX_TRACKS];
 		int bank_sizes[MAX_BANKS];
 		int offsets[MAX_BANKS][MAX_TRACKS];
+		int bank_offsets[MAX_BANKS];
 		int latency_offsets[MAX_BANKS][MAX_TRACKS];
 		int beatsPerMinute;
 		int currentLatency;
@@ -70,7 +71,12 @@ namespace AudioComponent
 		static void PrintValue(double value);
 
 		Platform::Array<short>^ GetAudioData(int bank, int track);
+		Platform::Array<short>^ GetBankAudioData(int bank);
 		int GetAudioDataSize(int bank, int track);
+		int GetBankSize(int bank)
+		{
+			return bank_sizes[bank];
+		}
 
 		void setMicrophoneLatencyMS(double value)
 		{
@@ -113,5 +119,17 @@ namespace AudioComponent
 			offsets[bank][track] = offset_samples;
 		}
 		int GetOffsetMS(int bank, int track) { return offsets[bank][track]/(SAMPLE_RATE/1000); }
+
+		void SetBankOffset(int offset_ms, int bank)
+		{
+			if (offset_ms > MAX_OFFSET)
+				offset_ms = MAX_OFFSET;
+			else if (offset_ms < -MAX_OFFSET)
+				offset_ms = -MAX_OFFSET;
+
+			int offset_samples = offset_ms*(SAMPLE_RATE/1000);
+			bank_offsets[bank] = offset_samples;
+		}
+		int GetBankOffsetMS(int bank) { return bank_offsets[bank]/(SAMPLE_RATE/1000); }
 	};
 }
