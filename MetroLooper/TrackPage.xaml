@@ -43,6 +43,7 @@
                 <Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20ms" />
             </StackPanel>
             <TextBlock x:Name="OffsetLabel" Text="Offset" Margin="299,253,309,31" />
+            <Button x:Name="DeleteButton" Click="DeleteButton_Click" Content="DEL" Height="100" Width="100" Margin="594,188,10,31" RenderTransformOrigin="0.444,0.484"/>
         </Grid>
     </Grid>
 

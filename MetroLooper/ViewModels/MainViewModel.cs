@@ -57,7 +57,7 @@ namespace MetroLooper.ViewModels
         {
             get
             {
-                if (null == audioMan)
+                if (audioMan == null)
                 {
                     audioMan = new AudioManager();
                 }

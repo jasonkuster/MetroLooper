@@ -453,7 +453,7 @@ void AudioEngine::LoadTrack(int bank, int track, const Platform::Array<short>^ d
 {
 	buffer_sizes[bank][track] = size;
 	SetOffset(offset_ms, bank, track);
-	latency_offsets[bank][size] = latency_samples;
+	latency_offsets[bank][track] = latency_samples;
 
 	for (int sample = 0; sample < size; sample++)
 	{
@@ -479,12 +479,34 @@ void AudioEngine::LoadBank(int bank, const Platform::Array<short>^ data, int siz
 	bankFinalized[bank] = true;
 }
 
+void AudioEngine::deleteTrack(int bank, int track)
+{
+	buffer_sizes[bank][track] = 0;
+	SetOffset(0, bank, track);
+	latency_offsets[bank][track] = 0;
+
+	ZeroMemory(audioData[bank][track], sizeof(short)*BUFFER_LENGTH);
+	SetVolumeDB(bank, track, 0.0);
+}
+
+void AudioEngine::deleteFinalizedBank(int bank)
+{
+	bank_sizes[bank] = 0;
+	SetBankOffset(0, bank);
+
+	ZeroMemory(bankAudioData[bank], sizeof(short)*BUFFER_LENGTH);
+
+	SetBankVolumeDB(bank, 0.0);
+	SetBankPitch(bank, 0);
+	bankFinalized[bank] = false;
+}
+
 void AudioEngine::LoadClickOneSecond(const Platform::Array<short>^ data)
 {
 	for (int sample = 0; sample < SAMPLE_RATE; sample++)
 	{
 		short value = data->get(sample);
-		value *= 5;
+		//value *= 5;
 		clickData[sample] = value;
 	}
 }
