@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using MetroLooper.Model;
 using MetroLooper.ViewModels;
 using System.Threading;
+using System.IO;
 
 namespace MetroLooper
 {
@@ -124,6 +125,46 @@ namespace MetroLooper
                     break;
             }
 
+            foreach (Bank b in viewModel.SelectedProject.banks)
+            {
+                if (!b.Finalized)
+                {
+                    foreach (Track t in b.tracks)
+                    {
+                        if (t.Size > 0)
+                        {
+                            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                            if (isoStore.FileExists(t.fileName))
+                            {
+                                System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                                IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                                byte[] buffer;
+                                using (BinaryReader r = new BinaryReader(file))
+                                {
+                                    buffer = r.ReadBytes(t.Size);
+                                }
+                                viewModel.AudioMan.LoadTrack(b.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                    if (isoStore.FileExists(b.finalTrack))
+                    {
+                        System.Diagnostics.Debug.WriteLine("File " + b.finalTrack + " exists! t's size is " + b.Size);
+                        IsolatedStorageFileStream file = isoStore.OpenFile(b.finalTrack, FileMode.Open);
+                        byte[] buffer;
+                        using (BinaryReader r = new BinaryReader(file))
+                        {
+                            buffer = r.ReadBytes(viewModel.SelectedBank.Size);
+                        }
+                        viewModel.AudioMan.LoadBank(b.bankID, buffer, b.Size, b.Offset, b.Volume, b.Pitch);
+                    }
+                }
+            }
+
             
 
             //int bankIndex = 0;
@@ -211,6 +252,7 @@ namespace MetroLooper
                 default:
                     break;
             }
+            playButton.Content = ((string)(playButton.Content)) == "Play" ? "Stop" : "Play";
             if (!isPlaying)
             {
                 playingTimer.Change(0, 4000);
@@ -245,6 +287,18 @@ namespace MetroLooper
                     break;
             }
             viewModel.AudioMan.SetBankVolumeDB(bankNumber, value);
+        }
+
+        private void stopAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            play1 = false;
+            bankPlay1.Content = "Play";
+            play2 = false;
+            bankPlay2.Content = "Play";
+            play3 = false;
+            bankPlay3.Content = "Play";
+            play4 = false;
+            bankPlay4.Content = "Play";
         }
     }
 }

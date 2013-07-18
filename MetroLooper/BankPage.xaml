@@ -17,11 +17,11 @@
     <phone:PhoneApplicationPage.Resources>
         <vm:MainViewModel x:Key="MainViewModel"/>
         <Storyboard x:Name="Bank1Go">
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect1">
-        		<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        	<PointAnimation Duration="0" To="0,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="progressRect1" d:IsOptimized="True"/>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <PointAnimation Duration="0" To="0,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="progressRect1" d:IsOptimized="True"/>
         </Storyboard>
         <Storyboard x:Name="Bank2Go">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect2">
@@ -45,34 +45,35 @@
             <PointAnimation Duration="0" To="0,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="progressRect4" d:IsOptimized="True"/>
         </Storyboard>
         <Storyboard x:Name="MainProgress">
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect">
-        		<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        	<PointAnimation Duration="0" To="0,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="progressRect" d:IsOptimized="True"/>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <PointAnimation Duration="0" To="0,0.5" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="progressRect" d:IsOptimized="True"/>
         </Storyboard>
     </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" MinHeight="54"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="0" Margin="12,17,0,10">
             <TextBlock Text="METROLOOPER" Style="{StaticResource PhoneTextNormalStyle}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.ColumnSpan="2">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="12"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -87,9 +88,9 @@
                     <Grid Height="44">
                         <Rectangle x:Name="boundingBox1" Stroke="{StaticResource PhoneBorderBrush}" StrokeThickness="3"/>
                         <Rectangle x:Name="progressRect1" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2">
-                        	<Rectangle.RenderTransform>
-                        		<CompositeTransform ScaleX="0"/>
-                        	</Rectangle.RenderTransform>
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform ScaleX="0"/>
+                            </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Slider Maximum="0.0" Minimum="-40.0" Value="0.0" ValueChanged="bankSlider_ValueChanged" x:Name="bankSlider1" Width="228"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -116,7 +117,7 @@
                     <TextBlock TextWrapping="Wrap" Text="Volume" Margin="0,-20,0,0" TextAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel x:Name="bankPanel3" Orientation="Horizontal" Grid.Row="1" Grid.Column="0">
+            <StackPanel x:Name="bankPanel3" Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
                 <StackPanel Width="123">
                     <Border x:Name="bank3Border" BorderBrush="White" BorderThickness="1" Tap="Border_Tap" HorizontalAlignment="Left" Height="75" VerticalAlignment="Center" Width="100" Background="Black" Margin="10,0,0,0">
                         <Image Margin="0,0,0,-2" Source="/Toolkit.Content/ApplicationBar.Select.png"/>
@@ -136,7 +137,7 @@
                     <TextBlock TextWrapping="Wrap" Text="Volume" Margin="0,-20,0,0" TextAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel x:Name="bankPanel4" Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+            <StackPanel x:Name="bankPanel4" Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
                 <StackPanel Width="123">
                     <Border x:Name="bank4Border" BorderBrush="White" BorderThickness="1" Tap="Border_Tap" HorizontalAlignment="Left" Height="75" VerticalAlignment="Center" Width="100" Background="Black" Margin="10,0,0,0">
                         <Image Margin="0,0,0,-2" Source="/Toolkit.Content/ApplicationBar.Select.png"/>
@@ -156,18 +157,18 @@
                     <TextBlock TextWrapping="Wrap" Text="Volume" Margin="0,-20,0,0" TextAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
-                <Grid Height="72">
-            		<Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>
-            		<Button Content="Stop All" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Center"/>
-            		<Button Content="Play Recording" Visibility="Collapsed" Margin="422,0,282,0"/>
-            	</Grid>
-                <Grid Margin="12,12,12,-55">
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+                <Grid Height="70">
+                    <Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>
+                    <Button x:Name="stopAllButton" Click="stopAllButton_Click" Content="Stop All" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Center"/>
+                    <Button Content="Play Recording" Visibility="Collapsed" Margin="422,0,282,0"/>
+                </Grid>
+                <Grid Margin="0,0,0,-55">
                     <Rectangle x:Name="boundingBox" Stroke="{StaticResource PhoneBorderBrush}" StrokeThickness="3"/>
                     <Rectangle x:Name="progressRect" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Margin="0,3,0,2" Canvas.ZIndex="-1" RenderTransformOrigin="0,0.5">
-                    	<Rectangle.RenderTransform>
-                    		<CompositeTransform ScaleX="0"/>
-                    	</Rectangle.RenderTransform>
+                        <Rectangle.RenderTransform>
+                            <CompositeTransform ScaleX="0"/>
+                        </Rectangle.RenderTransform>
                     </Rectangle>
                 </Grid>
             </StackPanel>
