@@ -41,9 +41,9 @@ namespace MetroLooper
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
                 ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             }
-            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-            IsolatedStorageSettings.ApplicationSettings.Save();
+            //viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            //IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
         #endregion
@@ -111,40 +111,44 @@ namespace MetroLooper
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            base.OnNavigatingFrom(e);
             if (!viewModel.SelectedBank.Finalized)
             {
-                timer.Dispose();
-                recTimer.Dispose();
-                micTimer.Dispose();
-                viewModel.AudioMan.StopClick();
-            }
-            viewModel.AudioMan.StopAll();
-            IsolatedStorageSettings.ApplicationSettings.Save();
-        }
-
-        protected async override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            if (viewModel.SelectedBank.tracks.Count > 0)
-            {
-                int selBank = viewModel.SelectedBank.bankID;
-                foreach (Track t in viewModel.SelectedBank.tracks)
+                var result = MessageBox.Show("You haven't finalized yet - do you want to cancel and hit save?", "Warning", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.Cancel)
                 {
-                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
-                    byte[] trackData;
-                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
-                    using (var s = await file.OpenStreamForWriteAsync())
+                    e.Cancel = true;
+                }
+                else
+                {
+                    if (!viewModel.SelectedBank.Finalized)
                     {
-                        s.Write(trackData, 0, trackLength);
+                        timer.Dispose();
+                        recTimer.Dispose();
+                        micTimer.Dispose();
+                        viewModel.AudioMan.StopClick();
                     }
-                    t.fileName = file.Path;
-                    t.Size = trackLength;
-                    t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
-                    t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
-                    t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
+                    viewModel.AudioMan.StopAll();
+                    IsolatedStorageSettings.ApplicationSettings.Save();
                 }
             }
+            else
+            {
+                if (!viewModel.SelectedBank.Finalized)
+                {
+                    timer.Dispose();
+                    recTimer.Dispose();
+                    micTimer.Dispose();
+                    viewModel.AudioMan.StopClick();
+                }
+                viewModel.AudioMan.StopAll();
+                IsolatedStorageSettings.ApplicationSettings.Save();
+            }
+            base.OnNavigatingFrom(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
         }
 
         #endregion
@@ -275,8 +279,27 @@ namespace MetroLooper
 
         private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            FinalizeAnimation.Begin();
+            //FinalizeAnimation.Begin();
 
+            if (viewModel.SelectedBank.tracks.Count > 0)
+            {
+                int selBank = viewModel.SelectedBank.bankID;
+                foreach (Track t in viewModel.SelectedBank.tracks)
+                {
+                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+                    byte[] trackData;
+                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
+                    using (var s = await file.OpenStreamForWriteAsync())
+                    {
+                        s.Write(trackData, 0, trackLength);
+                    }
+                    t.fileName = file.Path;
+                    t.Size = trackLength;
+                    t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
+                    t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
+                    t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
+                }
+            }
         }
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
