@@ -84,9 +84,13 @@ namespace MetroLooper
             playingTimer = new Timer(PlayTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
             play1 = false;
+            bankPlay1.Content = "Play";
             play2 = false;
+            bankPlay2.Content = "Play";
             play3 = false;
+            bankPlay3.Content = "Play";
             play4 = false;
+            bankPlay4.Content = "Play";
 
             switch (viewModel.SelectedProject.banks.Count)
             {
