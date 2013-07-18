@@ -252,6 +252,7 @@ namespace MetroLooper
             if (!timerRunning)
             {
                 MeasureAnimation.Begin();
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume(1.0f);
                 ((MainViewModel)DataContext).AudioMan.PlayClick();
                 timer.Change(4000, 4000);
                 timerRunning = true;
@@ -259,13 +260,12 @@ namespace MetroLooper
             }
             else if (ticking)
             {
-                //((MainViewModel)DataContext).AudioMan.StopClick();
-                ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)0.0);
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume(0.0f);
                 ticking = false;
             }
             else
             {
-                ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)1.0);
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume(1.0f);
                 startTicking = true;
             }
         }
