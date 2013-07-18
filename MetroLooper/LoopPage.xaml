@@ -151,7 +151,7 @@
             		<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" Margin="{StaticResource PhoneMargin}" />
             	</StackPanel>
             	<StackPanel>
-            		<TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="48" DataContext="{StaticResource MainViewModel}" Text="{Binding SelectedBank.BankName, Mode=OneWay}"/>
+            		<TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="48" Text="{Binding SelectedBank.BankName}"/>
             		<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" RenderTransformOrigin="0.444,0.484" Width="311" Margin="0,12"/>
             	</StackPanel>
             </StackPanel>

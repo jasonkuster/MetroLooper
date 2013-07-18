@@ -30,6 +30,7 @@ namespace MetroLooper
         bool play4 = false;
         bool isPlaying = false;
         Timer playingTimer;
+        Timer stopTimer;
 
         public BankPage()
         {
@@ -43,17 +44,29 @@ namespace MetroLooper
                 ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             }
             viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
-        private void PlayTracks(object state)
+        private void StopTracks(object state)
         {
             Dispatcher.BeginInvoke(delegate
             {
                 MainProgress.Stop();
-                MainProgress.Begin();
                 viewModel.AudioMan.StopAll();
+                Bank1Go.Stop();
+                Bank2Go.Stop();
+                Bank3Go.Stop();
+                Bank4Go.Stop();
+            });
+        }
+
+        private void PlayTracks(object state)
+        {
+            stopTimer.Change(3950, System.Threading.Timeout.Infinite);
+            Dispatcher.BeginInvoke(delegate
+            {
+                MainProgress.Begin();
                 if (play1)
                 {
                     viewModel.AudioMan.PlayBank(0);
@@ -80,8 +93,13 @@ namespace MetroLooper
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            if (e != null)
+            {
+                base.OnNavigatedTo(e);
+            }
+
             playingTimer = new Timer(PlayTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
             play1 = false;
             bankPlay1.Content = "Play";
@@ -106,6 +124,8 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = false;
                     bankSlider2.IsEnabled = false;
                     break;
@@ -113,6 +133,8 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
                     bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = false;
@@ -122,6 +144,8 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
                     bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = true;
@@ -130,6 +154,8 @@ namespace MetroLooper
                     bankSlider4.IsEnabled = false;
                     break;
                 case 4:
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
                     bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = true;
@@ -174,7 +200,7 @@ namespace MetroLooper
                         byte[] buffer;
                         using (BinaryReader r = new BinaryReader(file))
                         {
-                            buffer = r.ReadBytes(viewModel.SelectedBank.Size);
+                            buffer = r.ReadBytes(b.Size);
                         }
                         viewModel.AudioMan.LoadBank(b.bankID, buffer, b.Size, b.Offset, b.Volume, b.Pitch);
                     }
@@ -321,10 +347,9 @@ namespace MetroLooper
         {
             settings["projects"] = new ObservableCollection<Project>();
             ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
-            ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             IsolatedStorageSettings.ApplicationSettings.Save();
+            OnNavigatedTo(null);
 
             viewModel.AudioMan.ResetAll();
         }

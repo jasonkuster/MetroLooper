@@ -328,6 +328,8 @@ namespace MetroLooper
             timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+            viewModel.AudioMan.StopClick();
+            viewModel.AudioMan.StopAll();
             MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
             if (sure == MessageBoxResult.OK)
             {
