@@ -24,6 +24,7 @@ namespace MetroLooper
             this.BankNumber = viewModel.SelectedBank.bankID;
             this.TrackNumber = viewModel.SelectedTrack.trackID;
 
+            this.DataContext = viewModel;
             InitializeComponent();
 
             OffsetText.Text = viewModel.AudioMan.GetOffsetMS(this.BankNumber, this.TrackNumber).ToString();
