@@ -177,7 +177,7 @@ namespace MetroLooper
                 }
             }
 
-            
+
 
             //int bankIndex = 0;
             //foreach (UIElement ctrl in ContentPanel.Children)
@@ -199,7 +199,7 @@ namespace MetroLooper
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
- 	        base.OnNavigatingFrom(e);
+            base.OnNavigatingFrom(e);
             playingTimer.Dispose();
             viewModel.AudioMan.StopAll();
             isPlaying = false;
@@ -311,6 +311,18 @@ namespace MetroLooper
             bankPlay3.Content = "Play";
             play4 = false;
             bankPlay4.Content = "Play";
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            settings["projects"] = new ObservableCollection<Project>();
+            ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
+            ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
+            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            IsolatedStorageSettings.ApplicationSettings.Save();
+
+            viewModel.AudioMan.ResetAll();
         }
     }
 }
