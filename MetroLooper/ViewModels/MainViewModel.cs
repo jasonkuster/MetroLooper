@@ -38,7 +38,6 @@ namespace MetroLooper.ViewModels
         public MainViewModel()
         {
             recButtons = true;
-            audioMan = new AudioManager();
         }
 
         public ObservableCollection<Project> Projects
@@ -58,6 +57,10 @@ namespace MetroLooper.ViewModels
         {
             get
             {
+                if (audioMan == null)
+                {
+                    audioMan = new AudioManager();
+                }
                 return audioMan;
             }
             private set

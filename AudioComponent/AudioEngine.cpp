@@ -484,7 +484,7 @@ void AudioEngine::LoadClickOneSecond(const Platform::Array<short>^ data)
 	for (int sample = 0; sample < SAMPLE_RATE; sample++)
 	{
 		short value = data->get(sample);
-		value *= 5;
+		//value *= 5;
 		clickData[sample] = value;
 	}
 }

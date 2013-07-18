@@ -44,11 +44,32 @@ namespace MetroLooper
             viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
             viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             IsolatedStorageSettings.ApplicationSettings.Save();
+
+            viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
         }
 
         #endregion
 
         #region Public and Protected Members
+
+        private void LoadData()
+        {
+            foreach (Track t in viewModel.SelectedBank.tracks)
+            {
+                IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                if (isoStore.FileExists(t.fileName))
+                {
+                    System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                    IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                    byte[] buffer;
+                    using (BinaryReader r = new BinaryReader(file))
+                    {
+                        buffer = r.ReadBytes(t.Size);
+                    }
+                    viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
+                }
+            }
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -60,23 +81,7 @@ namespace MetroLooper
                 BankPanel.Visibility = Visibility.Collapsed;
                 if (viewModel.SelectedBank.tracks.Count > 0)
                 {
-                    ProgressBar.IsVisible = true;
-                    ProgressBar.Text = "Loading...";
-                    foreach (Track t in viewModel.SelectedBank.tracks)
-                    {
-                        IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                        if (isoStore.FileExists(t.fileName))
-                        {
-                            System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
-                            IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
-                            byte[] buffer;
-                            using (BinaryReader r = new BinaryReader(file))
-                            {
-                                buffer = r.ReadBytes(t.Size);
-                            }
-                            viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
-                        }
-                    }
+                    LoadData();
                     timer = new Timer(Progress_Go, new object(), 0, 4000);
                     timerRunning = true;
                 }
@@ -204,17 +209,17 @@ namespace MetroLooper
                     recording = false;
                     //if (stop)
                     //{
-                        Dispatcher.BeginInvoke(delegate
-                        {
-                            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
-                        });
+                    Dispatcher.BeginInvoke(delegate
+                    {
+                        ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+                    });
                     //}
                 }
             }
         }
 
         #endregion
-        
+
         private void Progress_Go(object state)
         {
             System.Diagnostics.Debug.WriteLine("Progress_go ticked, there are  " + viewModel.SelectedBank.tracks.Count + " tracks in bank " + viewModel.SelectedBank.bankID + ".");
@@ -231,7 +236,7 @@ namespace MetroLooper
             });
 
             micTimer.Change(3950, System.Threading.Timeout.Infinite);
-            
+
             //Music_Go(state);
             if (startTicking)
             {
