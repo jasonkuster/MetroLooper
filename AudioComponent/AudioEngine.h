@@ -94,7 +94,8 @@ namespace AudioComponent
 		void ReadPerformanceData();
 
 		void SetVolume(int bank, int track, double volume_db);
-		void SetPitch(int bank, int track, double pitch);
+		void SetBankVolume(int bank, double volume_db);
+		void SetBankPitch(int bank, double pitch);
 			
 		void PlayClickTrack();
 		void StopClickTrack();
@@ -131,5 +132,8 @@ namespace AudioComponent
 			bank_offsets[bank] = offset_samples;
 		}
 		int GetBankOffsetMS(int bank) { return bank_offsets[bank]/(SAMPLE_RATE/1000); }
+
+		void SetClickVolume(float gain) { clickVoice->SetVolume(gain); }
+		float GetClickVolume() { float gain; clickVoice->GetVolume(&gain); return gain; }
 	};
 }
