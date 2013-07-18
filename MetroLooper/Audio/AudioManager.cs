@@ -444,7 +444,7 @@ namespace MetroLooper
         {
             int size = sizeBytes / 2;
             short[] audioData = new short[size];
-            for (int i = 0; i < size*2; i += 2)
+            for (int i = 0; i < size*2 && i < data.Length; i += 2)
             {
                 audioData[i / 2] = BitConverter.ToInt16(data, i);
             }
@@ -465,7 +465,7 @@ namespace MetroLooper
         {
             int size = sizeBytes / 2;
             short[] audioData = new short[size];
-            for (int i = 0; i < size * 2; i += 2)
+            for (int i = 0; i < size * 2 && i < data.Length; i += 2)
             {
                 audioData[i / 2] = BitConverter.ToInt16(data, i);
             }

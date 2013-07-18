@@ -88,7 +88,7 @@ namespace MetroLooper
                 BankPanel.Visibility = Visibility.Collapsed;
                 if (viewModel.SelectedBank.tracks.Count > 0)
                 {
-                    LoadData();
+                    //LoadData();
                     timer = new Timer(Progress_Go, new object(), 0, 4000);
                     timerRunning = true;
                 }
@@ -106,18 +106,18 @@ namespace MetroLooper
                 trackPanel.Visibility = Visibility.Collapsed;
                 BankPanel.Visibility = Visibility.Visible;
 
-                IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                if (isoStore.FileExists(viewModel.SelectedBank.finalTrack))
-                {
-                    System.Diagnostics.Debug.WriteLine("File " + viewModel.SelectedBank.finalTrack + " exists! t's size is " + viewModel.SelectedBank.Size);
-                    IsolatedStorageFileStream file = isoStore.OpenFile(viewModel.SelectedBank.finalTrack, FileMode.Open);
-                    byte[] buffer;
-                    using (BinaryReader r = new BinaryReader(file))
-                    {
-                        buffer = r.ReadBytes(viewModel.SelectedBank.Size);
-                    }
-                    viewModel.AudioMan.LoadBank(viewModel.SelectedBank.bankID, buffer, viewModel.SelectedBank.Size, viewModel.SelectedBank.Offset, viewModel.SelectedBank.Volume, viewModel.SelectedBank.Pitch);
-                }
+            //    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+            //    if (isoStore.FileExists(viewModel.SelectedBank.finalTrack))
+            //    {
+            //        System.Diagnostics.Debug.WriteLine("File " + viewModel.SelectedBank.finalTrack + " exists! t's size is " + viewModel.SelectedBank.Size);
+            //        IsolatedStorageFileStream file = isoStore.OpenFile(viewModel.SelectedBank.finalTrack, FileMode.Open);
+            //        byte[] buffer;
+            //        using (BinaryReader r = new BinaryReader(file))
+            //        {
+            //            buffer = r.ReadBytes(viewModel.SelectedBank.Size);
+            //        }
+            //        viewModel.AudioMan.LoadBank(viewModel.SelectedBank.bankID, buffer, viewModel.SelectedBank.Size, viewModel.SelectedBank.Offset, viewModel.SelectedBank.Volume, viewModel.SelectedBank.Pitch);
+            //    }
             }
         }
 
