@@ -478,3 +478,13 @@ void AudioEngine::LoadBank(int bank, const Platform::Array<short>^ data, int siz
 	SetBankPitch(bank, pitch);
 	bankFinalized[bank] = true;
 }
+
+void AudioEngine::LoadClickOneSecond(const Platform::Array<short>^ data)
+{
+	for (int sample = 0; sample < SAMPLE_RATE; sample++)
+	{
+		short value = data->get(sample);
+		value *= 5;
+		clickData[sample] = value;
+	}
+}

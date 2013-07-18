@@ -73,6 +73,7 @@ namespace AudioComponent
 
 		void LoadTrack(int bank, int track, const Platform::Array<short>^ data, int size, int offset_ms, int latency_samples, double volume);
 		void LoadBank(int bank, const Platform::Array<short>^ data, int size, int offset_ms, double volume, double pitch);
+		void LoadClickOneSecond(const Platform::Array<short>^ data);
 
 		Platform::Array<short>^ GetAudioData(int bank, int track);
 		Platform::Array<short>^ GetBankAudioData(int bank);

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AudioComponent;
 using MetroLooper.AudioDoNotUse;
 using Microsoft.Xna.Framework.Audio;
+using System.IO;
 
 namespace MetroLooper
 {
@@ -36,6 +37,37 @@ namespace MetroLooper
             isPlaying = false;
 
             _engine.SetBPM(120);
+
+            //LoadClickWAVFile("Assets/clickTrack.wav");
+        }
+
+        /// <summary>
+        /// Load one second of WAV File to click track
+        /// </summary>
+        /// <param name="relativeFilePath">File Path</param>
+        public void LoadClickWAVFile(string relativeFilePath)
+        {
+            Stream stream = File.OpenRead(relativeFilePath);
+            int oneSecondBytes = 2 * 16000;
+            byte[] clickBuffer = new byte[oneSecondBytes];
+            int count = 0;
+            int current = 0;
+            bool start = true;
+            while (count < oneSecondBytes && (current > 0 || start))
+            {
+                current = stream.Read(clickBuffer, 0, 2 * 1600);
+                count += current;
+                start = false;
+            }
+
+            int size = oneSecondBytes / 2;
+            short[] clickData = new short[size];
+            for (int i = 0; i < size * 2; i += 2)
+            {
+                clickData[i / 2] = BitConverter.ToInt16(clickBuffer, i);
+            }
+
+            _engine.LoadClickOneSecond(clickData);
         }
 
         /// <summary>
