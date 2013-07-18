@@ -35,7 +35,7 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             timerRunning = false;
-            //if (!settings.Contains("projects"))
+            if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
