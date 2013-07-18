@@ -39,10 +39,11 @@ namespace MetroLooper
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
-                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank(0));
+                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             }
-            //viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
         #endregion
@@ -87,9 +88,10 @@ namespace MetroLooper
             recTimer.Dispose();
             micTimer.Dispose();
             viewModel.AudioMan.StopClick();
+            IsolatedStorageSettings.ApplicationSettings.Save();
         }
 
-        protected async override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             //foreach (Track t in viewModel.SelectedBank.tracks)
@@ -122,6 +124,7 @@ namespace MetroLooper
 
         private void StartMic(object state)
         {
+            viewModel.AudioMan.StopClick();
             System.Diagnostics.Debug.WriteLine("StartMic ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             if (recording)
             {
@@ -153,7 +156,7 @@ namespace MetroLooper
                     Dispatcher.BeginInvoke(delegate
                     {
                         int trackNum = viewModel.SelectedBank.tracks.Count;
-                        viewModel.SelectedBank.tracks.Add(new Track(trackNum, null));
+                        viewModel.SelectedBank.tracks.Add(new Track() { trackID = trackNum });
                         viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
                     });
                     recording = false;
@@ -201,7 +204,6 @@ namespace MetroLooper
             {
                 Dispatcher.BeginInvoke(delegate
                 {
-                    viewModel.AudioMan.StopClick();
                     viewModel.AudioMan.PlayClick();
                 });
             }
@@ -242,7 +244,7 @@ namespace MetroLooper
                     {
                         s.Write(trackData, 0, trackLength);
                     }
-                    t.file = file;
+                    t.fileName = file.Path;
                 }
             }
         }

@@ -22,7 +22,7 @@ namespace MetroLooper.Model
         }
 
         public string projName { get; set; }
-        public ObservableCollection<Bank> banks { get; private set; }
+        public ObservableCollection<Bank> banks { get; set; }
         public int bpm { get; set; }
         public int measures { get; set; }
     }

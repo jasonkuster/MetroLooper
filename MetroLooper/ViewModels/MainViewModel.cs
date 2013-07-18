@@ -74,17 +74,12 @@ namespace MetroLooper.ViewModels
         {
             get
             {
-                if (selectedProject == null)
-                {
-                    selectedProject = new Project("Test Project");
-                    selectedProject.banks.Add(new Bank(0));
-                    selectedBank = selectedProject.banks[0];
-                }
                 return selectedProject;
             }
             set
             {
                 selectedProject = value;
+                this.RaisePropertyChanged("SelectedProject");
             }
         }
 
@@ -95,13 +90,14 @@ namespace MetroLooper.ViewModels
             {
                 if (selectedBank == null)
                 {
-                    selectedBank = new Bank(0);
+                    selectedBank = new Bank() { bankID = 0 };
                 }
                 return selectedBank;
             }
             set
             {
                 selectedBank = value;
+                this.RaisePropertyChanged("SelectedBank");
             }
         }
 
@@ -110,21 +106,13 @@ namespace MetroLooper.ViewModels
         {
             get
             {
-                if (selectedTrack == null)
-                {
-                    selectedTrack = new Track(0,null);
-                }
                 return selectedTrack;
             }
             set
             {
                 selectedTrack = value;
+                this.RaisePropertyChanged("SelectedTrack");
             }
-        }
-
-        private void addTrack(StorageFile newTrack)
-        {
-            SelectedBank.tracks.Add(new Track(0, newTrack));
         }
 
         private bool recButtons = true;
