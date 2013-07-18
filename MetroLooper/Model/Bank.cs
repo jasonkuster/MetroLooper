@@ -14,7 +14,7 @@ namespace MetroLooper.Model
         public Bank(int id)
         {
             bankID = id;
-            finalized = false;
+            Finalized = false;
             tracks = new ObservableCollection<Track>();
         }
 

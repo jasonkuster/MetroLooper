@@ -37,13 +37,11 @@
             <Button x:Name="PlayBankButton" Click="PlayBank" Content="Play" Height="100" Width="100" Margin="594,10,10,209" RenderTransformOrigin="0.444,0.484"/>
             <Slider x:Name="VolumeSlider" Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0,10,642,71" HorizontalAlignment="Right" Width="52"/>
             <TextBlock x:Name="VolumeLabel" Text="Volume" Margin="0,253,627,31" />
-            <Slider x:Name="PitchRatioSlider" Maximum="12.0" Minimum="-11.0" Value="0.0" Orientation="Vertical" ValueChanged="PitchRatioSlider_ValueChanged"  Margin="0,10,530,71" HorizontalAlignment="Right" Width="52"/>
             <StackPanel x:Name="OffsetStackPanel" Margin="263,44,309,86">
                 <Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20ms" />
                 <TextBlock x:Name="OffsetText" Text="0.0" FontSize="32" HorizontalAlignment="Center"/>
                 <Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20ms" />
             </StackPanel>
-            <TextBlock x:Name="PitchLabel" Text="Pitch Shift" Margin="103,253,505,31" />
             <TextBlock x:Name="OffsetLabel" Text="Offset" Margin="299,253,309,31" />
         </Grid>
     </Grid>

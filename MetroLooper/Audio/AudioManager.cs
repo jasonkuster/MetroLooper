@@ -119,7 +119,7 @@ namespace MetroLooper
         }
 
         /// <summary>
-        /// Set Volume
+        /// Set Track Volume
         /// </summary>
         /// <param name="bank">Bank Number</param>
         /// <param name="track">Track Number</param>
@@ -130,14 +130,23 @@ namespace MetroLooper
         }
 
         /// <summary>
-        /// Set Pitch in Semitones
+        /// Set Bank Volume
         /// </summary>
         /// <param name="bank">Bank</param>
-        /// <param name="track">Track</param>
-        /// <param name="pitchRatio">Pitch Ratio</param>
-        public void SetPitchSemitones(int bank, int track, double pitchRatio)
+        /// <param name="volume_db">Volume in dB</param>
+        public void SetBankVolume(int bank, double volume_db)
         {
-            _engine.SetPitch(bank, track, pitchRatio);
+            _engine.SetBankVolume(bank, volume_db);
+        }
+
+        /// <summary>
+        /// Set bank Pitch in Semitones
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="pitchRatio">Pitch in Semitones</param>
+        public void SetPitchSemitones(int bank, double pitchSemitones)
+        {
+            _engine.SetBankPitch(bank, pitchSemitones);
         }
 
         /// <summary>
@@ -149,6 +158,37 @@ namespace MetroLooper
         public void SetOffsetMS(int bank, int track, double offset_ms)
         {
             _engine.SetOffset((int)offset_ms, bank, track);
+        }
+
+        /// <summary>
+        /// Get Track Offset in milliseconds
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <param name="track">Track</param>
+        /// <returns>Offset in milliseconds</returns>
+        public int GetOffsetMS(int bank, int track)
+        {
+            return _engine.GetOffsetMS(bank, track);
+        }
+
+        /// <summary>
+        /// Set Bank Offset in milliseconds
+        /// </summary>
+        /// <param name="bank">bank</param>
+        /// <param name="offset_ms">offset in ms</param>
+        public void SetBankOffsetMS(int bank, double offset_ms)
+        {
+            _engine.SetBankOffset((int)offset_ms, bank);
+        }
+
+        /// <summary>
+        /// Get Bank Offset in milliseconds
+        /// </summary>
+        /// <param name="bank">Bank</param>
+        /// <returns>Offset in ms</returns>
+        public int GetBankOffsetMS(int bank)
+        {
+            return _engine.GetBankOffsetMS(bank);
         }
 
         /// <summary>
@@ -218,11 +258,6 @@ namespace MetroLooper
             isPlaying = true;
         }
 
-        public int GetOffsetMS(int bank, int track)
-        {
-            return _engine.GetOffsetMS(bank, track);
-        }
-
         /// <summary>
         /// Callback method when a buffer (track) finishes
         /// </summary>
@@ -284,6 +319,24 @@ namespace MetroLooper
         public void MixDownBank(int bank)
         {
             _engine.MixDownBank(bank);
+        }
+
+        /// <summary>
+        /// Get Click Volume
+        /// </summary>
+        /// <returns>Volume (0 to 1)</returns>
+        public float GetClickVolume()
+        {
+            return _engine.GetClickVolume();
+        }
+
+        /// <summary>
+        /// Set Click Volume
+        /// </summary>
+        /// <param name="gain">Volume (0 to 1)</param>
+        public void SetClickVolume(float gain)
+        {
+            _engine.SetClickVolume(gain);
         }
     }
 }

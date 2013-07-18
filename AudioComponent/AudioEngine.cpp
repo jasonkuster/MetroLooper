@@ -82,10 +82,15 @@ void AudioEngine::SetVolume(int bank, int track, double volume_db)
 	voices[bank][track]->SetVolume(pow(10,(volume_db/20.0)));
 }
 
-void AudioEngine::SetPitch(int bank, int track, double pitch)
+void AudioEngine::SetBankVolume(int bank, double volume_db)
+{
+	bankVoices[bank]->SetVolume(pow(10,(volume_db/20.0)));
+}
+
+void AudioEngine::SetBankPitch(int bank, double pitch)
 {
 	float ratio = pow(2.0, pitch / 12.0);
-	voices[bank][track]->SetFrequencyRatio(ratio);
+	bankVoices[bank]->SetFrequencyRatio(ratio);
 }
 
 void AudioEngine::Initialize()

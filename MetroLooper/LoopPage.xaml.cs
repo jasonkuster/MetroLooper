@@ -259,11 +259,13 @@ namespace MetroLooper
             }
             else if (ticking)
             {
-                ((MainViewModel)DataContext).AudioMan.StopClick();
+                //((MainViewModel)DataContext).AudioMan.StopClick();
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)0.0);
                 ticking = false;
             }
             else
             {
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)1.0);
                 startTicking = true;
             }
         }
@@ -280,7 +282,15 @@ namespace MetroLooper
                 }
             }*/
 
-            viewModel.AudioMan.MixDownBank(0);
+            viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
+            trackPanel.Visibility = Visibility.Collapsed;
+            BankPanel.Visibility = Visibility.Visible;
+
+            timer.Dispose();
+            recTimer.Dispose();
+            micTimer.Dispose();
+            viewModel.AudioMan.StopClick();
+            viewModel.AudioMan.StopAll();
         }
 
         #endregion
@@ -319,6 +329,62 @@ namespace MetroLooper
         }
 
         #endregion
+
+        private void PlayBankButton_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel.AudioMan.StopAll();
+            viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double value = e.NewValue;
+            if (value < -35.0)
+            {
+                value = -120;
+            }
+            viewModel.AudioMan.SetBankVolume(viewModel.SelectedBank.bankID, value);
+        }
+
+        private void PitchRatioSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, e.NewValue);
+        }
+
+        private void OffsetIncreaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            double value = Convert.ToDouble(OffsetText.Text);
+            if (value < 400)
+            {
+                value += 20.0;
+                OffsetText.Text = value.ToString();
+                viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
+            }
+        }
+
+        private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
+        {
+            double value = Convert.ToDouble(OffsetText.Text);
+            if (value > -400)
+            {
+                value -= 20.0;
+                OffsetText.Text = value.ToString();
+                viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
+            }
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            double zero = 0.0;
+
+            VolumeSlider.Value = zero;
+            PitchRatioSlider.Value = zero;
+            OffsetText.Text = zero.ToString();
+
+            viewModel.AudioMan.SetBankVolume(viewModel.SelectedBank.bankID, zero);
+            viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, zero);
+            viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, zero);
+        }
     }
 
 
