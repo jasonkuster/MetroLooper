@@ -35,14 +35,14 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             timerRunning = false;
-            if (!settings.Contains("projects"))
+            //if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
                 ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             }
-            //viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             //IsolatedStorageSettings.ApplicationSettings.Save();
 
             VolumeSlider.Value = viewModel.SelectedBank.Volume;
@@ -81,6 +81,7 @@ namespace MetroLooper
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            PageOpened.Begin();
             ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
             if (!viewModel.SelectedBank.Finalized)
             {
@@ -230,19 +231,23 @@ namespace MetroLooper
                 {
                     t.Finalized = true;
                 }
-                MeasureAnimation.Stop();
-                MeasureAnimation.Begin();
+                //MeasureAnimation.Stop();
+                //MeasureAnimation.Begin();
+                PlayAnimation.Stop();
+                progressBar.Value = 0;
+                PlayAnimation.Begin();
                 viewModel.AudioMan.StopAll();
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
             });
 
             micTimer.Change(3950, System.Threading.Timeout.Infinite);
 
-            //Music_Go(state);
+
             if (startTicking)
             {
                 Dispatcher.BeginInvoke(delegate
                 {
+                    viewModel.AudioMan.SetClickVolume(1.0f);
                     viewModel.AudioMan.PlayClick();
                 });
                 startTicking = false;
@@ -281,8 +286,6 @@ namespace MetroLooper
 
         private async void saveButton_Click(object sender, RoutedEventArgs e)
         {
-            //FinalizeAnimation.Begin();
-
             if (viewModel.SelectedBank.tracks.Count > 0)
             {
                 int selBank = viewModel.SelectedBank.bankID;
@@ -308,12 +311,9 @@ namespace MetroLooper
         {
             if (!timerRunning)
             {
-                MeasureAnimation.Begin();
-                ((MainViewModel)DataContext).AudioMan.SetClickVolume(1.0f);
-                ((MainViewModel)DataContext).AudioMan.PlayClick();
-                timer.Change(4000, 4000);
+                startTicking = true;
+                timer.Change(0, 4000);
                 timerRunning = true;
-                ticking = true;
             }
             else
             {
@@ -431,11 +431,11 @@ namespace MetroLooper
         {
             if (((Track)loopList.SelectedItem) != null)
             {
+                TrackSelect.Begin();
                 MeasureAnimation.Stop();
                 viewModel.AudioMan.StopAll();
                 viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
-                loopList.SelectedItem = null;
-                NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
+                //NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
             }
         }
 
@@ -461,6 +461,23 @@ namespace MetroLooper
         }
 
         #endregion
+
+        private void Border_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (!timerRunning)
+            {
+                timer.Change(0, 4000);
+                timerRunning = true;
+            }
+            startRecord(true);
+        }
+
+        private void finishTrackButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            FinishTrack.Begin();
+            loopList.SelectedItem = null;
+            timer.Change(0, 4000);
+        }
     }
 
 

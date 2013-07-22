@@ -341,6 +341,7 @@ namespace MetroLooper
             bankPlay3.Content = "Play";
             play4 = false;
             bankPlay4.Content = "Play";
+            viewModel.AudioMan.StopAll();
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -352,6 +353,17 @@ namespace MetroLooper
             OnNavigatedTo(null);
 
             viewModel.AudioMan.ResetAll();
+        }
+
+        private void playButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            PlayBank1.Begin();
+        }
+
+        private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ContentPanel.Visibility = System.Windows.Visibility.Visible;
+            ContentPanel2.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }
