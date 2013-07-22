@@ -236,7 +236,7 @@
 							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
 						</es:Arc.Fill>
 					</es:Arc>
-					<Image x:Name="editImageOne" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
+					<Image Tap="editImageOne_Tap" x:Name="editImageOne" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
 				</Grid>
 				<Slider x:Name="volumeSliderOne" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
 			</StackPanel>
