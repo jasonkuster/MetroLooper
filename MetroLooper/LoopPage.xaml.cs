@@ -207,6 +207,7 @@ namespace MetroLooper
                         int trackNum = viewModel.SelectedBank.tracks.Count;
                         viewModel.SelectedBank.tracks.Add(new Track() { trackID = trackNum });
                         viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
+                        viewModel.AudioMan.WAVTestMethod(viewModel.SelectedBank.bankID, trackNum);
                     });
                     recording = false;
                     //if (stop)
