@@ -8,12 +8,13 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using MetroLooper.Resources;
+using MetroLooper.ViewModels;
 
 namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        AudioManager _manager;
+        MainViewModel viewModel;
         int count;
 
         // Constructor
@@ -21,8 +22,11 @@ namespace MetroLooper
         {
             InitializeComponent();
 
-            _manager = new AudioManager();
-            count = 0;
+            viewModel = new MainViewModel();
+            this.DataContext = viewModel;
+
+            //_manager = new AudioManager();
+            //count = 0;
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
@@ -30,40 +34,55 @@ namespace MetroLooper
 
         private void Record_Click(object sender, RoutedEventArgs e)
         {
-            if (!_manager.isRecording)
-            {
-                _manager.RecordAndPlay(0);
-                RecordStatus.Text = "Recording";
-            }
-            else
-            {
-                _manager.RecordStopAndSubmit(0, count);
-                count++;
-                if (count >= 10)
-                {
-                    count = 0;
-                }
-                RecordStatus.Text = "Not Recording";
-            }
+            //if (!_manager.isRecording)
+            //{
+            //    _manager.RecordAndPlay(0);
+            //    RecordStatus.Text = "Recording";
+            //}
+            //else
+            //{
+            //    _manager.RecordStopAndSubmit(0, count);
+            //    count++;
+            //    if (count >= 10)
+            //    {
+            //        count = 0;
+            //    }
+            //    RecordStatus.Text = "Not Recording";
+            //}
         }
 
         private void Play_Click(object sender, RoutedEventArgs e)
         {
-            if (!_manager.isPlaying)
-            {
-                _manager.PlayAll();
-                PlayStatus.Text = "Playing";
-            }
-            else
-            {
-                _manager.StopAll();
-                PlayStatus.Text = "Not Playing";
-            }
+            //if (!_manager.isPlaying)
+            //{
+            //    _manager.PlayAll();
+            //    PlayStatus.Text = "Playing";
+            //}
+            //else
+            //{
+            //    _manager.StopAll();
+            //    PlayStatus.Text = "Not Playing";
+            //}
         }
 
         private void Perf_Click(object sender, RoutedEventArgs e)
         {
-            _manager.GetPerf();
+            //_manager.GetPerf();
+        }
+
+        private void projListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void newProjButton_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/newProjPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         // Sample code for building a localized ApplicationBar
