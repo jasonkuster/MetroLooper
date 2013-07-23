@@ -158,6 +158,8 @@ void AudioEngine::Initialize()
 		ResetExportData();
 		exportDataSize = 0;
 
+		samplesPerMeasure = 64000;
+
 		initialized = true;
 		isClickPlaying = false;
 
@@ -169,7 +171,7 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 {
 	for (int index = 0; index < MAX_OFFSET; index++)
 	{
-		audioData[bank][track][index] = -1;
+		audioData[bank][track][index] = 0;
 	}
 	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size + MAX_OFFSET; sample++)
 	{
@@ -179,7 +181,7 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 
 	buffer_sizes[bank][track] = size;
 	latency_offsets[bank][track] = currentLatency;
-	CSCallback->PrintLatencyValue(currentLatency);
+	//CSCallback->PrintLatencyValue(currentLatency);
 	//CSCallback->PrintLatencyValue(microphoneLatency);
 }
 
@@ -261,6 +263,11 @@ void AudioEngine::PlayFullBank(int bank)
 		buffer2.PlayLength = size;
 		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
 	}
+	if (size > samplesPerMeasure)
+	{
+		buffer2.PlayLength = samplesPerMeasure;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
+	}
 
 	ThrowIfFailed(bankVoices[bank]->FlushSourceBuffers());
 	ThrowIfFailed(bankVoices[bank]->SubmitSourceBuffer(&buffer2));
@@ -299,6 +306,11 @@ void AudioEngine::PlayTrack(int bank, int track)
 	{
 		buffer2.PlayLength = size;
 		buffer2.AudioBytes = (2*size)+(2*buffer2.PlayBegin);
+	}
+	if (size > samplesPerMeasure)
+	{
+		buffer2.PlayLength = samplesPerMeasure;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
 	}
 
 	ThrowIfFailed(voices[bank][track]->FlushSourceBuffers());

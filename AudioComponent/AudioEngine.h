@@ -39,6 +39,8 @@ namespace AudioComponent
 		int beatsPerMinute;
 		int currentLatency;
 
+		int samplesPerMeasure;
+
 		bool local_instructions[MAX_BANKS][MAX_MEASURES];
 
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
@@ -72,6 +74,9 @@ namespace AudioComponent
 
 	public:
 		AudioEngine();
+
+		void SetMeasureLength(double seconds) { samplesPerMeasure = seconds*SAMPLE_RATE; }
+		double GetMeasureLength() { return samplesPerMeasure / (double)SAMPLE_RATE; }
 
 		static void BufferFinished(int bufferContext);
 		static void BufferStarted(int bufferContext);
