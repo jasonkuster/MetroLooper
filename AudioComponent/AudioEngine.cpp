@@ -126,6 +126,7 @@ void AudioEngine::Initialize()
 			}
 
 			bankFinalized[i] = false;
+			bankMixed[i] = false;
 			ThrowIfFailed(pXAudio2->CreateSourceVoice(&(bankVoices[i]), &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
 			bankVoices[i]->SetFrequencyRatio(1);
 			bankVoices[i]->SetVolume(1.0);
@@ -148,10 +149,17 @@ void AudioEngine::Initialize()
 		ZeroMemory(offsets, sizeof(int)*MAX_BANKS*MAX_TRACKS);
 		ZeroMemory(bank_offsets, sizeof(int)*MAX_BANKS);
 
+		ZeroMemory(local_instructions, sizeof(bool)*MAX_BANKS*MAX_MEASURES);
+
 		ZeroMemory(audioData, sizeof(short)*MAX_BANKS*MAX_TRACKS*BUFFER_LENGTH);
 		ZeroMemory(bankAudioData, sizeof(short)*MAX_BANKS*BUFFER_LENGTH);
 
 		pulledData = ref new Platform::Array<short>(BUFFER_LENGTH);
+		exportData = ref new Platform::Array<short>(SAMPLE_RATE*60);
+		ResetExportData();
+		exportDataSize = 0;
+
+		samplesPerMeasure = 64000;
 
 		initialized = true;
 		isClickPlaying = false;
@@ -164,7 +172,7 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 {
 	for (int index = 0; index < MAX_OFFSET; index++)
 	{
-		audioData[bank][track][index] = -1;
+		audioData[bank][track][index] = 0;
 	}
 	for (int sample = MAX_OFFSET; sample < BUFFER_LENGTH && sample < size + MAX_OFFSET; sample++)
 	{
@@ -174,7 +182,7 @@ void AudioEngine::PushData(const Platform::Array<short>^ data, int size, int ban
 
 	buffer_sizes[bank][track] = size;
 	latency_offsets[bank][track] = currentLatency;
-	CSCallback->PrintLatencyValue(currentLatency);
+	//CSCallback->PrintLatencyValue(currentLatency);
 	//CSCallback->PrintLatencyValue(microphoneLatency);
 }
 
@@ -226,14 +234,20 @@ void AudioEngine::PlayBank(int bank)
 
 void AudioEngine::PlayFullBank(int bank)
 {
-	if (!initialized || !bankFinalized[bank])
+	if (!initialized)
 	{
 		return;
+	}
+
+	if (bankMixed[bank] == false)
+	{
+		MixDownBank(bank);
 	}
 
 	int size = bank_sizes[bank];
 	if (size == 0)
 	{
+		bankMixed[bank] = false;
 		return;
 	}
 
@@ -254,6 +268,11 @@ void AudioEngine::PlayFullBank(int bank)
 	if (size < BUFFER_LENGTH)
 	{
 		buffer2.PlayLength = size;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
+	}
+	if (size > samplesPerMeasure)
+	{
+		buffer2.PlayLength = samplesPerMeasure;
 		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
 	}
 
@@ -294,6 +313,11 @@ void AudioEngine::PlayTrack(int bank, int track)
 	{
 		buffer2.PlayLength = size;
 		buffer2.AudioBytes = (2*size)+(2*buffer2.PlayBegin);
+	}
+	if (size > samplesPerMeasure)
+	{
+		buffer2.PlayLength = samplesPerMeasure;
+		buffer2.AudioBytes = 2*(size+(2*MAX_OFFSET));
 	}
 
 	ThrowIfFailed(voices[bank][track]->FlushSourceBuffers());
@@ -398,9 +422,15 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 	return buffer_sizes[bank][track];
 }
 
+void AudioEngine::FinalizeBank(int bank)
+{
+	bankFinalized[bank] = true;
+	MixDownBank(bank);
+}
+
 void AudioEngine::MixDownBank(int bank)
 {
-	if (bankFinalized[bank] || !initialized)
+	if (!initialized)
 	{
 		return;
 	}
@@ -439,7 +469,7 @@ void AudioEngine::MixDownBank(int bank)
 	}
 
 	bank_sizes[bank] = biggestSize;
-	bankFinalized[bank] = true;
+	bankMixed[bank] = true;
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)
@@ -512,3 +542,63 @@ void AudioEngine::LoadClickOneSecond(const Platform::Array<short>^ data)
 		clickData[sample] = value;
 	}
 }
+
+Platform::Array<short>^ AudioEngine::SubmitInstructions(int numBanks, int numMeasures, double secondsPerMeasure)
+{
+	//Note: This function will normalize all tracks by numBanks, rather than looking at the max number of banks playing in one measure, so that might need to change later but its easier for now this way.
+	ResetExportData();
+	int samplesPerMeasure = SAMPLE_RATE*secondsPerMeasure;
+
+	//TODO: See if you need to switch banks & measures here
+	for (int bank = 0; bank < numBanks; bank++)
+	{
+		for (int measure = 0; measure < numMeasures; measure++)
+		{
+			bool instruction = local_instructions[bank][measure];
+
+			if (instruction) //bank was played for this measure
+			{
+				for (int outputSample = measure*samplesPerMeasure; outputSample < (measure+1)*samplesPerMeasure; outputSample++)
+				{
+					int bankSample = MAX_OFFSET + bank_offsets[bank] + LATENCY + (outputSample % samplesPerMeasure); //Skip MAX_OFFSET and user offset and latency (currently 0)
+					short value = bankAudioData[bank][bankSample];
+
+					float gain;
+					bankVoices[bank]->GetVolume(&gain);
+					value *= gain; //Add gain
+
+					value /= (numBanks/1.0); //normalizing with numBanks to be safe and easy
+
+					exportData[outputSample] += value;
+				}
+			}
+		}
+	}
+
+	exportDataSize = numMeasures*samplesPerMeasure;
+	return exportData;
+}
+
+void AudioEngine::TransferInstructions(const Platform::Array<bool>^ instructions, int bankNumber, int numMeasures)
+{
+	for (int i = 0; i < numMeasures; i++)
+	{
+		local_instructions[bankNumber][i] = instructions->get(i);
+	}
+}
+
+int AudioEngine::GetExportSizeSamples()
+{
+	return exportDataSize;
+}
+
+void AudioEngine::ResetExportData()
+{
+	for (int i = 0; i < SAMPLE_RATE*60; i++)
+	{
+		exportData[i] = 0;
+	}
+
+	exportDataSize = 0;
+}
+

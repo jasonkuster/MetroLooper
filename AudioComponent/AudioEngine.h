@@ -6,6 +6,7 @@ namespace AudioComponent
 #define MAX_TRACKS 10
 #define MAX_BANKS 6
 #define MAX_OFFSET 1000*(SAMPLE_RATE/1000)
+#define MAX_MEASURES 60
 #define LATENCY 0*(SAMPLE_RATE/1000)
 #define LOG2(x) log10(x)/log10(2.0)
 
@@ -38,12 +39,20 @@ namespace AudioComponent
 		int beatsPerMinute;
 		int currentLatency;
 
+		int samplesPerMeasure;
+
+		bool local_instructions[MAX_BANKS][MAX_MEASURES];
+
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
 		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
 		bool bankFinalized[MAX_BANKS];
+		bool bankMixed[MAX_BANKS];
 		short clickData[SAMPLE_RATE];
 
 		Platform::Array<short>^ pulledData;
+		Platform::Array<short>^ exportData;
+		void AudioEngine::ResetExportData();
+		int exportDataSize;
 
 		XAUDIO2_BUFFER buffer2;
 		bool initialized;
@@ -66,6 +75,9 @@ namespace AudioComponent
 
 	public:
 		AudioEngine();
+
+		void SetMeasureLength(double seconds) { samplesPerMeasure = seconds*SAMPLE_RATE; }
+		double GetMeasureLength() { return samplesPerMeasure / (double)SAMPLE_RATE; }
 
 		static void BufferFinished(int bufferContext);
 		static void BufferStarted(int bufferContext);
@@ -124,7 +136,7 @@ namespace AudioComponent
 			bankVoices[bank]->GetFrequencyRatio(&ratio);
 			return 10*LOG2(ratio);
 		}
-			
+
 		void PlayClickTrack();
 		void StopClickTrack();
 		bool IsClickPlaying() {return isClickPlaying;}
@@ -164,6 +176,8 @@ namespace AudioComponent
 		void SetClickVolume(float gain) { clickVoice->SetVolume(gain); }
 		float GetClickVolume() { float gain; clickVoice->GetVolume(&gain); return gain; }
 
+		void FinalizeBank(int bank);
+
 		void ResetAll()
 		{
 			for (int bank = 0; bank < MAX_BANKS; bank++)
@@ -175,5 +189,9 @@ namespace AudioComponent
 				deleteFinalizedBank(bank);
 			}
 		}
+
+		void TransferInstructions(const Platform::Array<bool>^ instructions, int bankNumber, int numMeasures);
+		Platform::Array<short>^ SubmitInstructions(int numBanks, int numMeasures, double secondsPerMeasure);
+		int GetExportSizeSamples();
 	};
 }

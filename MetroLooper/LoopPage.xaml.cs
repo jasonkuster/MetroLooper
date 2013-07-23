@@ -271,7 +271,7 @@ namespace MetroLooper
             if (sure == MessageBoxResult.OK)
             {
                 //Mix-down and deletion code
-                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
+                viewModel.AudioMan.FinalizeBank(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Finalized = true;
                 timer.Dispose();
                 recTimer.Dispose();

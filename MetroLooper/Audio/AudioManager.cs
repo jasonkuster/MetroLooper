@@ -22,6 +22,21 @@ namespace MetroLooper
         public bool isPlaying;
 
         /// <summary>
+        /// Seconds per Measure value. Set this to set engine value
+        /// </summary>
+        public double secondsPerMeasure
+        {
+            get
+            {
+                return _engine.GetMeasureLength();
+            }
+            set
+            {
+                _engine.SetMeasureLength(value);
+            }
+        }
+
+        /// <summary>
         /// Is Recording
         /// </summary>
         public bool isRecording;
@@ -395,6 +410,16 @@ namespace MetroLooper
             _engine.MixDownBank(bank);
         }
 
+        public void FinalizeBank(int bank)
+        {
+            _engine.FinalizeBank(bank);
+        }
+
+        public void PlayMixedBank(int bank)
+        {
+            _engine.PlayFullBank(bank);
+        }
+
         /// <summary>
         /// Get Click Volume
         /// </summary>
@@ -513,6 +538,66 @@ namespace MetroLooper
             }
         }
 
-        
+        /// <summary>
+        /// Submit Export Instructions
+        /// </summary>
+        /// <param name="instructions">Bool array [banks][measures] of true/false</param>
+        /// <param name="numBanks">Number of banks</param>
+        /// <param name="numMeasures">Number of Measures</param>
+        /// <param name="secondsPerMeasure">Seconds per measure</param>
+        /// <param name="exportData">Array by reference</param>
+        /// <returns>Size of array returned</returns>
+        public int SubmitExportInstructions(bool[][] instructions, int numBanks, int numMeasures, out byte[] exportData)
+        {
+            for (int bank = 0; bank < numBanks; bank++)
+            {
+                bool[] bankInstructions = instructions[bank];
+                _engine.TransferInstructions(bankInstructions, bank, numMeasures);
+            }
+            short[] shortAudioData = _engine.SubmitInstructions(numBanks, numMeasures, secondsPerMeasure);
+
+            int sizeInSamples = _engine.GetExportSizeSamples();
+            exportData = new byte[sizeInSamples * sizeof(short)];
+            Buffer.BlockCopy(shortAudioData, 0, exportData, 0, exportData.Length);
+
+            return sizeInSamples * 2;
+        }
+
+        /// <summary>
+        /// Send in External Track data
+        /// </summary>
+        /// <param name="audioData">Audio data from wav file in byte array</param>
+        /// <param name="startTimeInMilliseconds">Start time in milliseconds</param>
+        /// <param name="bank">Bank number</param>
+        /// <param name="track">Trakc number</param>
+        private void AddExternalTrack(short[] audioData, int startTimeInMilliseconds, int bank, int track)
+        {
+            short[] shortData = new short[(int)(secondsPerMeasure * 16000)];
+            int startSample = startTimeInMilliseconds * (16000 / 1000);
+
+            for (int i = startSample; (i - startSample) < shortData.Length; i++)
+            {
+                shortData[i - startSample] = audioData[startSample];
+            }
+
+            _engine.PushData(shortData, shortData.Length, bank, track);
+        }
+
+        /// <summary>
+        /// Add track from WAV Stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <param name="startTimeInMilliseconds">Start time in ms</param>
+        /// <param name="bank">Bank #</param>
+        /// <param name="track">Track #</param>
+        public void AddTrackFromWAVStream(Stream stream, int startTimeInMilliseconds, int bank, int track)
+        {
+            MemoryStream memStream = new MemoryStream();
+            stream.CopyTo(memStream);
+
+            short[] shortData = FileHelper.ReadWAVFile(memStream);
+
+            AddExternalTrack(shortData, startTimeInMilliseconds, bank, track);
+        }
     }
 }
