@@ -570,24 +570,34 @@ namespace MetroLooper
         /// <param name="startTimeInMilliseconds">Start time in milliseconds</param>
         /// <param name="bank">Bank number</param>
         /// <param name="track">Trakc number</param>
-        public void AddExternalTrack(Byte[] audioData, int startTimeInMilliseconds, int bank, int track)
+        private void AddExternalTrack(short[] audioData, int startTimeInMilliseconds, int bank, int track)
         {
-            int totalNumBytes = audioData.Length;
-            short[] shortBuffer = new short[totalNumBytes / 2];
             short[] shortData = new short[(int)(secondsPerMeasure * 16000)];
             int startSample = startTimeInMilliseconds * (16000 / 1000);
 
-            for (int i = 0; i < totalNumBytes; i += 2)
-            {
-                shortBuffer[i / 2] = BitConverter.ToInt16(audioData, i);
-            }
-
             for (int i = startSample; (i - startSample) < shortData.Length; i++)
             {
-                shortData[i - startSample] = shortBuffer[startSample];
+                shortData[i - startSample] = audioData[startSample];
             }
 
             _engine.PushData(shortData, shortData.Length, bank, track);
+        }
+
+        /// <summary>
+        /// Add track from WAV Stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <param name="startTimeInMilliseconds">Start time in ms</param>
+        /// <param name="bank">Bank #</param>
+        /// <param name="track">Track #</param>
+        public void AddTrackFromWAVStream(Stream stream, int startTimeInMilliseconds, int bank, int track)
+        {
+            MemoryStream memStream = new MemoryStream();
+            stream.CopyTo(memStream);
+
+            short[] shortData = FileHelper.ReadWAVFile(memStream);
+
+            AddExternalTrack(shortData, startTimeInMilliseconds, bank, track);
         }
     }
 }
