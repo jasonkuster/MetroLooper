@@ -36,7 +36,7 @@ namespace MetroLooper
             this.DataContext = viewModel;
             timerRunning = false;
 
-            //viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
+            viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
             VisualStateManager.GoToState(this, "Starting", true);
         }
 
@@ -157,9 +157,19 @@ namespace MetroLooper
                         Track newTrack = new Track() { trackID = trackNum };
                         viewModel.SelectedBank.tracks.Add(newTrack);
                         viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
+<<<<<<< HEAD
                         byte[] trackData;
                         newTrack.Size = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, trackNum, out trackData);
                         newTrack.trackData = trackData;
+=======
+                        viewModel.AudioMan.WAVTestMethod(viewModel.SelectedBank.bankID, trackNum);
+                    });
+                    recording = false;
+                    //if (stop)
+                    //{
+                    Dispatcher.BeginInvoke(delegate
+                    {
+>>>>>>> 606b0eaeecbcbcea0df37b8d2119b65258fc1912
                         ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
                     });
                     recording = false;
@@ -187,32 +197,29 @@ namespace MetroLooper
 
             micTimer.Change(3950, System.Threading.Timeout.Infinite);
 
-            viewModel.AudioMan.PlayClick();
 
-
-            //System.Diagnostics.Debug.WriteLine("Ticking: " + ticking + ", startTicking: " + startTicking);
-            //if (startTicking)
-            //{
-            //    Dispatcher.BeginInvoke(delegate
-            //    {
-            //        viewModel.AudioMan.SetClickVolume(1.0f);
-            //        viewModel.AudioMan.PlayClick();
-            //    });
-            //    startTicking = false;
-            //    ticking = true;
-            //}
-            //else if (ticking)
-            //{
-            //    Dispatcher.BeginInvoke(delegate
-            //    {
-            //        viewModel.AudioMan.PlayClick();
-            //    });
-            //}
-            //else //This probably shouldn't happen. There's some shenanigans going on here. Don't delete this without thinking it all through.
-            //{ //also this was running and no dispatcher so what the fuck
-            //    viewModel.AudioMan.SetClickVolume(0);
-            //    viewModel.AudioMan.PlayClick();
-            //}
+            if (startTicking)
+            {
+                Dispatcher.BeginInvoke(delegate
+                {
+                    viewModel.AudioMan.SetClickVolume(1.0f);
+                    viewModel.AudioMan.PlayClick();
+                });
+                startTicking = false;
+                ticking = true;
+            }
+            else if (ticking)
+            {
+                Dispatcher.BeginInvoke(delegate
+                {
+                    viewModel.AudioMan.PlayClick();
+                });
+            }
+            else //This probably shouldn't happen. There's some shenanigans going on here. Don't delete this without thinking it all through.
+            { //also this was running and no dispatcher so what the fuck
+                viewModel.AudioMan.SetClickVolume(0);
+                viewModel.AudioMan.PlayClick();
+            }
         }
 
         #region Button Events
@@ -239,23 +246,19 @@ namespace MetroLooper
 
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.AudioMan.SetClickVolume(MetronomeSlider.IsChecked == true ? 1 : 0);
             if (!timerRunning)
             {
-                //startTicking = true;
+                startTicking = true;
                 timer.Change(0, 4000);
                 timerRunning = true;
             }
-            //else
-            //{
-            //    double value = ((MainViewModel)DataContext).AudioMan.GetClickVolume();
-            //    value = Math.Abs(1.0 - value);
-            //    ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)value);
-            //    if (!ticking)
-            //    {
-            //        startTicking = true;
-            //    }
-            //}
+            else
+            {
+                double value = ((MainViewModel)DataContext).AudioMan.GetClickVolume();
+                value = Math.Abs(1.0 - value);
+                ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)value);
+                startTicking = true;
+            }
         }
 
         private void finalizeButton_Click(object sender, RoutedEventArgs e)
@@ -263,10 +266,8 @@ namespace MetroLooper
             timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            PlayAnimation.Stop();
             viewModel.AudioMan.StopClick();
             viewModel.AudioMan.StopAll();
-            timerRunning = false;
             MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
             if (sure == MessageBoxResult.OK)
             {
@@ -286,6 +287,8 @@ namespace MetroLooper
                 viewModel.SelectedBank.Pitch = viewModel.AudioMan.GetPitchSemitones(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Offset = viewModel.AudioMan.GetBankOffsetMS(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Volume = viewModel.AudioMan.GetBankVolumeDB(viewModel.SelectedBank.bankID);
+                viewModel.AudioMan.StopClick();
+                viewModel.AudioMan.StopAll();
             }
             else
             {
@@ -398,16 +401,12 @@ namespace MetroLooper
             {
                 VisualStateManager.GoToState(this, "TrackSelected", true);
                 PlayAnimation.Stop();
-                MetronomeSlider.IsChecked = false;
                 viewModel.AudioMan.StopAll();
                 viewModel.AudioMan.StopClick();
                 viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
                 timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                timerRunning = false;
-                VolumeSlider.Value = viewModel.SelectedTrack.Volume;
-                OffsetTextBlock.Text = viewModel.SelectedTrack.Offset.ToString();
             }
         }
 
@@ -476,66 +475,6 @@ namespace MetroLooper
 					skip = t.trackID;
 				}
 			}
-        }
-
-        private void stopPlayButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            PlayAnimation.Stop();
-            viewModel.AudioMan.StopClick();
-            viewModel.AudioMan.StopAll();
-            timerRunning = false;
-
-            //TODO CHANGE BACKGROUND OF BUTTON TO PLAY
-        }
-
-        private void NewTrackButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-			VisualStateManager.GoToState(this, "Opened", true);
-			loopList.SelectedItem = null;
-        }
-
-        private void FinalizeButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-			timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-            PlayAnimation.Stop();
-            viewModel.AudioMan.StopClick();
-            viewModel.AudioMan.StopAll();
-            timerRunning = false;
-			VisualStateManager.GoToState(this, "Stopped", false);
-            MessageBoxResult sure = MessageBox.Show("Are you sure you want to finalize? This will mix your tracks down and delete the individual files.", "Finalize?", MessageBoxButton.OKCancel);
-            if (sure == MessageBoxResult.OK)
-            {
-                //Mix-down and deletion code
-                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
-                viewModel.SelectedBank.Finalized = true;
-                timer.Dispose();
-                recTimer.Dispose();
-                micTimer.Dispose();
-
-                VisualStateManager.GoToState(this, "Finalized", true);
-
-                byte[] trackData;
-                int trackLength = viewModel.AudioMan.GetBankAudioData(viewModel.SelectedBank.bankID, out trackData);
-                viewModel.SelectedBank.finalTrack = trackData;
-                viewModel.SelectedBank.Size = trackLength;
-                viewModel.SelectedBank.Pitch = viewModel.AudioMan.GetPitchSemitones(viewModel.SelectedBank.bankID);
-                viewModel.SelectedBank.Offset = viewModel.AudioMan.GetBankOffsetMS(viewModel.SelectedBank.bankID);
-                viewModel.SelectedBank.Volume = viewModel.AudioMan.GetBankVolumeDB(viewModel.SelectedBank.bankID);
-            }
-            //else
-            //{
-            //    timer.Change(0, 4000);
-            //}
-        }
-
-        private void openWavButton_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/WavPage.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 

@@ -9,12 +9,16 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using MetroLooper.Resources;
 using MetroLooper.ViewModels;
+using Microsoft.Live;
+using Microsoft.Live.Controls;
+using Newtonsoft.Json;
 
 namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
         MainViewModel viewModel;
+        private LiveConnectClient client;
         int count;
 
         // Constructor
@@ -100,5 +104,58 @@ namespace MetroLooper
         //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
+
+        private async void btnSignin_SessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
+        {
+            if (e.Status == LiveConnectSessionStatus.Connected)
+            {
+                client = new LiveConnectClient(e.Session);
+                LiveOperationResult fileList = await client.GetAsync("me/skydrive/files");
+                //LiveOperationResult operationResult = await client.GetAsync("me");
+                try
+                {
+                    //dynamic meResult = operationResult.Result;
+                    //if (meResult.first_name != null &&
+                    //    meResult.last_name != null)
+                    //{
+                    //    infoTextBlock.Text = "Hello " +
+                    //        meResult.first_name + " " +
+                    //        meResult.last_name + "!";
+                    //}
+                    //else
+                    //{
+                    //    infoTextBlock.Text = "Hello, signed-in user!";
+                    //}
+                    List<object> fileResult = (List<object>)(fileList.Result["data"]);
+                    //var result = fileResult.ToString(); //JsonConvert.DeserializeObject<Dictionary<string,string>>(fileResult.ToString());
+                    List<string> l = new List<string>();
+
+                    foreach (IDictionary<string,object> k in fileResult)
+                    {
+                        l.Add(k["name"].ToString());
+                    }
+
+                    listselector.ItemsSource = l;
+                    //infoTextBlock.Text = result;
+
+                }
+                catch (LiveConnectException exception)
+                {
+                    this.infoTextBlock.Text = "Error calling API: " +
+                        exception.Message;
+                }
+                btnSignin.Visibility = System.Windows.Visibility.Collapsed;
+                infoTextBlock.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                infoTextBlock.Text = "Not signed in.";
+            }
+        }
+
+        private void btnSignin_Click(object sender, RoutedEventArgs e)
+        {
+            this.SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
+        }
     }
 }
