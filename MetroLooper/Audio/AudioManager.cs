@@ -513,6 +513,21 @@ namespace MetroLooper
             }
         }
 
+        public int SubmitExportInstructions(bool[][] instructions, int numBanks, int numMeasures, double secondsPerMeasure, out byte[] exportData)
+        {
+            for (int bank = 0; bank < numBanks; bank++)
+            {
+                bool[] bankInstructions = instructions[bank];
+                _engine.TransferInstructions(bankInstructions, bank, numMeasures);
+            }
+            short[] shortAudioData = _engine.SubmitInstructions(numBanks, numMeasures, secondsPerMeasure);
+
+            int sizeInSamples = _engine.GetExportSizeSamples();
+            exportData = new byte[sizeInSamples * sizeof(short)];
+            Buffer.BlockCopy(shortAudioData, 0, exportData, 0, exportData.Length);
+
+            return sizeInSamples * 2;
+        }
         
     }
 }
