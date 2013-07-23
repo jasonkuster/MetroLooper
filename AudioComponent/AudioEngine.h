@@ -46,6 +46,7 @@ namespace AudioComponent
 		short audioData[MAX_BANKS][MAX_TRACKS][BUFFER_LENGTH];
 		short bankAudioData[MAX_BANKS][BUFFER_LENGTH];
 		bool bankFinalized[MAX_BANKS];
+		bool bankMixed[MAX_BANKS];
 		short clickData[SAMPLE_RATE];
 
 		Platform::Array<short>^ pulledData;
@@ -174,6 +175,8 @@ namespace AudioComponent
 
 		void SetClickVolume(float gain) { clickVoice->SetVolume(gain); }
 		float GetClickVolume() { float gain; clickVoice->GetVolume(&gain); return gain; }
+
+		void FinalizeBank(int bank);
 
 		void ResetAll()
 		{

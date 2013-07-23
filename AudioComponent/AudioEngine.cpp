@@ -126,6 +126,7 @@ void AudioEngine::Initialize()
 			}
 
 			bankFinalized[i] = false;
+			bankMixed[i] = false;
 			ThrowIfFailed(pXAudio2->CreateSourceVoice(&(bankVoices[i]), &waveformat, 0, XAUDIO2_MAX_FREQ_RATIO, callback));
 			bankVoices[i]->SetFrequencyRatio(1);
 			bankVoices[i]->SetVolume(1.0);
@@ -233,14 +234,20 @@ void AudioEngine::PlayBank(int bank)
 
 void AudioEngine::PlayFullBank(int bank)
 {
-	if (!initialized || !bankFinalized[bank])
+	if (!initialized)
 	{
 		return;
+	}
+
+	if (bankMixed[bank] == false)
+	{
+		MixDownBank(bank);
 	}
 
 	int size = bank_sizes[bank];
 	if (size == 0)
 	{
+		bankMixed[bank] = false;
 		return;
 	}
 
@@ -415,9 +422,15 @@ int AudioEngine::GetAudioDataSize(int bank, int track)
 	return buffer_sizes[bank][track];
 }
 
+void AudioEngine::FinalizeBank(int bank)
+{
+	bankFinalized[bank] = true;
+	MixDownBank(bank);
+}
+
 void AudioEngine::MixDownBank(int bank)
 {
-	if (bankFinalized[bank] || !initialized)
+	if (!initialized)
 	{
 		return;
 	}
@@ -456,7 +469,7 @@ void AudioEngine::MixDownBank(int bank)
 	}
 
 	bank_sizes[bank] = biggestSize;
-	bankFinalized[bank] = true;
+	bankMixed[bank] = true;
 }
 
 inline void AudioEngine::ThrowIfFailed(HRESULT hr)

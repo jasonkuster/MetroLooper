@@ -410,6 +410,16 @@ namespace MetroLooper
             _engine.MixDownBank(bank);
         }
 
+        public void FinalizeBank(int bank)
+        {
+            _engine.FinalizeBank(bank);
+        }
+
+        public void PlayMixedBank(int bank)
+        {
+            _engine.PlayFullBank(bank);
+        }
+
         /// <summary>
         /// Get Click Volume
         /// </summary>
