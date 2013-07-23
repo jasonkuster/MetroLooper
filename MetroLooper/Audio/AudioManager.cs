@@ -415,6 +415,10 @@ namespace MetroLooper
             _engine.FinalizeBank(bank);
         }
 
+        /// <summary>
+        /// Play Mixed-down version of bank. Make sure MixDownBank() has been called between last bank change and now
+        /// </summary>
+        /// <param name="bank">Bank</param>
         public void PlayMixedBank(int bank)
         {
             _engine.PlayFullBank(bank);
