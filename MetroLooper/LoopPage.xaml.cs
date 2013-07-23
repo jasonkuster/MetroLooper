@@ -35,61 +35,23 @@ namespace MetroLooper
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
             timerRunning = false;
-            //if (!settings.Contains("projects"))
-            {
-                settings["projects"] = new ObservableCollection<Project>();
-                ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
-                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
-            }
-            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-            //IsolatedStorageSettings.ApplicationSettings.Save();
-
-            VolumeSlider.Value = viewModel.SelectedBank.Volume;
-            PitchRatioSlider.Value = viewModel.SelectedBank.Pitch;
-            OffsetText.Text = viewModel.SelectedBank.Offset.ToString();
 
             viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
+            VisualStateManager.GoToState(this, "Starting", true);
         }
 
         #endregion
 
         #region Public and Protected Members
 
-        private void LoadData()
-        {
-            foreach (Track t in viewModel.SelectedBank.tracks)
-            {
-                if (t.Size > 0)
-                {
-                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                    if (isoStore.FileExists(t.fileName))
-                    {
-                        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
-                        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
-                        byte[] buffer;
-                        using (BinaryReader r = new BinaryReader(file))
-                        {
-                            buffer = r.ReadBytes(t.Size);
-                        }
-                        viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
-                    }
-                }
-            }
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            PageOpened.Begin();
-            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE); //TODO CHANGE THIS TO STATES
             if (!viewModel.SelectedBank.Finalized)
             {
-                trackPanel.Visibility = Visibility.Visible;
-                BankPanel.Visibility = Visibility.Collapsed;
                 if (viewModel.SelectedBank.tracks.Count > 0)
                 {
-                    //LoadData();
                     timer = new Timer(Progress_Go, new object(), 0, 4000);
                     timerRunning = true;
                 }
@@ -100,26 +62,14 @@ namespace MetroLooper
                 }
                 this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
-                ProgressBar.IsVisible = false;
             }
             else
             {
-                trackPanel.Visibility = Visibility.Collapsed;
-                BankPanel.Visibility = Visibility.Visible;
-
-            //    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-            //    if (isoStore.FileExists(viewModel.SelectedBank.finalTrack))
-            //    {
-            //        System.Diagnostics.Debug.WriteLine("File " + viewModel.SelectedBank.finalTrack + " exists! t's size is " + viewModel.SelectedBank.Size);
-            //        IsolatedStorageFileStream file = isoStore.OpenFile(viewModel.SelectedBank.finalTrack, FileMode.Open);
-            //        byte[] buffer;
-            //        using (BinaryReader r = new BinaryReader(file))
-            //        {
-            //            buffer = r.ReadBytes(viewModel.SelectedBank.Size);
-            //        }
-            //        viewModel.AudioMan.LoadBank(viewModel.SelectedBank.bankID, buffer, viewModel.SelectedBank.Size, viewModel.SelectedBank.Offset, viewModel.SelectedBank.Volume, viewModel.SelectedBank.Pitch);
-            //    }
+                VolumeSlider.Value = viewModel.SelectedBank.Volume;
+                //PitchRatioSlider.Value = viewModel.SelectedBank.Pitch; //TODO ADD THIS
+                OffsetTextBlock.Text = viewModel.SelectedBank.Offset.ToString();
             }
+            VisualStateManager.GoToState(this, "Opened", true);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -149,14 +99,11 @@ namespace MetroLooper
             base.OnNavigatingFrom(e);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-        }
-
         #endregion
 
         #region Private Members
+
+        #region Global Variables
 
         private Timer timer;
         private Timer recTimer;
@@ -169,6 +116,8 @@ namespace MetroLooper
         private bool timerRunning;
         private MainViewModel viewModel;
 
+        #endregion
+
         #region Start/Stop Recording
 
         private void StartMic(object state)
@@ -177,7 +126,7 @@ namespace MetroLooper
             System.Diagnostics.Debug.WriteLine("StartMic ticked, recording is " + recording + ", starting is " + starting + ", and stop is " + stop + ".");
             if (recording)
             {
-                if (starting) //!stop ||  <--continuous play scenario, remove else
+                if (starting)
                 {
                     starting = false;
                     recording = true;
@@ -205,18 +154,15 @@ namespace MetroLooper
                     Dispatcher.BeginInvoke(delegate
                     {
                         int trackNum = viewModel.SelectedBank.tracks.Count;
-                        viewModel.SelectedBank.tracks.Add(new Track() { trackID = trackNum });
+                        Track newTrack = new Track() { trackID = trackNum };
+                        viewModel.SelectedBank.tracks.Add(newTrack);
                         viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
-                        //viewModel.AudioMan.WAVTestMethod(viewModel.SelectedBank.bankID, trackNum);
-                    });
-                    recording = false;
-                    //if (stop)
-                    //{
-                    Dispatcher.BeginInvoke(delegate
-                    {
+                        byte[] trackData;
+                        newTrack.Size = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, trackNum, out trackData);
+                        newTrack.trackData = trackData;
                         ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE);
                     });
-                    //}
+                    recording = false;
                 }
             }
         }
@@ -232,8 +178,6 @@ namespace MetroLooper
                 {
                     t.Finalized = true;
                 }
-                //MeasureAnimation.Stop();
-                //MeasureAnimation.Begin();
                 PlayAnimation.Stop();
                 progressBar.Value = 0;
                 PlayAnimation.Begin();
@@ -261,6 +205,11 @@ namespace MetroLooper
                     viewModel.AudioMan.PlayClick();
                 });
             }
+            else //This probably shouldn't happen. There's some shenanigans going on here. Don't delete this without thinking it all through.
+            { //also this was running and no dispatcher so what the fuck
+                viewModel.AudioMan.SetClickVolume(0);
+                viewModel.AudioMan.PlayClick();
+            }
         }
 
         #region Button Events
@@ -285,29 +234,6 @@ namespace MetroLooper
             startRecord(true);
         }
 
-        private async void saveButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (viewModel.SelectedBank.tracks.Count > 0)
-            {
-                int selBank = viewModel.SelectedBank.bankID;
-                foreach (Track t in viewModel.SelectedBank.tracks)
-                {
-                    StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
-                    byte[] trackData;
-                    int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
-                    using (var s = await file.OpenStreamForWriteAsync())
-                    {
-                        s.Write(trackData, 0, trackLength);
-                    }
-                    t.fileName = file.Path;
-                    t.Size = trackLength;
-                    t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
-                    t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
-                    t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
-                }
-            }
-        }
-
         private void metronomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (!timerRunning)
@@ -321,10 +247,11 @@ namespace MetroLooper
                 double value = ((MainViewModel)DataContext).AudioMan.GetClickVolume();
                 value = Math.Abs(1.0 - value);
                 ((MainViewModel)DataContext).AudioMan.SetClickVolume((float)value);
+                startTicking = true;
             }
         }
 
-        private async void finalizeButton_Click(object sender, RoutedEventArgs e)
+        private void finalizeButton_Click(object sender, RoutedEventArgs e)
         {
             timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
@@ -340,16 +267,12 @@ namespace MetroLooper
                 timer.Dispose();
                 recTimer.Dispose();
                 micTimer.Dispose();
-                FinalizeAnimation.Begin();
 
-                StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_final", CreationCollisionOption.ReplaceExisting);
+                VisualStateManager.GoToState(this, "Finalized", true);
+
                 byte[] trackData;
                 int trackLength = viewModel.AudioMan.GetBankAudioData(viewModel.SelectedBank.bankID, out trackData);
-                using (var s = await file.OpenStreamForWriteAsync())
-                {
-                    s.Write(trackData, 0, trackLength);
-                }
-                viewModel.SelectedBank.finalTrack = file.Path;
+                viewModel.SelectedBank.finalTrack = trackData;
                 viewModel.SelectedBank.Size = trackLength;
                 viewModel.SelectedBank.Pitch = viewModel.AudioMan.GetPitchSemitones(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Offset = viewModel.AudioMan.GetBankOffsetMS(viewModel.SelectedBank.bankID);
@@ -376,8 +299,16 @@ namespace MetroLooper
             {
                 value = -120;
             }
-            viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, value);
-            viewModel.SelectedBank.Volume = value;
+            if (viewModel.SelectedBank.Finalized)
+            {
+                viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, value);
+                viewModel.SelectedBank.Volume = value;
+            }
+            else
+            {
+                viewModel.AudioMan.SetVolumeDB(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, value);
+                viewModel.SelectedTrack.Volume = value;
+            }
         }
 
         private void PitchRatioSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -388,25 +319,41 @@ namespace MetroLooper
 
         private void OffsetIncreaseButton_Click(object sender, RoutedEventArgs e)
         {
-            double value = Convert.ToDouble(OffsetText.Text);
+            double value = Convert.ToDouble(OffsetTextBlock.Text);
             if (value < 400)
             {
                 value += 20.0;
-                OffsetText.Text = value.ToString();
-                viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
-                viewModel.SelectedBank.Offset = (int)value;
+                OffsetTextBlock.Text = value.ToString();
+                if (viewModel.SelectedBank.Finalized)
+                {
+                    viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
+                    viewModel.SelectedBank.Offset = (int)value;
+                }
+                else
+                {
+                    viewModel.AudioMan.SetOffsetMS(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, value);
+                    viewModel.SelectedTrack.Offset = (int)value;
+                }
             }
         }
 
         private void OffsetDecreaseButton_Click(object sender, RoutedEventArgs e)
         {
-            double value = Convert.ToDouble(OffsetText.Text);
+            double value = Convert.ToDouble(OffsetTextBlock.Text);
             if (value > -400)
             {
                 value -= 20.0;
-                OffsetText.Text = value.ToString();
-                viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
-                viewModel.SelectedBank.Offset = (int)value;
+                OffsetTextBlock.Text = value.ToString();
+                if (viewModel.SelectedBank.Finalized)
+                {
+                    viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, value);
+                    viewModel.SelectedBank.Offset = (int)value;
+                }
+                else
+                {
+                    viewModel.AudioMan.SetOffsetMS(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, value);
+                    viewModel.SelectedTrack.Offset = (int)value;
+                }
             }
         }
 
@@ -415,15 +362,25 @@ namespace MetroLooper
             double zero = 0.0;
 
             VolumeSlider.Value = zero;
-            PitchRatioSlider.Value = zero;
-            OffsetText.Text = zero.ToString();
+            //PitchRatioSlider.Value = zero; //TODO FIX THIS
+            OffsetTextBlock.Text = zero.ToString();
 
-            viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, zero);
-            viewModel.SelectedBank.Volume = zero;
-            viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, zero);
-            viewModel.SelectedBank.Pitch = zero;
-            viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, zero);
-            viewModel.SelectedBank.Offset = (int)zero;
+            if (viewModel.SelectedBank.Finalized)
+            {
+                viewModel.AudioMan.SetBankVolumeDB(viewModel.SelectedBank.bankID, zero);
+                viewModel.SelectedBank.Volume = zero;
+                viewModel.AudioMan.SetPitchSemitones(viewModel.SelectedBank.bankID, zero);
+                viewModel.SelectedBank.Pitch = zero;
+                viewModel.AudioMan.SetBankOffsetMS(viewModel.SelectedBank.bankID, zero);
+                viewModel.SelectedBank.Offset = (int)zero;
+            }
+            else
+            {
+                viewModel.AudioMan.SetVolumeDB(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, zero);
+                viewModel.SelectedTrack.Volume = zero;
+                viewModel.AudioMan.SetOffsetMS(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID, zero);
+                viewModel.SelectedTrack.Offset = (int)zero;
+            }
         }
 
         #endregion
@@ -432,11 +389,14 @@ namespace MetroLooper
         {
             if (((Track)loopList.SelectedItem) != null)
             {
-                TrackSelect.Begin();
-                MeasureAnimation.Stop();
+                VisualStateManager.GoToState(this, "TrackSelected", true);
+                PlayAnimation.Stop();
                 viewModel.AudioMan.StopAll();
+                viewModel.AudioMan.StopClick();
                 viewModel.SelectedTrack = ((Track)loopList.SelectedItem);
-                //NavigationService.Navigate(new Uri("/TrackPage.xaml", UriKind.RelativeOrAbsolute));
+                timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                recTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                micTimer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             }
         }
 
@@ -475,9 +435,36 @@ namespace MetroLooper
 
         private void finishTrackButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            FinishTrack.Begin();
+            //FinishTrack.Begin();
+            VisualStateManager.GoToState(this, "Opened", true);
             loopList.SelectedItem = null;
             timer.Change(0, 4000);
+        }
+
+        private void delButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            timer.Change(0, 4000);
+            VisualStateManager.GoToState(this, "Opened", true);
+			viewModel.AudioMan.DeleteTrack(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID);
+			viewModel.SelectedBank.tracks.Remove(viewModel.SelectedTrack);
+			int skip = 0;
+			bool foundSkip = false;
+			foreach (Track t in viewModel.SelectedBank.tracks)
+			{
+				if (foundSkip)
+				{
+					t.trackID -= 1;
+				}
+				else
+				{
+					if (skip - t.trackID > 1)
+					{
+						foundSkip = true;
+						t.trackID -= 1;
+					}
+					skip = t.trackID;
+				}
+			}
         }
     }
 

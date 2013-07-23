@@ -29,6 +29,7 @@ namespace MetroLooper.Model
         public int Offset { get; set; }
         public double Volume { get; set; }
         public string fileName { get; set; }
+        public byte[] trackData { get; set; }
         public bool _Finalized;
         public bool Finalized {
             get

@@ -175,56 +175,15 @@ namespace MetroLooper
                     {
                         if (t.Size > 0)
                         {
-                            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                            if (isoStore.FileExists(t.fileName))
-                            {
-                                System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
-                                IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
-                                byte[] buffer;
-                                using (BinaryReader r = new BinaryReader(file))
-                                {
-                                    buffer = r.ReadBytes(t.Size);
-                                }
-                                viewModel.AudioMan.LoadTrack(b.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
-                            }
+                            viewModel.AudioMan.LoadTrack(b.bankID, t.trackID, t.trackData, t.Size, t.Offset, t.Latency, t.Volume);
                         }
                     }
                 }
                 else
                 {
-                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                    if (isoStore.FileExists(b.finalTrack))
-                    {
-                        System.Diagnostics.Debug.WriteLine("File " + b.finalTrack + " exists! t's size is " + b.Size);
-                        IsolatedStorageFileStream file = isoStore.OpenFile(b.finalTrack, FileMode.Open);
-                        byte[] buffer;
-                        using (BinaryReader r = new BinaryReader(file))
-                        {
-                            buffer = r.ReadBytes(b.Size);
-                        }
-                        viewModel.AudioMan.LoadBank(b.bankID, buffer, b.Size, b.Offset, b.Volume, b.Pitch);
-                    }
+                    viewModel.AudioMan.LoadBank(b.bankID, b.finalTrack, b.Size, b.Offset, b.Volume, b.Pitch);
                 }
             }
-
-
-
-            //int bankIndex = 0;
-            //foreach (UIElement ctrl in ContentPanel.Children)
-            //{
-            //    if (ctrl.GetType() == typeof(StackPanel) && ((StackPanel)ctrl).Orientation == System.Windows.Controls.Orientation.Horizontal)
-            //    {
-            //        if (bankIndex < ((Project)(this.DataContext)).banks.Count)
-            //        {
-            //            ((StackPanel)ctrl).DataContext = ((Project)(this.DataContext)).banks[bankIndex];
-            //            bankIndex++;
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-            //}
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -364,6 +323,11 @@ namespace MetroLooper
         {
             ContentPanel.Visibility = System.Windows.Visibility.Visible;
             ContentPanel2.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void editImageOne_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/LoopPage.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }

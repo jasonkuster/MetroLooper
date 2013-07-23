@@ -8,133 +8,29 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:MetroLooper.ViewModels"
     xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     x:Class="MetroLooper.LoopPage"
     SupportedOrientations="Landscape" Orientation="Landscape"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 
     <phone:PhoneApplicationPage.Resources>
-        <DataTemplate x:Key="LoopItemTemplate">
-        	<Grid>
-        		<Border BorderThickness="3" Background="{Binding Finalized, Converter={StaticResource BoolBrushConverter}}" BorderBrush="{StaticResource PhoneBorderBrush}">
-        			<Grid>
-        				<TextBlock x:Name="TrackName" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="16"/>
-        				<TextBlock x:Name="finBlock" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized, Converter={StaticResource BoolVisConverter}}"/>
-        			</Grid>
-        		</Border>
-        	</Grid>
-        </DataTemplate>
-        <Storyboard x:Name="MeasureAnimation">
-        	<DoubleAnimation Duration="0:0:4" To="621" Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="progressRect" d:IsOptimized="True"/>
-        </Storyboard>
-
-        <vm:MainViewModel x:Key="MainViewModel"/>
-        <Storyboard x:Name="FinalizeAnimation">
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="trackPanel">
-        		<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
-        	</DoubleAnimationUsingKeyFrames>
-        	<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="trackPanel">
-        		<EasingPointKeyFrame KeyTime="0" Value="0.5,0"/>
-        		<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,1"/>
-        	</PointAnimationUsingKeyFrames>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        		<DiscreteObjectKeyFrame KeyTime="0:0:1">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Collapsed</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BankPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="BankPanel">
-        		<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        	<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="BankPanel">
-        		<EasingPointKeyFrame KeyTime="0" Value="0.5,1"/>
-        		<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0"/>
-        	</PointAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Name="TrackSelect">
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel">
-        		<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
-        	</DoubleAnimationUsingKeyFrames>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        		<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Collapsed</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="editPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel">
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Name="PlayAnimation">
-        	<DoubleAnimation Duration="0:0:4" To="100" Storyboard.TargetProperty="(RangeBase.Value)" Storyboard.TargetName="progressBar" d:IsOptimized="True"/>
-        </Storyboard>
-        <Storyboard x:Name="PageOpened">
-        	<DoubleAnimation Duration="0:0:0.5" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
-        	<DoubleAnimation Duration="0:0:0.5" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackGrid">
-        		<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid">
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Name="FinishTrack">
-        	<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" d:IsOptimized="True"/>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="editPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Collapsed</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
-        		<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
-        			<DiscreteObjectKeyFrame.Value>
-        				<Visibility>Visible</Visibility>
-        			</DiscreteObjectKeyFrame.Value>
-        		</DiscreteObjectKeyFrame>
-        	</ObjectAnimationUsingKeyFrames>
-        	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel">
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-        		<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-        	</DoubleAnimationUsingKeyFrames>
-        </Storyboard>
+    	<DataTemplate x:Key="LoopItemTemplate">
+    		<Grid>
+                <Border BorderThickness="3" HorizontalAlignment="Stretch" Background="{Binding Finalized, Converter={StaticResource BoolBrushConverter}}" BorderBrush="{StaticResource PhoneBorderBrush}">
+                    <Grid>
+                        <TextBlock x:Name="TrackName" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="16"/>
+                        <TextBlock x:Name="finBlock" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized, Converter={StaticResource BoolVisConverter}}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+    	</DataTemplate>
+    	<vm:MainViewModel x:Key="MainViewModel"/>
+    	<Storyboard x:Name="PlayAnimation">
+    		<DoubleAnimation Duration="0:0:4" To="100" Storyboard.TargetProperty="(RangeBase.Value)" Storyboard.TargetName="progressBar" d:IsOptimized="True"/>
+    	</Storyboard>
     </phone:PhoneApplicationPage.Resources>
+    
 	<phone:PhoneApplicationPage.FontFamily>
 		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
 	</phone:PhoneApplicationPage.FontFamily>
@@ -144,34 +40,204 @@
 	<phone:PhoneApplicationPage.Foreground>
 		<StaticResource ResourceKey="PhoneForegroundBrush"/>
 	</phone:PhoneApplicationPage.Foreground>
-
-    <toolkit:TransitionService.NavigationInTransition>
-        <toolkit:NavigationInTransition>
-            <toolkit:NavigationInTransition.Backward>
-                <toolkit:TurnstileTransition Mode="BackwardIn"/>
-            </toolkit:NavigationInTransition.Backward>
-            <toolkit:NavigationInTransition.Forward>
-                <toolkit:TurnstileTransition Mode="ForwardIn"/>
-            </toolkit:NavigationInTransition.Forward>
-        </toolkit:NavigationInTransition>
-    </toolkit:TransitionService.NavigationInTransition>
-    <toolkit:TransitionService.NavigationOutTransition>
-        <toolkit:NavigationOutTransition>
-            <toolkit:NavigationOutTransition.Backward>
-                <toolkit:TurnstileTransition Mode="BackwardOut"/>
-            </toolkit:NavigationOutTransition.Backward>
-            <toolkit:NavigationOutTransition.Forward>
-                <toolkit:TurnstileTransition Mode="ForwardOut"/>
-            </toolkit:NavigationOutTransition.Forward>
-        </toolkit:NavigationOutTransition>
-    </toolkit:TransitionService.NavigationOutTransition>
-
+    
+    <!--
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator x:Name="ProgressBar" IsIndeterminate="true" IsVisible="False" Text="Loading..." />
     </shell:SystemTray.ProgressIndicator>
-
+    -->
+    
     <!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent" >
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="PageStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.7"/>
+					<VisualTransition GeneratedDuration="0:0:0.7" To="Opened">
+						<Storyboard>
+							<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
+							<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Opened" GeneratedDuration="0:0:0.7" To="TrackSelected">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
+							<DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" BeginTime="0:0:0.3"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="TrackSelected" GeneratedDuration="0:0:0.7" To="Opened">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.4" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel" BeginTime="0:0:0.3"/>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Opened" GeneratedDuration="0:0:0.7">
+						<Storyboard>
+							<DoubleAnimation Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel" BeginTime="0:0:0.7"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
+							<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="maskingRect">
+								<DiscreteObjectKeyFrame KeyTime="0:0:0.7">
+									<DiscreteObjectKeyFrame.Value>
+										<Visibility>Visible</Visibility>
+									</DiscreteObjectKeyFrame.Value>
+								</DiscreteObjectKeyFrame>
+							</ObjectAnimationUsingKeyFrames>
+							<DoubleAnimation Duration="0:0:0.7" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition GeneratedDuration="0:0:0.7" To="Finalized">
+						<Storyboard>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
+							<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation BeginTime="0:0:0.4" Duration="0:0:0.3" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
+							<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel"/>
+							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="loopList"/>
+							<DoubleAnimation Duration="0" To="0.005" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Finalized" GeneratedDuration="0:0:0.7">
+						<Storyboard>
+							<DoubleAnimation BeginTime="0:0:0.7" Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
+							<DoubleAnimation BeginTime="0:0:0.7" Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel"/>
+							<DoubleAnimation Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="loopList"/>
+							<DoubleAnimation Duration="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect"/>
+						</Storyboard>
+					</VisualTransition>
+					<VisualTransition From="Opened" GeneratedDuration="0:0:0.7" To="Finalized">
+						<Storyboard>
+							<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
+							<DoubleAnimation Duration="0:0:0.3" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" BeginTime="0:0:0.4"/>
+						</Storyboard>
+					</VisualTransition>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="Opened">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="maskingRect">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="loopList">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="TrackSelected">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="maskingRect">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="loopList">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="Finalized">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="maskingRect">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="loopList">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="loopList" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="0.005" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="ButtonStates">
+				<VisualState x:Name="Stopped">
+					<Storyboard>
+						<ColorAnimation Duration="0" To="{StaticResource PhoneDisabledColor}" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="rectangle" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="Playing"/>
+				<VisualState x:Name="Recording"/>
+				<VisualState x:Name="Finalizing"/>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
@@ -191,29 +257,8 @@
 				<ColumnDefinition/>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<!--<StackPanel x:Name="trackPanel" Margin="0,-33,0,14" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2">
-				<StackPanel.RenderTransform>
-					<CompositeTransform/>
-				</StackPanel.RenderTransform>
-				<Grid>
-					<TextBlock x:Name="loopListBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loop List" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}"/>
-					<TextBlock Text="{Binding SelectedBank.BankName}" HorizontalAlignment="Right" Margin="{StaticResource PhoneMargin}"/>
-				</Grid>
-				<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" HorizontalAlignment="Left" Height="233" VerticalAlignment="Top" SelectionChanged="LongListSelector_SelectionChanged" Width="680" Margin="12,0,0,0" ItemTemplate="{StaticResource LoopItemTemplate}"/>
-				<StackPanel Height="100" Orientation="Horizontal" Margin="0">
-					<Button x:Name="continueButton" Visibility="Collapsed" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Cont" Click="continueButton_Click" Margin="{StaticResource PhoneMargin}"/>
-					<Button x:Name="stopButton" Visibility="Collapsed" IsEnabled="{Binding Instance.Stop, Source={StaticResource MainViewModel}}" Content="Stop" Click="stopButton_Click" Margin="{StaticResource PhoneMargin}"/>
-					<Button x:Name="saveButton" Visibility="Visible" Content="Save" Click="saveButton_Click"  Margin="{StaticResource PhoneMargin}"/>
-					<Button x:Name="recOneButton" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Record" Click="recOneButton_Click" Margin="{StaticResource PhoneMargin}"/>
-					<Button x:Name="metronomeButton" Content="Metronome" Click="metronomeButton_Click" Margin="{StaticResource PhoneMargin}"/>
-					<Button x:Name="finalizeButton" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Finalize" Click="finalizeButton_Click" Margin="{StaticResource PhoneMargin}"/>
-				</StackPanel>
-				<Grid Height="44">
-					<Rectangle x:Name="boundingBox" Stroke="{StaticResource PhoneBorderBrush}" Margin="41,0,0,10" HorizontalAlignment="Left" Width="622"/>
-					<Rectangle x:Name="progressRect" Stroke="{StaticResource PhoneBorderBrush}" Margin="42,0,0,10" Width="0" HorizontalAlignment="Left" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}"/>
-				</Grid>
-			</StackPanel>-->
-			<StackPanel x:Name="BankPanel" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2" Visibility="Collapsed">
+			
+			<!--<StackPanel x:Name="BankPanel" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2" Visibility="Collapsed">
 				<StackPanel.RenderTransform>
 					<CompositeTransform/>
 				</StackPanel.RenderTransform>
@@ -236,7 +281,7 @@
 					<TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="48" Text="{Binding SelectedBank.BankName}"/>
 					<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" RenderTransformOrigin="0.444,0.484" Width="311" Margin="0,12"/>
 				</StackPanel>
-			</StackPanel>
+			</StackPanel>-->
 			<Grid x:Name="trackPanel" Grid.ColumnSpan="2" Margin="12" Visibility="Visible">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="4*"/>
@@ -246,7 +291,7 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<Grid x:Name="trackGrid" RenderTransformOrigin="1,0.5" Visibility="Collapsed">
+				<Grid x:Name="trackGrid" RenderTransformOrigin="1,0.5">
 					<Grid.RenderTransform>
 						<CompositeTransform ScaleX="0"/>
 					</Grid.RenderTransform>
@@ -255,7 +300,10 @@
 							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
 						</Rectangle.Fill>
 					</Rectangle>
-                    <phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" SelectionChanged="LongListSelector_SelectionChanged" ItemTemplate="{StaticResource LoopItemTemplate}" Margin="{StaticResource PhoneMargin}">
+					<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" SelectionChanged="LongListSelector_SelectionChanged" ItemTemplate="{StaticResource LoopItemTemplate}" Margin="{StaticResource PhoneMargin}" RenderTransformOrigin="0.5,0.5">
+						<phone:LongListSelector.RenderTransform>
+							<CompositeTransform/>
+						</phone:LongListSelector.RenderTransform>
 						<phone:LongListSelector.Background>
 							<SolidColorBrush Color="{StaticResource PhoneChromeColor}"/>
 						</phone:LongListSelector.Background>
@@ -269,7 +317,7 @@
 					</Rectangle>
 					<Grid x:Name="recPanel" Margin="{StaticResource PhoneMargin}" RenderTransformOrigin="0.5,0.5">
 						<Grid.RenderTransform>
-							<CompositeTransform/>
+							<CompositeTransform ScaleX="0"/>
 						</Grid.RenderTransform>
 						<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Record New Track" VerticalAlignment="Top" Margin="0,12,0,0">
 							<TextBlock.Foreground>
@@ -286,7 +334,7 @@
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
 							</Border.BorderBrush>
-							<Rectangle Margin="20">
+							<Rectangle x:Name="rectangle" Margin="20">
 								<Rectangle.Fill>
 									<SolidColorBrush Color="{StaticResource PhoneContrastBackgroundColor}"/>
 								</Rectangle.Fill>
@@ -297,9 +345,9 @@
 							<toolkitPrimitives:ToggleSwitchButton Content="ToggleSwitchButton" Click="metronomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 						</StackPanel>
 					</Grid>
-					<Grid x:Name="editPanel" Margin="{StaticResource PhoneMargin}" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+					<Grid x:Name="editPanel" Margin="{StaticResource PhoneMargin}" RenderTransformOrigin="0.5,0.5">
 						<Grid.RenderTransform>
-							<CompositeTransform/>
+							<CompositeTransform ScaleX="0"/>
 						</Grid.RenderTransform>
 						<Grid.RowDefinitions>
 							<RowDefinition Height="3*"/>
@@ -310,17 +358,30 @@
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
 						<StackPanel>
-							<Slider Orientation="Vertical" Margin="0" Height="175"/>
-							<TextBlock TextWrapping="Wrap" Text="Volume" HorizontalAlignment="Center"/>
+							<Image x:Name="delButton" Height="30" Width="30" HorizontalAlignment="Left" Source="/Toolkit.Content/ApplicationBar.Delete.png" Tap="delButton_Tap">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="Tap">
+										<ec:GoToStateAction StateName="Opened"/>
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+							</Image>
+                            <Slider x:Name="VolumeSlider"  Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0" Height="150"/>
+							<TextBlock x:Name="volumeBlock" TextWrapping="Wrap" Text="Volume" HorizontalAlignment="Center"/>
 						</StackPanel>
 						<StackPanel Grid.Column="1">
-							<Image x:Name="finishTrackButton" Tap="finishTrackButton_Tap" HorizontalAlignment="Right" Height="30" VerticalAlignment="Top" Width="30" Source="/Toolkit.Content/ApplicationBar.Check.png"/>
+							<Image x:Name="finishTrackButton" Tap="finishTrackButton_Tap" HorizontalAlignment="Right" Height="30" VerticalAlignment="Top" Width="30" Source="/Toolkit.Content/ApplicationBar.Check.png">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="Tap">
+										<ec:GoToStateAction StateName="Opened"/>
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+							</Image>
 							<Button Content="+20" HorizontalAlignment="Center" Margin="34,0,33,0" BorderBrush="{x:Null}"/>
-							<TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" FontSize="32"/>
+							<TextBlock x:Name="OffsetTextBlock" TextWrapping="Wrap" HorizontalAlignment="Center" FontSize="32"/>
 							<Button Content="-20" HorizontalAlignment="Center" BorderBrush="{x:Null}"/>
 						</StackPanel>
-						<Button Content="Reset" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" BorderBrush="{x:Null}"/>
-						<Button Content="Play" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" BorderBrush="{x:Null}"/>
+						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" BorderBrush="{x:Null}"/>
+						<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" BorderBrush="{x:Null}"/>
 					</Grid>
 					<Rectangle x:Name="maskingRect" Stroke="Black" RenderTransformOrigin="0,0.5">
 						<Rectangle.Fill>
@@ -331,7 +392,7 @@
 						</Rectangle.RenderTransform>
 					</Rectangle>
 				</Grid>
-                <ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="1" Grid.ColumnSpan="2"/>
+				<ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="1" Grid.ColumnSpan="2"/>
 			</Grid>
 		</Grid>
 	</Grid>
