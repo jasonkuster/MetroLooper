@@ -1,0 +1,253 @@
+Removed from BankPage
+	Finalized Bank Load
+					//IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                    //if (isoStore.FileExists(b.finalTrack))
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine("File " + b.finalTrack + " exists! t's size is " + b.Size);
+                    //    IsolatedStorageFileStream file = isoStore.OpenFile(b.finalTrack, FileMode.Open);
+                    //    byte[] buffer;
+                    //    using (BinaryReader r = new BinaryReader(file))
+                    //    {
+                    //        buffer = r.ReadBytes(b.Size);
+                    //    }
+                    //    viewModel.AudioMan.LoadBank(b.bankID, buffer, b.Size, b.Offset, b.Volume, b.Pitch);
+                    //}
+					
+	Non-Finalized Bank Load
+
+                        //    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                        //    if (isoStore.FileExists(t.fileName))
+                        //    {
+                        //        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                        //        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                        //        byte[] buffer;
+                        //        using (BinaryReader r = new BinaryReader(file))
+                        //        {
+                        //            buffer = r.ReadBytes(t.Size);
+                        //        }
+                        //        viewModel.AudioMan.LoadTrack(b.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
+                        //    }
+
+						
+Removed from LoopPage
+        private void LoadData()
+        {
+            foreach (Track t in viewModel.SelectedBank.tracks)
+            {
+                if (t.Size > 0)
+                {
+                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                    if (isoStore.FileExists(t.fileName))
+                    {
+                        System.Diagnostics.Debug.WriteLine("File " + t.fileName + " exists! t's size is " + t.Size);
+                        IsolatedStorageFileStream file = isoStore.OpenFile(t.fileName, FileMode.Open);
+                        byte[] buffer;
+                        using (BinaryReader r = new BinaryReader(file))
+                        {
+                            buffer = r.ReadBytes(t.Size);
+                        }
+                        viewModel.AudioMan.LoadTrack(viewModel.SelectedBank.bankID, t.trackID, buffer, t.Size, t.Offset, t.Latency, t.Volume);
+                    }
+                }
+            }
+        }
+		
+		
+                //    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                //    if (isoStore.FileExists(viewModel.SelectedBank.finalTrack))
+                //    {
+                //        System.Diagnostics.Debug.WriteLine("File " + viewModel.SelectedBank.finalTrack + " exists! t's size is " + viewModel.SelectedBank.Size);
+                //        IsolatedStorageFileStream file = isoStore.OpenFile(viewModel.SelectedBank.finalTrack, FileMode.Open);
+                //        byte[] buffer;
+                //        using (BinaryReader r = new BinaryReader(file))
+                //        {
+                //            buffer = r.ReadBytes(viewModel.SelectedBank.Size);
+                //        }
+                //        viewModel.AudioMan.LoadBank(viewModel.SelectedBank.bankID, buffer, viewModel.SelectedBank.Size, viewModel.SelectedBank.Offset, viewModel.SelectedBank.Volume, viewModel.SelectedBank.Pitch);
+                //    }
+				
+
+        <!--
+    	<Storyboard x:Name="FinalizeAnimation">
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="trackPanel">
+    			<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+    		</DoubleAnimationUsingKeyFrames>
+    		<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="trackPanel">
+    			<EasingPointKeyFrame KeyTime="0" Value="0.5,0"/>
+    			<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,1"/>
+    		</PointAnimationUsingKeyFrames>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    			<DiscreteObjectKeyFrame KeyTime="0:0:1">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Collapsed</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="BankPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleY)" Storyboard.TargetName="BankPanel">
+    			<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+    		</DoubleAnimationUsingKeyFrames>
+    		<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="BankPanel">
+    			<EasingPointKeyFrame KeyTime="0" Value="0.5,1"/>
+    			<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0"/>
+    		</PointAnimationUsingKeyFrames>
+    	</Storyboard>
+    	<Storyboard x:Name="TrackSelect">
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel">
+    			<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0"/>
+    		</DoubleAnimationUsingKeyFrames>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    			<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Collapsed</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="editPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel">
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+    		</DoubleAnimationUsingKeyFrames>
+    	</Storyboard>
+        -->
+        
+		
+		
+        <!--
+    	<Storyboard x:Name="FinishTrack">
+    		<DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" d:IsOptimized="True"/>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="editPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0:0:0.2">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Collapsed</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="recPanel">
+    			<DiscreteObjectKeyFrame KeyTime="0:0:0.3">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel">
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+    		</DoubleAnimationUsingKeyFrames>
+    	</Storyboard>
+        -->
+		
+		
+    	<Storyboard x:Name="MeasureAnimation">
+    		<DoubleAnimation Duration="0:0:4" To="621" Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="progressRect" d:IsOptimized="True"/>
+    	</Storyboard>
+		
+		
+    	<Storyboard x:Name="PageOpened">
+    		<DoubleAnimation Duration="0:0:0.5" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+    		<DoubleAnimation Duration="0:0:0.5" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
+    		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="trackGrid">
+    			<DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+    				<DiscreteObjectKeyFrame.Value>
+    					<Visibility>Visible</Visibility>
+    				</DiscreteObjectKeyFrame.Value>
+    			</DiscreteObjectKeyFrame>
+    		</ObjectAnimationUsingKeyFrames>
+    		<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid">
+    			<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+    			<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+    		</DoubleAnimationUsingKeyFrames>
+    	</Storyboard>
+		
+		<!--<StackPanel x:Name="trackPanel" Margin="0,-33,0,14" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2">
+				<StackPanel.RenderTransform>
+					<CompositeTransform/>
+				</StackPanel.RenderTransform>
+				<Grid>
+					<TextBlock x:Name="loopListBlock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Loop List" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}"/>
+					<TextBlock Text="{Binding SelectedBank.BankName}" HorizontalAlignment="Right" Margin="{StaticResource PhoneMargin}"/>
+				</Grid>
+				<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" HorizontalAlignment="Left" Height="233" VerticalAlignment="Top" SelectionChanged="LongListSelector_SelectionChanged" Width="680" Margin="12,0,0,0" ItemTemplate="{StaticResource LoopItemTemplate}"/>
+				<StackPanel Height="100" Orientation="Horizontal" Margin="0">
+					<Button x:Name="continueButton" Visibility="Collapsed" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Cont" Click="continueButton_Click" Margin="{StaticResource PhoneMargin}"/>
+					<Button x:Name="stopButton" Visibility="Collapsed" IsEnabled="{Binding Instance.Stop, Source={StaticResource MainViewModel}}" Content="Stop" Click="stopButton_Click" Margin="{StaticResource PhoneMargin}"/>
+					<Button x:Name="saveButton" Visibility="Visible" Content="Save" Click="saveButton_Click"  Margin="{StaticResource PhoneMargin}"/>
+					<Button x:Name="recOneButton" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Record" Click="recOneButton_Click" Margin="{StaticResource PhoneMargin}"/>
+					<Button x:Name="metronomeButton" Content="Metronome" Click="metronomeButton_Click" Margin="{StaticResource PhoneMargin}"/>
+					<Button x:Name="finalizeButton" IsEnabled="{Binding Instance.RecButtons, Source={StaticResource MainViewModel}}" Content="Finalize" Click="finalizeButton_Click" Margin="{StaticResource PhoneMargin}"/>
+				</StackPanel>
+				<Grid Height="44">
+					<Rectangle x:Name="boundingBox" Stroke="{StaticResource PhoneBorderBrush}" Margin="41,0,0,10" HorizontalAlignment="Left" Width="622"/>
+					<Rectangle x:Name="progressRect" Stroke="{StaticResource PhoneBorderBrush}" Margin="42,0,0,10" Width="0" HorizontalAlignment="Left" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}"/>
+				</Grid>
+			</StackPanel>-->
+			
+			
+			
+                //FinalizeAnimation.Begin();
+                //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_final", CreationCollisionOption.ReplaceExisting);
+                //using (var s = await file.OpenStreamForWriteAsync())
+                //{
+                //    s.Write(trackData, 0, trackLength);
+                //}
+
+
+        //private async void saveButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (viewModel.SelectedBank.tracks.Count > 0)
+        //    {
+        //        int selBank = viewModel.SelectedBank.bankID;
+        //        foreach (Track t in viewModel.SelectedBank.tracks)
+        //        {
+        //            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("bank_" + viewModel.SelectedBank.bankID + "_track_" + t.trackID, CreationCollisionOption.ReplaceExisting);
+        //            byte[] trackData;
+        //            int trackLength = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, t.trackID, out trackData);
+        //            using (var s = await file.OpenStreamForWriteAsync())
+        //            {
+        //                s.Write(trackData, 0, trackLength);
+        //            }
+        //            t.fileName = file.Path;
+        //            t.Size = trackLength;
+        //            t.Latency = viewModel.AudioMan.GetTrackLatency(selBank, t.trackID);
+        //            t.Offset = viewModel.AudioMan.GetOffsetMS(selBank, t.trackID);
+        //            t.Volume = viewModel.AudioMan.GetVolumeDB(selBank, t.trackID);
+        //        }
+        //    }
+        //}
+		
+		
+		
+            //if (!settings.Contains("projects"))
+            //{
+            //    settings["projects"] = new ObservableCollection<Project>();
+            //    ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
+            //    ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
+            //}
+            //viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
+            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+            //IsolatedStorageSettings.ApplicationSettings.Save();
