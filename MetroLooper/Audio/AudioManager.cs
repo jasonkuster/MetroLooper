@@ -542,6 +542,23 @@ namespace MetroLooper
             }
         }
 
+        public void TestExport()
+        {
+            bool[][] instructions = new bool[3][];
+            for (int i = 0; i < 3; i++)
+            {
+                instructions[i] = new bool[5];
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                instructions[0][i] = true;
+            }
+
+            byte[] audioData;
+            SubmitExportInstructions(instructions, 1, 5, out audioData); 
+        }
+
         /// <summary>
         /// Submit Export Instructions
         /// </summary>
