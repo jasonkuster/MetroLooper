@@ -80,7 +80,7 @@ namespace MetroLooper
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-
+            NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void newProjButton_Click(object sender, EventArgs e)

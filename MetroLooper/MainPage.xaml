@@ -53,7 +53,7 @@
             <!--Pivot item two-->
             <phone:PivotItem Header="skydrive">
                 <Grid>
-                    <phone:LongListSelector x:Name="listselector">
+                    <phone:LongListSelector x:Name="listselector" Margin="488,615,-488,-615">
                         <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding name}"/>
