@@ -393,9 +393,14 @@ namespace MetroLooper
         private void NewTrackButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             VisualStateManager.GoToState(this, "Opened", true);
-            viewModel.SelectedTrack.IsSelected = false;
-            viewModel.SelectedTrack = null;
+            if (viewModel.SelectedTrack != null)
+            {
+                viewModel.SelectedTrack.IsSelected = false;
+                viewModel.SelectedTrack = null;
+            }
+
             loopList.SelectedItem = null;
+            
         }
 
         private void FinalizeButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
