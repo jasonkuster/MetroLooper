@@ -321,8 +321,9 @@ namespace MetroLooper
 
         private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ContentPanel.Visibility = System.Windows.Visibility.Visible;
-            ContentPanel2.Visibility = System.Windows.Visibility.Collapsed;
+            viewModel.AudioMan.TestExport();
+//            ContentPanel.Visibility = System.Windows.Visibility.Visible;
+  //          ContentPanel2.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void editImageOne_Tap(object sender, System.Windows.Input.GestureEventArgs e)
