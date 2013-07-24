@@ -92,7 +92,7 @@
 		</StackPanel>
 
         <!--ContentPanel - place additional content here-->
-		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Visibility="Collapsed">
+		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Visibility="Visible">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
@@ -187,6 +187,7 @@
 				<StackPanel Margin="0,288,0,0">
 					<Grid Height="70">
 						<Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>
+                        <Button x:Name="swapButton" Content="Swap" Click="swapButton_Click" HorizontalAlignment="Left"/>
 						<Button x:Name="stopAllButton" Click="stopAllButton_Click" Content="Stop All" VerticalAlignment="Center" Margin="0" HorizontalAlignment="Center"/>
 						<Button Content="Play Recording" Visibility="Collapsed" Margin="422,0,282,0"/>
 						<Button x:Name="ResetButton" Click="ResetButton_Click"  Content="Reset" VerticalAlignment="Center" Margin="598,0,0,0" HorizontalAlignment="Center"/>
@@ -202,7 +203,7 @@
 				</StackPanel>
 			</Grid>
 		</Grid>
-		<Grid x:Name="ContentPanel2" Visibility="Visible" Grid.RowSpan="2" Grid.Row="2">
+		<Grid x:Name="ContentPanel2" Visibility="Collapsed" Grid.RowSpan="2" Grid.Row="2">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*"/>
 				<RowDefinition Height="2*"/>
@@ -375,7 +376,7 @@
 				</Grid>
 				<Slider x:Name="volumeSliderSix" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
 			</StackPanel>
-			<Button x:Name="swapButton" Content="Swap" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Click="swapButton_Click"/>
+			<Button x:Name="swapButton2" Content="Swap" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Click="swapButton_Click"/>
 		</Grid>
 	</Grid>
 

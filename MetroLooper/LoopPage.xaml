@@ -45,7 +45,7 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem x:Name="openWavButton" Click="openWavButton_Click" Text="new track from wav"/>
+                <shell:ApplicationBarMenuItem x:Name="openWavButton" IsEnabled="False" Click="openWavButton_Click" Text="new track from wav"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

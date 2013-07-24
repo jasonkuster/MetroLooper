@@ -10,6 +10,7 @@ using System.IO.IsolatedStorage;
 using Windows.Storage;
 using System.ComponentModel;
 using System.Windows.Media;
+using Microsoft.Live;
 //using Windows.UI;
 
 namespace MetroLooper.ViewModels
@@ -66,6 +67,24 @@ namespace MetroLooper.ViewModels
             private set
             {
                 audioMan = value;
+            }
+        }
+
+        private LiveConnectClient client;
+        public LiveConnectClient Client
+        {
+            get
+            {
+                if (client == null)
+                {
+                    return null;
+                }
+                return client;
+
+            }
+            set
+            {
+                client = value;
             }
         }
 

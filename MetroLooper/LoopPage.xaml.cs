@@ -24,7 +24,7 @@ namespace MetroLooper
 {
     public partial class LoopPage : PhoneApplicationPage
     {
-        public enum LOCK_STATE { RECORDING, ALL, NONE };
+        public enum LOCK_STATE { RECORDING, STOPPED, PLAYING, FINALIZING };
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
 
         #region Constructors
@@ -36,8 +36,7 @@ namespace MetroLooper
             this.DataContext = viewModel;
             timerRunning = false;
 
-            //viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
-            VisualStateManager.GoToState(this, "Starting", true);
+            viewModel.AudioMan.GetPerf(); //DO NOT REMOVE
         }
 
         #endregion
@@ -47,7 +46,7 @@ namespace MetroLooper
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE); //TODO CHANGE THIS TO STATES
+            ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE); //TODO: CHANGE THIS TO STATES
             if (!viewModel.SelectedBank.Finalized)
             {
                 if (viewModel.SelectedBank.tracks.Count > 0)
@@ -62,40 +61,27 @@ namespace MetroLooper
                 }
                 this.recTimer = new Timer(CompleteRecord, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
                 this.micTimer = new Timer(StartMic, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+                VisualStateManager.GoToState(this, "Opened", true);
             }
             else
             {
                 VolumeSlider.Value = viewModel.SelectedBank.Volume;
-                //PitchRatioSlider.Value = viewModel.SelectedBank.Pitch; //TODO ADD THIS
+                //PitchRatioSlider.Value = viewModel.SelectedBank.Pitch; //TODO: ADD THIS
                 OffsetTextBlock.Text = viewModel.SelectedBank.Offset.ToString();
+                VisualStateManager.GoToState(this, "Finalized", true);
             }
-            VisualStateManager.GoToState(this, "Opened", true);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (!viewModel.SelectedBank.Finalized)
             {
-                if (!viewModel.SelectedBank.Finalized)
-                {
-                    timer.Dispose();
-                    recTimer.Dispose();
-                    micTimer.Dispose();
-                }
-                viewModel.AudioMan.StopAll();
+                timer.Dispose();
+                recTimer.Dispose();
+                micTimer.Dispose();
                 viewModel.AudioMan.StopClick();
             }
-            else
-            {
-                if (!viewModel.SelectedBank.Finalized)
-                {
-                    timer.Dispose();
-                    recTimer.Dispose();
-                    micTimer.Dispose();
-                    viewModel.AudioMan.StopClick();
-                }
-                viewModel.AudioMan.StopAll();
-            }
+            viewModel.AudioMan.StopAll();
             base.OnNavigatingFrom(e);
         }
 
@@ -183,36 +169,12 @@ namespace MetroLooper
                 PlayAnimation.Begin();
                 viewModel.AudioMan.StopAll();
                 viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
+                viewModel.AudioMan.SetClickVolume(MetronomeSlider.IsChecked == true ? 1 : 0);
             });
 
             micTimer.Change(3950, System.Threading.Timeout.Infinite);
 
             viewModel.AudioMan.PlayClick();
-
-
-            //System.Diagnostics.Debug.WriteLine("Ticking: " + ticking + ", startTicking: " + startTicking);
-            //if (startTicking)
-            //{
-            //    Dispatcher.BeginInvoke(delegate
-            //    {
-            //        viewModel.AudioMan.SetClickVolume(1.0f);
-            //        viewModel.AudioMan.PlayClick();
-            //    });
-            //    startTicking = false;
-            //    ticking = true;
-            //}
-            //else if (ticking)
-            //{
-            //    Dispatcher.BeginInvoke(delegate
-            //    {
-            //        viewModel.AudioMan.PlayClick();
-            //    });
-            //}
-            //else //This probably shouldn't happen. There's some shenanigans going on here. Don't delete this without thinking it all through.
-            //{ //also this was running and no dispatcher so what the fuck
-            //    viewModel.AudioMan.SetClickVolume(0);
-            //    viewModel.AudioMan.PlayClick();
-            //}
         }
 
         #region Button Events

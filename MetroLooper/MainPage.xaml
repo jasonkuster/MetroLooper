@@ -56,12 +56,12 @@
                     <phone:LongListSelector x:Name="listselector">
                         <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding}"/>
+                                <TextBlock Text="{Binding name}"/>
                             </DataTemplate>
                         </phone:LongListSelector.ItemTemplate>
                     </phone:LongListSelector>
-                    <my:SignInButton Name="btnSignin" Click="btnSignin_Click" ClientId="00000000440FD145" Scopes="wl.signin wl.basic wl.skydrive" TextType="SignIn" SessionChanged="btnSignin_SessionChanged" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                    <TextBlock Height="32" HorizontalAlignment="Left" Margin="12,78,0,0" Name="infoTextBlock" Text="" VerticalAlignment="Top" Width="419" />
+                    <my:SignInButton Name="btnSignin" Click="btnSignin_Click" ClientId="00000000440FD145" Scopes="wl.signin wl.basic wl.skydrive wl.skydrive_update" TextType="SignIn" SessionChanged="btnSignin_SessionChanged" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="224,21,0,0" />
+                    <TextBlock Height="32" HorizontalAlignment="Left" Margin="38,114,0,0" Name="infoTextBlock" Text="" VerticalAlignment="Top" Width="569" />
                 </Grid>
             </phone:PivotItem>
         </phone:Pivot>

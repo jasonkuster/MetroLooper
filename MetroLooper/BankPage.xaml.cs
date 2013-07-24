@@ -21,8 +21,6 @@ namespace MetroLooper
 
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
         MainViewModel viewModel;
-        string selectedProjString = "";
-        int selectedProj = -1;
 
         bool play1 = false;
         bool play2 = false;
@@ -40,7 +38,7 @@ namespace MetroLooper
             if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
-                ((ObservableCollection<Project>)settings["projects"]).Add(new Project("Project One"));
+                ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
                 ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
             }
             viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
@@ -321,8 +319,8 @@ namespace MetroLooper
 
         private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ContentPanel.Visibility = System.Windows.Visibility.Visible;
-            ContentPanel2.Visibility = System.Windows.Visibility.Collapsed;
+            ContentPanel.Visibility = ContentPanel.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            ContentPanel2.Visibility = ContentPanel2.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }
 
         private void editImageOne_Tap(object sender, System.Windows.Input.GestureEventArgs e)

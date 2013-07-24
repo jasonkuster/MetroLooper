@@ -15,15 +15,16 @@ namespace MetroLooper.Model
             banks = new ObservableCollection<Bank>();
         }
 
-        public Project(string projName)
-        {
-            this.projName = projName;
-            banks = new ObservableCollection<Bank>();
-        }
-
         public string projName { get; set; }
         public ObservableCollection<Bank> banks { get; set; }
         public int bpm { get; set; }
         public int measures { get; set; }
+        public int trackLen
+        {
+            get
+            {
+                return ((measures * 4) / (bpm / 60) * 1000);
+            }
+        }
     }
 }
