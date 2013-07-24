@@ -35,7 +35,7 @@ namespace MetroLooper
             InitializeComponent();
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
-            if (!settings.Contains("projects"))
+            //if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
@@ -326,6 +326,21 @@ namespace MetroLooper
         private void editImageOne_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
+        }
+
+        private void playButton_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+
+        }
+
+        private void editButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+
+        }
+
+        private void deleteButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+
         }
     }
 }
