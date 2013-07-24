@@ -33,7 +33,7 @@ namespace MetroLooper.Model
             }
             set
             {
-                trackID = value;
+                _trackID = value;
                 this.RaisePropertyChanged("trackName");
             }
         }
