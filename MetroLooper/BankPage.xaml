@@ -391,10 +391,10 @@
 						</StackPanel>
 						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" VerticalAlignment="Center" Grid.Row="1" BorderBrush="White"/>
 						<Grid Grid.Row="1" Grid.Column="1">
-							<Border x:Name="playButton" BorderBrush="White" BorderThickness="3" Margin="0,12,77,12">
+							<Border x:Name="playButton" Tap="PlayBankButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0,12,77,12">
 								<Image x:Name="playStopImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
 							</Border>
-							<Border x:Name="delButton" BorderBrush="White" BorderThickness="3" Margin="75,12,0,12">
+                            <Border x:Name="delButton" Tap="delButton_Tap" BorderBrush="White" BorderThickness="3" Margin="75,12,0,12">
 								<Image x:Name="delImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Delete.png"/>
 							</Border>
 						</Grid>
