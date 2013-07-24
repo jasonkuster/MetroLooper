@@ -15,7 +15,7 @@
 
     <phone:PhoneApplicationPage.Resources>
         <vm:MainViewModel x:Key="MainViewModel"/>
-        <Storyboard x:Name="Bank1Go">
+        <!--<Storyboard x:Name="Bank1Go">
         	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect1">
         		<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
         		<EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
@@ -67,7 +67,25 @@
         			</DiscreteObjectKeyFrame.Value>
         		</DiscreteObjectKeyFrame>
         	</ObjectAnimationUsingKeyFrames>
-        </Storyboard>
+        </Storyboard>-->
+        <DataTemplate x:Key="BankItem">
+        	<StackPanel Margin="{StaticResource PhoneMargin}" Width="187" Height="165">
+        		<TextBlock TextWrapping="Wrap" Text="BankName" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+        		<Border BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="39">
+        			<Image Source="/Toolkit.Content/ApplicationBar.Play.png"/>
+        		</Border>
+        		<StackPanel Orientation="Horizontal" Height="48">
+        			<Border BorderBrush="White" BorderThickness="3" Margin="0,0,12,0">
+        				<Image Source="/Assets/AppBar/edit.png" Margin="0"/>
+        			</Border>
+        			<TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center"/>
+        			<Border BorderBrush="White" BorderThickness="3" Margin="12,0,0,0">
+        				<Image Source="/Toolkit.Content/ApplicationBar.Delete.png"/>
+        			</Border>
+        		</StackPanel>
+        		<Slider Margin="0,-8,0,0"/>
+        	</StackPanel>
+        </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.FontFamily>
 		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
@@ -205,16 +223,14 @@
 		</Grid>
 		<Grid x:Name="ContentPanel2" Visibility="Visible" Grid.RowSpan="2" Grid.Row="2">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="2*"/>
-				<RowDefinition Height="2*"/>
-				<RowDefinition/>
+				<RowDefinition Height="341*"/>
+				<RowDefinition Height="85*"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
+			<phone:LongListSelector LayoutMode="Grid" ItemTemplate="{StaticResource BankItem}"/>
+			<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Margin="12,12,497,183" Visibility="Collapsed">
 				<Grid x:Name="playGridOne" Width="{Binding ActualHeight, ElementName=bankOnePanel}">
 					<Grid.RowDefinitions>
 						<RowDefinition/>
@@ -241,142 +257,7 @@
 				</Grid>
 				<Slider x:Name="volumeSliderOne" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
 			</StackPanel>
-			<StackPanel Grid.Column="1" x:Name="bankTwoPanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
-				<Grid x:Name="playGridTwo" Width="{Binding ActualHeight, ElementName=bankTwoPanel}">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle x:Name="bankTwoRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
-						<Rectangle.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<Image x:Name="playButtonTwo" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
-					<es:Arc x:Name="playRingTwo" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-						<es:Arc.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
-						</es:Arc.Fill>
-					</es:Arc>
-					<Image x:Name="editImageTwo" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
-				</Grid>
-				<Slider x:Name="volumeSliderTwo" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
-			</StackPanel>
-			<StackPanel Grid.Column="2" x:Name="bankThreePanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
-				<Grid x:Name="playGridThree" Width="{Binding ActualHeight, ElementName=bankThreePanel}">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle x:Name="bankThreeRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
-						<Rectangle.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<Image x:Name="playButtonThree" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
-					<es:Arc x:Name="playRingThree" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-						<es:Arc.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
-						</es:Arc.Fill>
-					</es:Arc>
-					<Image x:Name="editImageThree" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
-				</Grid>
-				<Slider x:Name="volumeSliderThree" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
-			</StackPanel>
-			<StackPanel Grid.Column="0" Grid.Row="1" x:Name="bankFourPanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
-				<Grid x:Name="playGridFour" Width="{Binding ActualHeight, ElementName=bankFourPanel}">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle x:Name="bankFourRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
-						<Rectangle.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<Image x:Name="playButtonFour" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
-					<es:Arc x:Name="playRingFour" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-						<es:Arc.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
-						</es:Arc.Fill>
-					</es:Arc>
-					<Image x:Name="editImageFour" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
-				</Grid>
-				<Slider x:Name="volumeSliderFour" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
-			</StackPanel>
-			<StackPanel Grid.Column="1" Grid.Row="1" x:Name="bankFivePanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
-				<Grid x:Name="playGridFive" Width="{Binding ActualHeight, ElementName=bankFivePanel}">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle x:Name="bankFiveRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
-						<Rectangle.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<Image x:Name="playButtonFive" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
-					<es:Arc x:Name="playRingFive" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-						<es:Arc.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
-						</es:Arc.Fill>
-					</es:Arc>
-					<Image x:Name="editImageFive" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
-				</Grid>
-				<Slider x:Name="volumeSliderFive" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
-			</StackPanel>
-			<StackPanel Grid.Column="2" Grid.Row="1" x:Name="bankSixPanel" Orientation="Horizontal" Margin="{StaticResource PhoneMargin}">
-				<Grid x:Name="playGridSix" Width="{Binding ActualHeight, ElementName=bankSixPanel}">
-					<Grid.RowDefinitions>
-						<RowDefinition/>
-						<RowDefinition/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Rectangle x:Name="bankSixRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
-						<Rectangle.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-						</Rectangle.Fill>
-					</Rectangle>
-					<Image x:Name="playButtonSix" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
-					<es:Arc x:Name="playRingSix" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-						<es:Arc.Fill>
-							<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
-						</es:Arc.Fill>
-					</es:Arc>
-					<Image x:Name="editImageSix" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
-				</Grid>
-				<Slider x:Name="volumeSliderSix" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
-			</StackPanel>
-			<Button x:Name="swapButton2" Content="Swap" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Click="swapButton_Click"/>
+			<Button x:Name="swapButton2" Content="Swap" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Click="swapButton_Click"/>
 		</Grid>
 	</Grid>
 
