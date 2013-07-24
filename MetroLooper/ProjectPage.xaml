@@ -69,22 +69,27 @@
         	</ObjectAnimationUsingKeyFrames>
         </Storyboard>
         <DataTemplate x:Key="BankItem">
-        	<StackPanel Margin="{StaticResource PhoneMargin}" Width="187" Height="165">
-        		<TextBlock TextWrapping="Wrap" Text="BankName" Margin="0,0,0,3" HorizontalAlignment="Left"/>
-        		<Border BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="39">
-        			<Image Source="/Toolkit.Content/ApplicationBar.Play.png"/>
-        		</Border>
-        		<StackPanel Orientation="Horizontal" Height="48">
-        			<Border BorderBrush="White" BorderThickness="3" Margin="0,0,12,0">
-        				<Image Source="/Assets/AppBar/edit.png" Margin="0"/>
+        	<Grid Height="150" Width="200" Margin="{StaticResource PhoneMargin}">
+        		<StackPanel>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding bankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+        			<Border x:Name="playButton" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+        				<Image Source="/Toolkit.Content/ApplicationBar.Play.png"/>
         			</Border>
-        			<TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center"/>
-        			<Border BorderBrush="White" BorderThickness="3" Margin="12,0,0,0">
-        				<Image Source="/Toolkit.Content/ApplicationBar.Delete.png"/>
-        			</Border>
+        			<Grid Height="41">
+        				<Border x:Name="editButton" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+        					<Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
+        				</Border>
+        				<TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        				<Border x:Name="deleteButton" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+        					<Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+        				</Border>
+        			</Grid>
+                    <Slider x:Name="volumeSlider" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="0.0" Margin="0,-8,0,0"/>
         		</StackPanel>
-        		<Slider Margin="0,-8,0,0"/>
-        	</StackPanel>
+        		<Border BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Collapsed">
+        			<Image Source="/Assets/AppBar/add.png"/>
+        		</Border>
+        	</Grid>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.FontFamily>
@@ -229,7 +234,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<phone:LongListSelector LayoutMode="Grid" ItemTemplate="{StaticResource BankItem}"/>
+			<phone:LongListSelector LayoutMode="Grid" GridCellSize="224,174"  ItemsSource="{Binding SelectedProject.banks}" ItemTemplate="{StaticResource BankItem}"/>
 			<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Margin="12,12,497,183" Visibility="Collapsed">
 				<Grid x:Name="playGridOne" Width="{Binding ActualHeight, ElementName=bankOnePanel}">
 					<Grid.RowDefinitions>
