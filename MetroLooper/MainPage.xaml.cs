@@ -18,7 +18,6 @@ namespace MetroLooper
     public partial class MainPage : PhoneApplicationPage
     {
         MainViewModel viewModel;
-        private LiveConnectClient client;
         int count;
 
         // Constructor
@@ -26,7 +25,7 @@ namespace MetroLooper
         {
             InitializeComponent();
 
-            viewModel = new MainViewModel();
+            viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
 
             //_manager = new AudioManager();
@@ -109,47 +108,126 @@ namespace MetroLooper
         {
             if (e.Status == LiveConnectSessionStatus.Connected)
             {
-                client = new LiveConnectClient(e.Session);
-                LiveOperationResult fileList = await client.GetAsync("me/skydrive/files");
-                //LiveOperationResult operationResult = await client.GetAsync("me");
+                viewModel.Client = new LiveConnectClient(e.Session);
+                btnSignin.Visibility = System.Windows.Visibility.Collapsed;
                 try
                 {
-                    //dynamic meResult = operationResult.Result;
-                    //if (meResult.first_name != null &&
-                    //    meResult.last_name != null)
-                    //{
-                    //    infoTextBlock.Text = "Hello " +
-                    //        meResult.first_name + " " +
-                    //        meResult.last_name + "!";
-                    //}
-                    //else
-                    //{
-                    //    infoTextBlock.Text = "Hello, signed-in user!";
-                    //}
-                    List<object> fileResult = (List<object>)(fileList.Result["data"]);
-                    //var result = fileResult.ToString(); //JsonConvert.DeserializeObject<Dictionary<string,string>>(fileResult.ToString());
-                    List<string> l = new List<string>();
-
-                    foreach (IDictionary<string,object> k in fileResult)
+                    LiveOperationResult folderResult = await viewModel.Client.GetAsync("me/skydrive/files");
+                    dynamic items = folderResult.Result;
+                    List<object> folderItems = (List<object>)(((IDictionary<string,object>)items)["data"]);
+                    List<Dictionary<string,string>> objs = new List<Dictionary<string,string>>();
+                    foreach (object o in folderItems)
                     {
-                        l.Add(k["name"].ToString());
+                        IDictionary<string, object> obj = (IDictionary<string, object>)o;
+                        Dictionary<string,string> newobj = new Dictionary<string,string>();
+                        if (!obj["type"].ToString().Equals("folder") && !obj["type"].ToString().Equals("album"))
+                        {
+                            foreach(string key in obj.Keys)
+                            {
+                                if (obj[key] != null)
+                                {
+                                    newobj.Add(key, obj[key].ToString());
+                                }
+                            }
+                            objs.Add(newobj);
+                        }
                     }
-
-                    listselector.ItemsSource = l;
-                    //infoTextBlock.Text = result;
-
+                    listselector.ItemsSource = objs;
                 }
                 catch (LiveConnectException exception)
                 {
-                    this.infoTextBlock.Text = "Error calling API: " +
-                        exception.Message;
+                    this.infoTextBlock.Text = "Couldn't get list of projects because: " + exception.Message;
                 }
-                btnSignin.Visibility = System.Windows.Visibility.Collapsed;
-                infoTextBlock.Visibility = System.Windows.Visibility.Collapsed;
             }
             else
             {
-                infoTextBlock.Text = "Not signed in.";
+                this.infoTextBlock.Text = "not signed in";
+            }
+        }
+
+        //private System.Threading.CancellationTokenSource ctsUpload;
+
+        //private async void saveButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
+        //        dynamic res = clientResult.Result;
+        //        string path = res.id;
+        //        //var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        //        //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+        //        //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+        //        //picker.FileTypeFilter.Add("*");
+        //        //Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
+        //        //if (file != null)
+        //        {
+        //            this.progressBar.Value = 0;
+        //            var progressHandler = new Progress<LiveOperationProgress>(
+        //                (progress) => { this.progressBar.Value = progress.ProgressPercentage; });
+        //            this.ctsUpload = new System.Threading.CancellationTokenSource();
+        //            await viewModel.Client.BackgroundUploadAsync(path, new Uri("/shared/transfers/12 - Don't Stop Me Now.MP3", UriKind.RelativeOrAbsolute), OverwriteOption.DoNotOverwrite, this.ctsUpload.Token, progressHandler);
+        //            //"folder.8c8ce076ca27823f.8C8CE076CA27823F!134","MyUploadedPicture.jpg", file, true, this.ctsUpload.Token, progressHandler);
+        //            this.infoTextBlock.Text = "Upload completed.";
+        //        }
+        //    }
+        //    catch (System.Threading.Tasks.TaskCanceledException)
+        //    {
+        //        this.infoTextBlock.Text = "Upload cancelled.";
+        //    }
+        //    catch (LiveConnectException exception)
+        //    {
+        //        this.infoTextBlock.Text = "Error uploading file: " + exception.Message;
+        //    }
+        //}
+
+        //private void btnCancelUpload_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (this.ctsUpload != null)
+        //    {
+        //        this.ctsUpload.Cancel();
+        //    }
+        //}
+
+        private System.Threading.CancellationTokenSource ctsDownload;
+
+        private async void btnDownloadFile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
+                dynamic res = clientResult.Result;
+                string path = res.id;
+                //var picker = new Windows.Storage.Pickers.FileSavePicker();
+                //picker.SuggestedFileName = "MyDownloadedPicutre.jpg";
+                //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
+                //picker.FileTypeChoices.Add("Picture", new List<string>(new string[] { ".jpg" }));
+                //StorageFile file = await picker.PickSaveFileAsync();
+                //if (file != null)
+                {
+                    //this.progressBar.Value = 0;
+                    //var progressHandler = new Progress<LiveOperationProgress>(
+                        //(progress) => { this.progressBar.Value = progress.ProgressPercentage; });
+                    //this.ctsDownload = new System.Threading.CancellationTokenSource();
+                    //LiveConnectClient liveClient = new LiveConnectClient(this.session);
+                    await viewModel.Client.BackgroundDownloadAsync(path, new Uri(""));
+                    this.infoTextBlock.Text = "Download completed.";
+                }
+            }
+            catch (System.Threading.Tasks.TaskCanceledException)
+            {
+                this.infoTextBlock.Text = "Download cancelled.";
+            }
+            catch (LiveConnectException exception)
+            {
+                this.infoTextBlock.Text = "Error getting file contents: " + exception.Message;
+            }
+        }
+
+        private void btnCancelDownload_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.ctsDownload != null)
+            {
+                this.ctsDownload.Cancel();
             }
         }
 

@@ -100,12 +100,12 @@
     <Compile Include="Model\Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\XNAAsyncDispatcher.cs" />
-    <Compile Include="BankPage.xaml.cs">
-      <DependentUpon>BankPage.xaml</DependentUpon>
+    <Compile Include="ProjectPage.xaml.cs">
+      <DependentUpon>ProjectPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalizedStrings.cs" />
-    <Compile Include="LoopPage.xaml.cs">
-      <DependentUpon>LoopPage.xaml</DependentUpon>
+    <Compile Include="BankPage.xaml.cs">
+      <DependentUpon>BankPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -137,11 +137,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="BankPage.xaml">
+    <Page Include="ProjectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LoopPage.xaml">
+    <Page Include="BankPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
