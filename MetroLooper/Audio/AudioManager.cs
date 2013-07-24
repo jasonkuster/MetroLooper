@@ -573,7 +573,7 @@ namespace MetroLooper
         /// <param name="audioData">Audio data from wav file in byte array</param>
         /// <param name="startTimeInMilliseconds">Start time in milliseconds</param>
         /// <param name="bank">Bank number</param>
-        /// <param name="track">Trakc number</param>
+        /// <param name="track">Track number</param>
         private void AddExternalTrack(short[] audioData, int startTimeInMilliseconds, int bank, int track)
         {
             short[] shortData = new short[(int)(secondsPerMeasure * 16000)];

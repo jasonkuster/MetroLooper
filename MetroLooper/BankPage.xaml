@@ -106,20 +106,21 @@
 							<DoubleAnimation Duration="0:0:0.086" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect" BeginTime="0:0:0.3"/>
 							<DoubleAnimation BeginTime="0:0:0.5" Duration="0:0:0.2" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
 							<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel"/>
-							<DoubleAnimation Duration="0" To="0.005" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton"/>
 							<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="LoopPanel"/>
 							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.2" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect"/>
 							<DoubleAnimation Duration="0:0:0.3" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="trackPanel"/>
+							<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="finalPanel"/>
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="Finalized" GeneratedDuration="0:0:0.7">
 						<Storyboard>
 							<DoubleAnimation BeginTime="0:0:0.7" Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="recPanel"/>
-							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
-							<DoubleAnimation Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid"/>
 							<DoubleAnimation BeginTime="0:0:0.7" Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel"/>
-							<DoubleAnimation Duration="0" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton"/>
-							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.4" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation BeginTime="0:0:0.3" Duration="0:0:0.2" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect"/>
+							<DoubleAnimation BeginTime="0:0:0.4" Duration="0:0:0.3" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="trackPanel"/>
+							<DoubleAnimation BeginTime="0:0:0.7" Duration="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="finalPanel"/>
 						</Storyboard>
 					</VisualTransition>
 					<VisualTransition From="Opened" GeneratedDuration="0:0:0.7" To="Finalized">
@@ -157,7 +158,7 @@
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.FontFamily)" Storyboard.TargetName="textBlock">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(TextBlock.FontFamily)" Storyboard.TargetName="recordNewBlock">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<FontFamily>Segoe WP Light</FontFamily>
@@ -250,11 +251,10 @@
 						</ObjectAnimationUsingKeyFrames>
 						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="trackGrid" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="editPanel" d:IsOptimized="True"/>
-						<DoubleAnimation Duration="0" To="0.005" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="finishTrackButton" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="-10" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.SkewY)" Storyboard.TargetName="maskingRect" d:IsOptimized="True"/>
-						<ColorAnimation Duration="0" To="#FFE51400" Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="VolumeSlider" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="LoopPanel" d:IsOptimized="True"/>
 						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="trackPanel" d:IsOptimized="True"/>
+						<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="finalPanel" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 			</VisualStateGroup>
@@ -286,57 +286,9 @@
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
 			
-			<!--<StackPanel x:Name="BankPanel" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2" Visibility="Collapsed">
-				<StackPanel.RenderTransform>
-					<CompositeTransform/>
-				</StackPanel.RenderTransform>
-				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-					<Slider x:Name="VolumeSlider" Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Height="314" Margin="{StaticResource PhoneMargin}"/>
-					<TextBlock x:Name="VolumeLabel" Text="Volume" RenderTransformOrigin="0.063,0.62" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<Slider x:Name="PitchRatioSlider" Maximum="12.0" Minimum="-11.0" Value="0.0" Orientation="Vertical" ValueChanged="PitchRatioSlider_ValueChanged" Margin="{StaticResource PhoneMargin}" Height="314" HorizontalAlignment="Center"/>
-					<TextBlock x:Name="PitchLabel" Text="Pitch Shift" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel x:Name="OffsetStackPanel" VerticalAlignment="Center">
-					<Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20ms" Margin="{StaticResource PhoneMargin}" />
-					<TextBlock x:Name="OffsetText" Text="0" FontSize="32" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
-					<Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20ms" Margin="{StaticResource PhoneMargin}" />
-					<TextBlock x:Name="OffsetLabel" Text="Offset" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-					<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel>
-					<TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="48" Text="{Binding SelectedBank.BankName}"/>
-					<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" RenderTransformOrigin="0.444,0.484" Width="311" Margin="0,12"/>
-				</StackPanel>
-			</StackPanel>-->
 			<ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="1"/>
 			
-			<!--<StackPanel x:Name="BankPanel" Orientation="Horizontal" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2" Grid.RowSpan="2" Visibility="Collapsed">
-				<StackPanel.RenderTransform>
-					<CompositeTransform/>
-				</StackPanel.RenderTransform>
-				<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-					<Slider x:Name="VolumeSlider" Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Height="314" Margin="{StaticResource PhoneMargin}"/>
-					<TextBlock x:Name="VolumeLabel" Text="Volume" RenderTransformOrigin="0.063,0.62" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-					<Slider x:Name="PitchRatioSlider" Maximum="12.0" Minimum="-11.0" Value="0.0" Orientation="Vertical" ValueChanged="PitchRatioSlider_ValueChanged" Margin="{StaticResource PhoneMargin}" Height="314" HorizontalAlignment="Center"/>
-					<TextBlock x:Name="PitchLabel" Text="Pitch Shift" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel x:Name="OffsetStackPanel" VerticalAlignment="Center">
-					<Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20ms" Margin="{StaticResource PhoneMargin}" />
-					<TextBlock x:Name="OffsetText" Text="0" FontSize="32" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
-					<Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20ms" Margin="{StaticResource PhoneMargin}" />
-					<TextBlock x:Name="OffsetLabel" Text="Offset" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-					<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" Margin="{StaticResource PhoneMargin}" />
-				</StackPanel>
-				<StackPanel>
-					<TextBlock TextWrapping="Wrap" TextAlignment="Center" FontSize="48" Text="{Binding SelectedBank.BankName}"/>
-					<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" RenderTransformOrigin="0.444,0.484" Width="311" Margin="0,12"/>
-				</StackPanel>
-			</StackPanel>-->
-			<Grid x:Name="trackPanel" Grid.ColumnSpan="2" Margin="12" Visibility="Visible" RenderTransformOrigin="0.5,0.5">
+            <Grid x:Name="trackPanel" Grid.ColumnSpan="2" Margin="12" Visibility="Visible" RenderTransformOrigin="0.5,0.5">
 				<Grid.RenderTransform>
 					<CompositeTransform TranslateX="373"/>
 				</Grid.RenderTransform>
@@ -371,6 +323,13 @@
 						<TextBlock x:Name="NewTrackButton" TextWrapping="Wrap" Text="New Track" TextAlignment="Center" FontSize="26.667" Margin="0,12" FontFamily="Segoe WP Light" Tap="NewTrackButton_Tap"/>
 						<TextBlock x:Name="FinalizeButton" TextWrapping="Wrap" Text="Finalize" TextAlignment="Center" FontSize="26.667" FontFamily="Segoe WP Light" Tap="FinalizeButton_Tap"/>
 					</StackPanel>
+					<Grid x:Name="finalPanel" RenderTransformOrigin="0.5,0.5">
+						<Grid.RenderTransform>
+							<CompositeTransform ScaleX="0"/>
+						</Grid.RenderTransform>
+						<TextBlock x:Name="bankNameBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Bank Name" VerticalAlignment="Center" Margin="0,0,0,92"/>
+						<TextBox x:Name="bankNameBox" Text="{Binding SelectedBank.BankName, Mode=TwoWay}" HorizontalAlignment="Center" Height="72" TextWrapping="Wrap" VerticalAlignment="Center" Width="304"/>
+					</Grid>
 				</Grid>
 				<Grid x:Name="controlGrid" Grid.Column="1">
 					<Rectangle Stroke="Black">
@@ -382,12 +341,12 @@
 						<Grid.RenderTransform>
 							<CompositeTransform ScaleX="0"/>
 						</Grid.RenderTransform>
-						<TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Record New Track" VerticalAlignment="Top" Margin="0,12,0,0" FontFamily="Segoe WP Light">
+						<TextBlock x:Name="recordNewBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Record New Track" VerticalAlignment="Top" Margin="0,12,0,0" FontFamily="Segoe WP Light">
 							<TextBlock.Foreground>
 								<SolidColorBrush Color="{StaticResource PhoneTextHighContrastColor}"/>
 							</TextBlock.Foreground>
 						</TextBlock>
-						<Border HorizontalAlignment="Center" Tap="Border_Tap"  VerticalAlignment="Center" BorderThickness="5" Width="75" Height="75" Margin="100,-50,0,0" CornerRadius="100">
+						<Border x:Name="recordButton" HorizontalAlignment="Center" Tap="recordButton_Tap"  VerticalAlignment="Center" BorderThickness="5" Width="75" Height="75" Margin="100,-50,0,0" CornerRadius="100">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
 							</Border.BorderBrush>
@@ -397,11 +356,11 @@
 								</Ellipse.Fill>
 							</Ellipse>
 						</Border>
-						<Border HorizontalAlignment="Center" Height="75" VerticalAlignment="Center" Width="75" BorderThickness="5" Margin="-100,-50,0,0" CornerRadius="100">
+						<Border x:Name="stopPlayButton" Tap="stopPlayButton_Tap" HorizontalAlignment="Center" Height="75" VerticalAlignment="Center" Width="75" BorderThickness="5" Margin="-100,-50,0,0" CornerRadius="100">
 							<Border.BorderBrush>
 								<SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
 							</Border.BorderBrush>
-							<Image x:Name="image" Source="/Assets/stop.png" Margin="0"/>
+							<Image x:Name="stopPlayImage" Source="/Assets/stop.png" Margin="0"/>
 						</Border>
 						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,139,0,0">
 							<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="Metronome" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe WP Light"/>
@@ -421,30 +380,24 @@
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
 						<StackPanel>
-							<Image x:Name="delButton" Height="30" Width="30" HorizontalAlignment="Left" Source="/Toolkit.Content/ApplicationBar.Delete.png" Tap="delButton_Tap">
-								<i:Interaction.Triggers>
-									<i:EventTrigger EventName="Tap">
-										<ec:GoToStateAction StateName="Opened"/>
-									</i:EventTrigger>
-								</i:Interaction.Triggers>
-							</Image>
-                            <Slider x:Name="VolumeSlider"  Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0" Height="150"/>
-							<TextBlock x:Name="volumeBlock" TextWrapping="Wrap" Text="Volume" HorizontalAlignment="Center" FontFamily="Segoe WP Light"/>
+                            <TextBlock TextWrapping="Wrap" Text="Volume" HorizontalAlignment="Center" FontFamily="Segoe WP Light"/>
+                            <Slider x:Name="VolumeSlider"  Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0" Height="183" Foreground="Black"/>
 						</StackPanel>
 						<StackPanel Grid.Column="1">
-							<Image x:Name="finishTrackButton" Tap="finishTrackButton_Tap" HorizontalAlignment="Right" Height="30" VerticalAlignment="Top" Width="30" Source="/Toolkit.Content/ApplicationBar.Check.png">
-								<i:Interaction.Triggers>
-									<i:EventTrigger EventName="Tap">
-										<ec:GoToStateAction StateName="Opened"/>
-									</i:EventTrigger>
-								</i:Interaction.Triggers>
-							</Image>
+							<TextBlock TextWrapping="Wrap" Text="Offset" HorizontalAlignment="Center" FontFamily="Segoe WP Light"/>
 							<Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20" HorizontalAlignment="Center" BorderBrush="{x:Null}"/>
 							<TextBlock x:Name="OffsetTextBlock" TextWrapping="NoWrap" HorizontalAlignment="Center" FontSize="32" FontFamily="Segoe WP Light"/>
 							<Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20" HorizontalAlignment="Center" BorderBrush="{x:Null}"/>
 						</StackPanel>
-						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" BorderBrush="{x:Null}"/>
-						<Button x:Name="PlayBankButton" Click="PlayBankButton_Click" Content="Play" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" BorderBrush="{x:Null}"/>
+						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" VerticalAlignment="Center" Grid.Row="1" BorderBrush="White"/>
+						<Grid Grid.Row="1" Grid.Column="1">
+							<Border x:Name="playButton" BorderBrush="White" BorderThickness="3" Margin="0,12,77,12">
+								<Image x:Name="playStopImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
+							</Border>
+							<Border x:Name="delButton" BorderBrush="White" BorderThickness="3" Margin="75,12,0,12">
+								<Image x:Name="delImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Delete.png"/>
+							</Border>
+						</Grid>
 					</Grid>
 					<Rectangle x:Name="maskingRect" Stroke="Black" RenderTransformOrigin="0,0.5">
 						<Rectangle.Fill>

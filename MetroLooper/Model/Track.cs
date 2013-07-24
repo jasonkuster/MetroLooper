@@ -23,7 +23,20 @@ namespace MetroLooper.Model
                 return "Track " + (trackID + 1);
             }
         }
-        public int trackID { get; set; }
+
+        private int _trackID;
+        public int trackID
+        {
+            get
+            {
+                return _trackID;
+            }
+            set
+            {
+                trackID = value;
+                this.RaisePropertyChanged("trackName");
+            }
+        }
         public int Size { get; set; }
         public int Latency { get; set; }
         public int Offset { get; set; }
