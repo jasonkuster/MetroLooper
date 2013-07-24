@@ -324,7 +324,7 @@ namespace MetroLooper
             }
         }
 
-        private void PlayBankButton_Click(object sender, RoutedEventArgs e)
+        private void PlayBankButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             viewModel.AudioMan.StopAll();
             viewModel.AudioMan.PlayBank(viewModel.SelectedBank.bankID);
@@ -362,6 +362,7 @@ namespace MetroLooper
                 Bank b = viewModel.SelectedBank;
                 viewModel.SelectedBank = null;
                 viewModel.SelectedProject.banks.Remove(b);
+                viewModel.AudioMan.DeleteFinalizedBank(b.bankID);
                 NavigationService.GoBack();
             }
         }
@@ -417,7 +418,7 @@ namespace MetroLooper
             if (sure == MessageBoxResult.OK)
             {
                 //Mix-down and deletion code
-                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
+                viewModel.AudioMan.FinalizeBank(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Finalized = true;
                 timer.Dispose();
                 recTimer.Dispose();
