@@ -15,7 +15,7 @@
 
     <phone:PhoneApplicationPage.Resources>
         <vm:MainViewModel x:Key="MainViewModel"/>
-        <!--<Storyboard x:Name="Bank1Go">
+        <Storyboard x:Name="Bank1Go">
         	<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.ScaleX)" Storyboard.TargetName="progressRect1">
         		<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
         		<EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
@@ -67,7 +67,7 @@
         			</DiscreteObjectKeyFrame.Value>
         		</DiscreteObjectKeyFrame>
         	</ObjectAnimationUsingKeyFrames>
-        </Storyboard>-->
+        </Storyboard>
         <DataTemplate x:Key="BankItem">
         	<StackPanel Margin="{StaticResource PhoneMargin}" Width="187" Height="165">
         		<TextBlock TextWrapping="Wrap" Text="BankName" Margin="0,0,0,3" HorizontalAlignment="Left"/>
@@ -110,7 +110,7 @@
 		</StackPanel>
 
         <!--ContentPanel - place additional content here-->
-		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Visibility="Visible">
+		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Visibility="Collapsed">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
@@ -121,7 +121,7 @@
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-			<Grid Grid.ColumnSpan="2" Grid.RowSpan="4" Visibility="Collapsed">
+			<Grid Grid.ColumnSpan="2" Grid.RowSpan="4" Visibility="Visible">
 				<StackPanel x:Name="bankPanel1" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0,0,352,288">
 					<StackPanel Width="123">
 						<Border x:Name="bank1Border" BorderBrush="White" BorderThickness="1" Tap="Border_Tap" HorizontalAlignment="Left" Height="75" VerticalAlignment="Center" Width="100" Background="Black" Margin="10,0,0,0">
