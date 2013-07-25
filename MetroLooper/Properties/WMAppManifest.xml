@@ -2,7 +2,7 @@
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
   <App xmlns="" ProductID="{dcbf617a-ec44-4900-8e2e-8155b275a46b}" Title="MetroLooper" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Jason Kuster and Colin Francis" Description="Sample description" Publisher="Sad Flapjack Apps" PublisherID="{20ca91cd-1172-4ac3-9e6f-2c31b631a337}">
-    <IconPath IsRelative="true" IsResource="false">MetroLooperv1.2_appicon.png</IconPath>
+    <IconPath IsRelative="true" IsResource="false">MetroLooper-Tiles_app.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
       <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
@@ -17,9 +17,9 @@
     <Tokens>
       <PrimaryToken TokenID="MetroLooperToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">MetroLooperv1.2_tile_small.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">MetroLooper-Tiles_small.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">MetroLooperv1.2_tile_medium.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">MetroLooper-Tiles_medium.png</BackgroundImageURI>
           <Title>MetroLooper</Title>
           <BackContent>
           </BackContent>
@@ -27,10 +27,13 @@
           </BackBackgroundImageURI>
           <BackTitle>
           </BackTitle>
+          <LargeBackgroundImageURI IsRelative="true" IsResource="false">MetroLooper-Tiles_wide.png</LargeBackgroundImageURI>
+          <LargeBackContent />
+          <LargeBackBackgroundImageURI IsRelative="true" IsResource="false">
+          </LargeBackBackgroundImageURI>
           <DeviceLockImageURI>
           </DeviceLockImageURI>
-          <HasLarge>
-          </HasLarge>
+          <HasLarge>True</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>
