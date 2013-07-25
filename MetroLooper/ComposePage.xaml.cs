@@ -16,7 +16,7 @@ using System.IO;
 
 namespace MetroLooper
 {
-    public partial class ProjectPage : PhoneApplicationPage
+    public partial class ComposePage : PhoneApplicationPage
     {
 
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
@@ -30,8 +30,10 @@ namespace MetroLooper
         Timer playingTimer;
         Timer stopTimer;
         Dictionary<int,bool> banksToPlay;
+        bool[][] instructions;
+        int currentMeasure;
 
-        public ProjectPage()
+        public ComposePage()
         {
             InitializeComponent();
             viewModel = MainViewModel.Instance;
@@ -46,6 +48,17 @@ namespace MetroLooper
             //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             IsolatedStorageSettings.ApplicationSettings.Save();
             banksToPlay = new Dictionary<int, bool>();
+            currentMeasure = 0;
+
+            instructions = new bool[4][];
+            for (int i = 0; i < 4; i++)
+            {
+                instructions[i] = new bool[60];
+                for (int j = 0; j < 60; j++)
+                {
+                    instructions[i][j] = false;
+                }
+            }
         }
 
         private void StopTracks(object state)
@@ -78,22 +91,28 @@ namespace MetroLooper
                 {
                     viewModel.AudioMan.PlayMixedBank(0);
                     Bank1Go.Begin();
+                    instructions[0][currentMeasure] = true;
                 }
                 if (play2)
                 {
                     viewModel.AudioMan.PlayMixedBank(1);
                     Bank2Go.Begin();
+                    instructions[1][currentMeasure] = true;
                 }
                 if (play3)
                 {
                     viewModel.AudioMan.PlayMixedBank(2);
                     Bank3Go.Begin();
+                    instructions[2][currentMeasure] = true;
                 }
                 if (play4)
                 {
                     viewModel.AudioMan.PlayMixedBank(3);
                     Bank4Go.Begin();
+                    instructions[3][currentMeasure] = true;
                 }
+
+                currentMeasure++;
             });
 
         }
@@ -130,7 +149,6 @@ namespace MetroLooper
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
                     bankPlay1.IsEnabled = false;
-                    bankSlider1.IsEnabled = false;
                     break;
                 case 1:
                     //Code to handle one bank
@@ -138,43 +156,30 @@ namespace MetroLooper
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
                     bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = false;
-                    bankSlider2.IsEnabled = false;
                     break;
                 case 2:
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
                     bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = false;
-                    bankSlider3.IsEnabled = false;
                     break;
                 case 3:
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Visible;
                     bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
                     bankPlay4.IsEnabled = false;
-                    bankSlider4.IsEnabled = false;
                     break;
                 case 4:
                     bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
                     bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
                     bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
                     bankPlay4.IsEnabled = true;
-                    bankSlider4.IsEnabled = true;
                     break;
                 default:
                     break;
@@ -305,6 +310,9 @@ namespace MetroLooper
 
         private void stopAllButton_Click(object sender, RoutedEventArgs e)
         {
+            playingTimer.Dispose();
+            isPlaying = false;
+
             play1 = false;
             bankPlay1.Content = "Play";
             play2 = false;
@@ -314,6 +322,11 @@ namespace MetroLooper
             play4 = false;
             bankPlay4.Content = "Play";
             viewModel.AudioMan.StopAll();
+
+            int numMeasures = currentMeasure - 1;
+            viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, "MyWave.wav");
+
+            NavigationService.GoBack();
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -395,13 +408,13 @@ namespace MetroLooper
             }
         }
 
-        private void ComposeButton_Click(object sender, RoutedEventArgs e)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Bank b in viewModel.SelectedProject.banks)
+            if (!isPlaying)
             {
-                viewModel.AudioMan.MixDownBank(b.bankID);
+                playingTimer.Change(0, 4000);
+                isPlaying = true;
             }
-            NavigationService.Navigate(new Uri("/ComposePage.xaml", UriKind.RelativeOrAbsolute));
         }
     }
 }
