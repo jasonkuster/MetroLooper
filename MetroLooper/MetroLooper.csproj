@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="Audio\AudioManager.cs" />
     <Compile Include="Audio\Helper.cs" />
+    <Compile Include="ComposePage.xaml.cs">
+      <DependentUpon>ComposePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Model\Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
@@ -150,6 +153,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="ComposePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="NewProjPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
