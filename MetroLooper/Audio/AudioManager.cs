@@ -546,7 +546,7 @@ namespace MetroLooper
             }
         }
 
-        public async void TestExport(string fileName)
+        public void TestExport(string fileName)
         {
             bool[][] instructions = new bool[3][];
             for (int i = 0; i < 3; i++)
@@ -563,25 +563,15 @@ namespace MetroLooper
             SubmitExportInstructions(instructions, 1, 5, out audioData);
 
             FileHelper.WriteWAVFile(audioData, 16000, "/shared/transfers/" + fileName);
+            FileHelper.UploadToSkydrive(fileName, this.viewModel);
+        }
 
-            try
-            {
-                LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
-                dynamic res = clientResult.Result;
-                string path = res.id;
-                {
-                    await viewModel.Client.BackgroundUploadAsync(path, new Uri("/shared/transfers/" + fileName, UriKind.RelativeOrAbsolute), OverwriteOption.DoNotOverwrite);
-                }
-            }
-            catch (System.Threading.Tasks.TaskCanceledException)
-            {
-            }
-            catch (LiveConnectException)
-            {
-            }
-            catch (Exception)
-            {
-            }
+        public void ExportAndUpload(bool[][] instructions, int numBanks, int numMeasures, string fileName)
+        {
+            byte[] audioData;
+            SubmitExportInstructions(instructions, numBanks, numMeasures, out audioData);
+            FileHelper.WriteWAVFile(audioData, 16000, "/shared/transfers/" + fileName);
+            FileHelper.UploadToSkydrive(fileName, this.viewModel);
         }
 
         /// <summary>
@@ -593,7 +583,7 @@ namespace MetroLooper
         /// <param name="secondsPerMeasure">Seconds per measure</param>
         /// <param name="exportData">Array by reference</param>
         /// <returns>Size of array returned</returns>
-        public int SubmitExportInstructions(bool[][] instructions, int numBanks, int numMeasures, out byte[] exportData)
+        private int SubmitExportInstructions(bool[][] instructions, int numBanks, int numMeasures, out byte[] exportData)
         {
             for (int bank = 0; bank < numBanks; bank++)
             {

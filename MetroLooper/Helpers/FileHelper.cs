@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.IO.IsolatedStorage;
+using Microsoft.Live;
+using MetroLooper.ViewModels;
 
 namespace MetroLooper
 {
@@ -26,6 +28,28 @@ namespace MetroLooper
             UpdateWAVHeader(outputStream);
 
             WriteToIsolatedStorage(outputStream, fileName);
+        }
+
+        public static async void UploadToSkydrive(string fileName, MainViewModel viewModel)
+        {
+            try
+            {
+                LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
+                dynamic res = clientResult.Result;
+                string path = res.id;
+                {
+                    await viewModel.Client.BackgroundUploadAsync(path, new Uri("/shared/transfers/" + fileName, UriKind.RelativeOrAbsolute), OverwriteOption.Overwrite);
+                }
+            }
+            catch (System.Threading.Tasks.TaskCanceledException tce)
+            {
+            }
+            catch (LiveConnectException ce)
+            {
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         /// <summary>
