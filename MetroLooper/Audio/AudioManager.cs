@@ -613,7 +613,7 @@ namespace MetroLooper
 
             for (int i = startSample; (i - startSample) < shortData.Length; i++)
             {
-                shortData[i - startSample] = audioData[startSample];
+                shortData[i - startSample] = audioData[i];
             }
 
             _engine.PushData(shortData, shortData.Length, bank, track);

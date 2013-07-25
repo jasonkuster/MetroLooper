@@ -449,7 +449,7 @@ namespace MetroLooper
 
         private void openWavButton_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/WavPage.xaml", UriKind.RelativeOrAbsolute));
+            NavigationService.Navigate(new Uri("/WavSelectPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         #endregion

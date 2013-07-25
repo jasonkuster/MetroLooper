@@ -100,6 +100,7 @@
     <Compile Include="Model\Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\XNAAsyncDispatcher.cs" />
+    <Compile Include="Model\SkydriveItem.cs" />
     <Compile Include="NewProjPage.xaml.cs">
       <DependentUpon>NewProjPage.xaml</DependentUpon>
     </Compile>
@@ -140,6 +141,9 @@
     <Compile Include="WAVConfigPage.xaml.cs">
       <DependentUpon>WAVConfigPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WavSelectPage.xaml.cs">
+      <DependentUpon>WavSelectPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -179,6 +183,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="WAVConfigPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WavSelectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

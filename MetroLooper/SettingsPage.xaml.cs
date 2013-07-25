@@ -34,5 +34,9 @@ namespace MetroLooper
                 this.infoTextBlock.Text = "not signed in";
             }
         }
+
+        private void wavButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }
