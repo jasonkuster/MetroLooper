@@ -12,18 +12,27 @@ using MetroLooper.ViewModels;
 using Microsoft.Live;
 using Microsoft.Live.Controls;
 using Newtonsoft.Json;
+using System.IO.IsolatedStorage;
+using System.Collections.ObjectModel;
+using MetroLooper.Model;
 
 namespace MetroLooper
 {
     public partial class MainPage : PhoneApplicationPage
     {
         MainViewModel viewModel;
+        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
         int count;
 
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+
+            //if (!settings.Contains("projects"))
+            {
+                settings["projects"] = new ObservableCollection<Project>();
+            }
 
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
@@ -104,46 +113,46 @@ namespace MetroLooper
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
 
-        private async void btnSignin_SessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
-        {
-            if (e.Status == LiveConnectSessionStatus.Connected)
-            {
-                viewModel.Client = new LiveConnectClient(e.Session);
-                btnSignin.Visibility = System.Windows.Visibility.Collapsed;
-                try
-                {
-                    LiveOperationResult folderResult = await viewModel.Client.GetAsync("me/skydrive/files");
-                    dynamic items = folderResult.Result;
-                    List<object> folderItems = (List<object>)(((IDictionary<string,object>)items)["data"]);
-                    List<Dictionary<string,string>> objs = new List<Dictionary<string,string>>();
-                    foreach (object o in folderItems)
-                    {
-                        IDictionary<string, object> obj = (IDictionary<string, object>)o;
-                        Dictionary<string,string> newobj = new Dictionary<string,string>();
-                        if (!obj["type"].ToString().Equals("folder") && !obj["type"].ToString().Equals("album"))
-                        {
-                            foreach(string key in obj.Keys)
-                            {
-                                if (obj[key] != null)
-                                {
-                                    newobj.Add(key, obj[key].ToString());
-                                }
-                            }
-                            objs.Add(newobj);
-                        }
-                    }
-                    listselector.ItemsSource = objs;
-                }
-                catch (LiveConnectException exception)
-                {
-                    this.infoTextBlock.Text = "Couldn't get list of projects because: " + exception.Message;
-                }
-            }
-            else
-            {
-                this.infoTextBlock.Text = "not signed in";
-            }
-        }
+        //private async void btnSignin_SessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
+        //{
+        //    if (e.Status == LiveConnectSessionStatus.Connected)
+        //    {
+        //        viewModel.Client = new LiveConnectClient(e.Session);
+        //        btnSignin.Visibility = System.Windows.Visibility.Collapsed;
+        //        try
+        //        {
+        //            LiveOperationResult folderResult = await viewModel.Client.GetAsync("me/skydrive/files");
+        //            dynamic items = folderResult.Result;
+        //            List<object> folderItems = (List<object>)(((IDictionary<string,object>)items)["data"]);
+        //            List<Dictionary<string,string>> objs = new List<Dictionary<string,string>>();
+        //            foreach (object o in folderItems)
+        //            {
+        //                IDictionary<string, object> obj = (IDictionary<string, object>)o;
+        //                Dictionary<string,string> newobj = new Dictionary<string,string>();
+        //                if (!obj["type"].ToString().Equals("folder") && !obj["type"].ToString().Equals("album"))
+        //                {
+        //                    foreach(string key in obj.Keys)
+        //                    {
+        //                        if (obj[key] != null)
+        //                        {
+        //                            newobj.Add(key, obj[key].ToString());
+        //                        }
+        //                    }
+        //                    objs.Add(newobj);
+        //                }
+        //            }
+        //            listselector.ItemsSource = objs;
+        //        }
+        //        catch (LiveConnectException exception)
+        //        {
+        //            this.infoTextBlock.Text = "Couldn't get list of projects because: " + exception.Message;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        this.infoTextBlock.Text = "not signed in";
+        //    }
+        //}
 
         //private System.Threading.CancellationTokenSource ctsUpload;
 
@@ -188,52 +197,65 @@ namespace MetroLooper
         //    }
         //}
 
-        private System.Threading.CancellationTokenSource ctsDownload;
+        //private System.Threading.CancellationTokenSource ctsDownload;
 
-        private async void btnDownloadFile_Click(object sender, RoutedEventArgs e)
+        //private async void btnDownloadFile_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
+        //        dynamic res = clientResult.Result;
+        //        string path = res.id;
+        //        //var picker = new Windows.Storage.Pickers.FileSavePicker();
+        //        //picker.SuggestedFileName = "MyDownloadedPicutre.jpg";
+        //        //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
+        //        //picker.FileTypeChoices.Add("Picture", new List<string>(new string[] { ".jpg" }));
+        //        //StorageFile file = await picker.PickSaveFileAsync();
+        //        //if (file != null)
+        //        {
+        //            //this.progressBar.Value = 0;
+        //            //var progressHandler = new Progress<LiveOperationProgress>(
+        //                //(progress) => { this.progressBar.Value = progress.ProgressPercentage; });
+        //            //this.ctsDownload = new System.Threading.CancellationTokenSource();
+        //            //LiveConnectClient liveClient = new LiveConnectClient(this.session);
+        //            await viewModel.Client.BackgroundDownloadAsync(path, new Uri(""));
+        //            this.infoTextBlock.Text = "Download completed.";
+        //        }
+        //    }
+        //    catch (System.Threading.Tasks.TaskCanceledException)
+        //    {
+        //        this.infoTextBlock.Text = "Download cancelled.";
+        //    }
+        //    catch (LiveConnectException exception)
+        //    {
+        //        this.infoTextBlock.Text = "Error getting file contents: " + exception.Message;
+        //    }
+        //}
+
+        //private void btnCancelDownload_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (this.ctsDownload != null)
+        //    {
+        //        this.ctsDownload.Cancel();
+        //    }
+        //}
+
+        //private void btnSignin_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
+        //}
+
+        private void newProjButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            try
-            {
-                LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
-                dynamic res = clientResult.Result;
-                string path = res.id;
-                //var picker = new Windows.Storage.Pickers.FileSavePicker();
-                //picker.SuggestedFileName = "MyDownloadedPicutre.jpg";
-                //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
-                //picker.FileTypeChoices.Add("Picture", new List<string>(new string[] { ".jpg" }));
-                //StorageFile file = await picker.PickSaveFileAsync();
-                //if (file != null)
-                {
-                    //this.progressBar.Value = 0;
-                    //var progressHandler = new Progress<LiveOperationProgress>(
-                        //(progress) => { this.progressBar.Value = progress.ProgressPercentage; });
-                    //this.ctsDownload = new System.Threading.CancellationTokenSource();
-                    //LiveConnectClient liveClient = new LiveConnectClient(this.session);
-                    await viewModel.Client.BackgroundDownloadAsync(path, new Uri(""));
-                    this.infoTextBlock.Text = "Download completed.";
-                }
-            }
-            catch (System.Threading.Tasks.TaskCanceledException)
-            {
-                this.infoTextBlock.Text = "Download cancelled.";
-            }
-            catch (LiveConnectException exception)
-            {
-                this.infoTextBlock.Text = "Error getting file contents: " + exception.Message;
-            }
+            NavigationService.Navigate(new Uri("/newProjPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
-        private void btnCancelDownload_Click(object sender, RoutedEventArgs e)
+        private void openProjButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (this.ctsDownload != null)
+            if (viewModel.Projects.Count > 0)
             {
-                this.ctsDownload.Cancel();
+                NavigationService.Navigate(new Uri("/ProjSelectPage.xaml", UriKind.RelativeOrAbsolute));
             }
-        }
-
-        private void btnSignin_Click(object sender, RoutedEventArgs e)
-        {
-            this.SupportedOrientations = SupportedPageOrientation.PortraitOrLandscape;
         }
     }
 }

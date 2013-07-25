@@ -16,15 +16,29 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
             <shell:ApplicationBarIconButton x:Name="settingsButton" Text="settings" Click="settingsButton_Click" IconUri="/Assets/AppBar/feature.settings.png"/>
-            <shell:ApplicationBarIconButton x:Name="newProjButton" Text="new" Click="newProjButton_Click" IconUri="/Assets/AppBar/add.png"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <!--Pivot Control-->
-        <phone:Pivot Title="METROLOOPER">
-            <!--Pivot item one-->
+        
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="0" Margin="12,0,12,0">
+            <Image Source="/Assets/MetroLooperv1.2_logo.png" Margin="0,0,0,237" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid Margin="48,248,48,91">
+            	<Border x:Name="newProjButton" HorizontalAlignment="Left" BorderBrush="White" BorderThickness="2" Tap="newProjButton_Tap">
+            		<Image Source="/Assets/AppBar/add.png"/>
+            	</Border>
+            	<Border x:Name="openProjButton" Tap="openProjButton_Tap" HorizontalAlignment="Center" BorderBrush="White" BorderThickness="2">
+            		<Image Source="/Assets/AppBar/folder.png"/>
+            	</Border>
+            	<Border x:Name="openSkydriveButton" HorizontalAlignment="Right" BorderBrush="White" BorderThickness="2">
+            		<Image Source="/Assets/skydrive.png" Margin="{StaticResource PhoneMargin}"/>
+            	</Border>
+            </Grid>
+        </Grid>
+        <!--<phone:Pivot Title="METROLOOPER">
             <phone:PivotItem Header="projects">
                 <Grid>
                     <ScrollViewer x:Name="projViewer" Visibility="Collapsed">
@@ -49,8 +63,6 @@
                     <TextBlock Text="No projects. Click the + to add a new one." Visibility="Visible" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
             </phone:PivotItem>
-
-            <!--Pivot item two-->
             <phone:PivotItem Header="skydrive">
                 <Grid>
                     <phone:LongListSelector x:Name="listselector" Margin="488,615,-488,-615">
@@ -64,7 +76,7 @@
                     <TextBlock Height="32" HorizontalAlignment="Left" Margin="38,114,0,0" Name="infoTextBlock" Text="" VerticalAlignment="Top" Width="569" />
                 </Grid>
             </phone:PivotItem>
-        </phone:Pivot>
+        </phone:Pivot>-->
     </Grid>
 
 </phone:PhoneApplicationPage>
