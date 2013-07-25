@@ -13,12 +13,14 @@ namespace MetroLooper.Model
         {
             projName = "Project 1";
             banks = new ObservableCollection<Bank>();
+            Initialized = false;
         }
 
         public string projName { get; set; }
         public ObservableCollection<Bank> banks { get; set; }
         public int bpm { get; set; }
         public int measures { get; set; }
+        public bool Initialized { get; set; }
         public int trackLen
         {
             get

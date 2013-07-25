@@ -100,6 +100,9 @@
     <Compile Include="Model\Bank.cs" />
     <Compile Include="Audio\Recorder.cs" />
     <Compile Include="Audio\XNAAsyncDispatcher.cs" />
+    <Compile Include="NewProjPage.xaml.cs">
+      <DependentUpon>NewProjPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectPage.xaml.cs">
       <DependentUpon>ProjectPage.xaml</DependentUpon>
     </Compile>
@@ -112,6 +115,9 @@
     </Compile>
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\RecordingManager.cs" />
+    <Compile Include="ProjSelectPage.xaml.cs">
+      <DependentUpon>ProjSelectPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -140,6 +146,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="NewProjPage.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ProjectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -151,6 +161,10 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjSelectPage.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="SampleData\LoopSamples\LoopSamples.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
@@ -184,12 +198,20 @@
     <Content Include="Assets\AppBar\back.png" />
     <Content Include="Assets\AppBar\edit.png" />
     <Content Include="Assets\AppBar\feature.settings.png" />
+    <Content Include="Assets\AppBar\folder.png" />
     <Content Include="Assets\AppBar\microphone.png" />
+    <Content Include="Assets\AppBar\minus.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\AppBar\stop.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\clickTrack.wav" />
+    <Content Include="Assets\MetroLooperv1.2_icon_trans.png" />
+    <Content Include="Assets\MetroLooperv1.2_icon_trans_vert.png" />
+    <Content Include="Assets\MetroLooperv1.2_logo.png" />
+    <Content Include="Assets\skydrive.png" />
     <Content Include="Assets\stop.png" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -56,7 +56,20 @@ namespace MetroLooper.Model
         public int Offset { get; set; }
         public double Pitch { get; set; }
         public double Volume { get; set; }
-        public bool Initialized { get; set; }
+        private bool _initialized;
+        public bool Initialized
+        {
+            get
+            {
+                return _initialized;
+            }
+            set
+            {
+                _initialized = value;
+                RaisePropertyChanged("Initialized");
+                RaisePropertyChanged("NotInitialized");
+            }
+        }
         public bool NotInitialized
         {
             get
