@@ -8,6 +8,8 @@ using MetroLooper.AudioDoNotUse;
 using Microsoft.Xna.Framework.Audio;
 using System.IO;
 using MetroLooper.Audio;
+using Microsoft.Live;
+using MetroLooper.ViewModels;
 
 namespace MetroLooper
 {
@@ -15,6 +17,7 @@ namespace MetroLooper
     {
         private Recorder _recorder;
         private AudioEngine _engine;
+        private MainViewModel viewModel;
 
         /// <summary>
         /// Is Playing
@@ -49,6 +52,7 @@ namespace MetroLooper
             _recorder = new Recorder();
             _engine = new AudioEngine();
             _engine.SetCallback(this); //Do this before anything else!
+            viewModel = MainViewModel.Instance;
 
             isPlaying = false;
 
@@ -456,7 +460,7 @@ namespace MetroLooper
         {
             int size = sizeBytes / 2;
             short[] audioData = new short[size];
-            for (int i = 0; i < size*2 && i < data.Length; i += 2)
+            for (int i = 0; i < size * 2 && i < data.Length; i += 2)
             {
                 audioData[i / 2] = BitConverter.ToInt16(data, i);
             }
@@ -542,7 +546,7 @@ namespace MetroLooper
             }
         }
 
-        public void TestExport()
+        public async void TestExport(string fileName)
         {
             bool[][] instructions = new bool[3][];
             for (int i = 0; i < 3; i++)
@@ -556,7 +560,25 @@ namespace MetroLooper
             }
 
             byte[] audioData;
-            SubmitExportInstructions(instructions, 1, 5, out audioData); 
+            SubmitExportInstructions(instructions, 1, 5, out audioData);
+
+            FileHelper.WriteWAVFile(audioData, 16000, "/shared/transfers/" + fileName);
+
+            try
+            {
+                LiveOperationResult clientResult = await viewModel.Client.GetAsync("me/skydrive");
+                dynamic res = clientResult.Result;
+                string path = res.id;
+                {
+                    await viewModel.Client.BackgroundUploadAsync(path, new Uri("/shared/transfers/" + fileName, UriKind.RelativeOrAbsolute), OverwriteOption.DoNotOverwrite);
+                }
+            }
+            catch (System.Threading.Tasks.TaskCanceledException)
+            {
+            }
+            catch (LiveConnectException)
+            {
+            }
         }
 
         /// <summary>

@@ -9,20 +9,37 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework.Audio;
 using MetroLooper.Audio;
+using MetroLooper.ViewModels;
+using System.IO;
+using MetroLooper.Model;
 
 namespace MetroLooper
 {
     public partial class WAVConfigPage : PhoneApplicationPage
     {
+        private MainViewModel viewModel;
         private int startTimeInMilliseconds = 0;
         private int sampleRate = 16000;
         private double secondsPerMeasure = 4;
         private short[] shortData;
         private byte[] byteData;
+        private MemoryStream stream;
         SoundEffect effect;
 
         public WAVConfigPage()
         {
+            stream = new MemoryStream();
+            viewModel = MainViewModel.Instance;
+            byteData = stream.ToArray();
+
+            shortData = new short[(int)(secondsPerMeasure*sampleRate)];
+            for (int i = 0; i < sampleRate; i++)
+            {
+                shortData[i] = (short)(Math.Cos(440 * 2 * 3.14 * i / sampleRate)*short.MaxValue);
+            }
+            byteData = Helper.ConvertShortArrayToByteArray(shortData);
+
+
             InitializeComponent();
         }
 
@@ -55,6 +72,9 @@ namespace MetroLooper
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
         {
+            int trackNum = viewModel.SelectedBank.tracks.Count;
+            viewModel.AudioMan.AddTrackFromWAVStream(stream, startTimeInMilliseconds, viewModel.SelectedBank.bankID, trackNum);
+            viewModel.SelectedBank.tracks.Add(new Track() { trackID = trackNum } );
             //Submit to AudioManager, need bank and track
         }
     }

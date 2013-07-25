@@ -319,7 +319,7 @@ namespace MetroLooper
 
         private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            viewModel.AudioMan.TestExport();
+            viewModel.AudioMan.TestExport("testWAV.wav");
             ContentPanel.Visibility = ContentPanel.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             ContentPanel2.Visibility = ContentPanel2.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }
