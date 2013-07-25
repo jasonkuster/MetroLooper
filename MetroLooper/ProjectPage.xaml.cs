@@ -29,13 +29,14 @@ namespace MetroLooper
         bool isPlaying = false;
         Timer playingTimer;
         Timer stopTimer;
+        Dictionary<int,bool> banksToPlay;
 
         public ProjectPage()
         {
             InitializeComponent();
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
-            //if (!settings.Contains("projects"))
+            if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
                 ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
@@ -44,6 +45,7 @@ namespace MetroLooper
             viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
             //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
             IsolatedStorageSettings.ApplicationSettings.Save();
+            banksToPlay = new Dictionary<int, bool>();
         }
 
         private void StopTracks(object state)
@@ -65,26 +67,33 @@ namespace MetroLooper
             Dispatcher.BeginInvoke(delegate
             {
                 MainProgress.Begin();
-                if (play1)
+                foreach (int k in banksToPlay.Keys)
                 {
-                    viewModel.AudioMan.PlayBank(0);
-                    Bank1Go.Begin();
+                    if (banksToPlay[k])
+                    {
+                        viewModel.AudioMan.PlayBank(k);
+                    }
                 }
-                if (play2)
-                {
-                    viewModel.AudioMan.PlayBank(1);
-                    Bank2Go.Begin();
-                }
-                if (play3)
-                {
-                    viewModel.AudioMan.PlayBank(2);
-                    Bank3Go.Begin();
-                }
-                if (play4)
-                {
-                    viewModel.AudioMan.PlayBank(3);
-                    Bank4Go.Begin();
-                }
+                //if (play1)
+                //{
+                //    viewModel.AudioMan.PlayBank(0);
+                //    Bank1Go.Begin();
+                //}
+                //if (play2)
+                //{
+                //    viewModel.AudioMan.PlayBank(1);
+                //    Bank2Go.Begin();
+                //}
+                //if (play3)
+                //{
+                //    viewModel.AudioMan.PlayBank(2);
+                //    Bank3Go.Begin();
+                //}
+                //if (play4)
+                //{
+                //    viewModel.AudioMan.PlayBank(3);
+                //    Bank4Go.Begin();
+                //}
             });
 
         }
@@ -99,71 +108,7 @@ namespace MetroLooper
             playingTimer = new Timer(PlayTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
-            play1 = false;
-            bankPlay1.Content = "Play";
-            play2 = false;
-            bankPlay2.Content = "Play";
-            play3 = false;
-            bankPlay3.Content = "Play";
-            play4 = false;
-            bankPlay4.Content = "Play";
-
-            switch (viewModel.SelectedProject.banks.Count)
-            {
-                case 0:
-                    bankPanel2.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = false;
-                    bankSlider1.IsEnabled = false;
-                    break;
-                case 1:
-                    //Code to handle one bank
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = false;
-                    bankSlider2.IsEnabled = false;
-                    break;
-                case 2:
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = false;
-                    bankSlider3.IsEnabled = false;
-                    break;
-                case 3:
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
-                    bankPlay4.IsEnabled = false;
-                    bankSlider4.IsEnabled = false;
-                    break;
-                case 4:
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
-                    bankPlay4.IsEnabled = true;
-                    bankSlider4.IsEnabled = true;
-                    break;
-                default:
-                    break;
-            }
+            
 
             foreach (Bank b in viewModel.SelectedProject.banks)
             {
@@ -331,17 +276,53 @@ namespace MetroLooper
 
         private void playButton_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
         {
-
+            if (((Bank)BankList.SelectedItem) != null)
+            {
+                if (banksToPlay.ContainsKey(((Bank)BankList.SelectedItem).bankID))
+                {
+                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = banksToPlay[((Bank)BankList.SelectedItem).bankID] == true ? false : true;
+                }
+                else
+                {
+                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = true;
+                }
+                playingTimer.Change(0, 4000);
+            }
         }
 
         private void editButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-
+            if (((Bank)BankList.SelectedItem) != null)
+            {
+                if (!((Bank)BankList.SelectedItem).Initialized)
+                {
+                    ((Bank)BankList.SelectedItem).Initialized = true;
+                    viewModel.SelectedProject.banks.Add(new Bank() { bankID = viewModel.SelectedProject.banks.Count });
+                }
+                viewModel.SelectedBank = ((Bank)BankList.SelectedItem);
+                BankList.SelectedItem = null;
+                NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
+            }
         }
 
         private void deleteButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-
+            if (((Bank)BankList.SelectedItem) != null)
+            {
+                if (((Bank)BankList.SelectedItem).Finalized)
+                {
+                    viewModel.AudioMan.DeleteFinalizedBank(((Bank)BankList.SelectedItem).bankID);
+                }
+                else //TODO: FIX SO THAT DELETING BANK 2/4 DOESN'T BREAK EVERYTHING
+                {
+                    foreach (Track t in ((Bank)BankList.SelectedItem).tracks) //TODO: DECREMENT EVERY BANK AFTERWARD
+                    {
+                        viewModel.AudioMan.DeleteTrack(((Bank)BankList.SelectedItem).bankID, t.trackID);
+                    }
+                }
+                viewModel.SelectedProject.banks.Remove(((Bank)BankList.SelectedItem));
+                BankList.SelectedItem = null;
+            }
         }
     }
 }

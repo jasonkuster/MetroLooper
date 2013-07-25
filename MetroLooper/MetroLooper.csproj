@@ -122,6 +122,9 @@
       <DependentUpon>LoopSamples.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Track.cs" />
+    <Compile Include="SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TrackPage.xaml.cs">
       <DependentUpon>TrackPage.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,10 @@
     <Page Include="SampleData\LoopSamples\LoopSamples.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TrackPage.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>

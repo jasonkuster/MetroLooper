@@ -70,8 +70,8 @@
         </Storyboard>
         <DataTemplate x:Key="BankItem">
         	<Grid Height="150" Width="200" Margin="{StaticResource PhoneMargin}">
-        		<StackPanel>
-        			<TextBlock TextWrapping="Wrap" Text="{Binding bankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                <StackPanel Visibility="{Binding NotInitialized,Converter={StaticResource BoolVisConverter}}">
+        			<TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
         			<Border x:Name="playButton" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
         				<Image Source="/Toolkit.Content/ApplicationBar.Play.png"/>
         			</Border>
@@ -84,9 +84,9 @@
         					<Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
         				</Border>
         			</Grid>
-                    <Slider x:Name="volumeSlider" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="0.0" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSlider" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
         		</StackPanel>
-        		<Border BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Collapsed">
+                <Border x:Name="newButton" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="{Binding Initialized,Converter={StaticResource BoolVisConverter}}">
         			<Image Source="/Assets/AppBar/add.png"/>
         		</Border>
         	</Grid>
@@ -234,7 +234,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			<phone:LongListSelector LayoutMode="Grid" GridCellSize="224,174"  ItemsSource="{Binding SelectedProject.banks}" ItemTemplate="{StaticResource BankItem}"/>
+			<phone:LongListSelector x:Name="BankList" LayoutMode="Grid" GridCellSize="224,174"  ItemsSource="{Binding SelectedProject.banks}" ItemTemplate="{StaticResource BankItem}"/>
 			<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Margin="12,12,497,183" Visibility="Collapsed">
 				<Grid x:Name="playGridOne" Width="{Binding ActualHeight, ElementName=bankOnePanel}">
 					<Grid.RowDefinitions>
