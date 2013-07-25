@@ -67,33 +67,33 @@ namespace MetroLooper
             Dispatcher.BeginInvoke(delegate
             {
                 MainProgress.Begin();
-                foreach (int k in banksToPlay.Keys)
+                //foreach (int k in banksToPlay.Keys)
+                //{
+                //    if (banksToPlay[k])
+                //    {
+                //        viewModel.AudioMan.PlayBank(k);
+                //    }
+                //}
+                if (play1)
                 {
-                    if (banksToPlay[k])
-                    {
-                        viewModel.AudioMan.PlayBank(k);
-                    }
+                    viewModel.AudioMan.PlayBank(0);
+                    Bank1Go.Begin();
                 }
-                //if (play1)
-                //{
-                //    viewModel.AudioMan.PlayBank(0);
-                //    Bank1Go.Begin();
-                //}
-                //if (play2)
-                //{
-                //    viewModel.AudioMan.PlayBank(1);
-                //    Bank2Go.Begin();
-                //}
-                //if (play3)
-                //{
-                //    viewModel.AudioMan.PlayBank(2);
-                //    Bank3Go.Begin();
-                //}
-                //if (play4)
-                //{
-                //    viewModel.AudioMan.PlayBank(3);
-                //    Bank4Go.Begin();
-                //}
+                if (play2)
+                {
+                    viewModel.AudioMan.PlayBank(1);
+                    Bank2Go.Begin();
+                }
+                if (play3)
+                {
+                    viewModel.AudioMan.PlayBank(2);
+                    Bank3Go.Begin();
+                }
+                if (play4)
+                {
+                    viewModel.AudioMan.PlayBank(3);
+                    Bank4Go.Begin();
+                }
             });
 
         }
@@ -105,10 +105,80 @@ namespace MetroLooper
                 base.OnNavigatedTo(e);
             }
 
+            if (!viewModel.SelectedProject.Initialized)
+            {
+                viewModel.SelectedProject.Initialized = true;
+                NavigationService.RemoveBackEntry();
+            }
+
             playingTimer = new Timer(PlayTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
-            
+            play1 = false;
+            bankPlay1.Content = "Play";
+            play2 = false;
+            bankPlay2.Content = "Play";
+            play3 = false;
+            bankPlay3.Content = "Play";
+            play4 = false;
+            bankPlay4.Content = "Play";
+
+            switch (viewModel.SelectedProject.banks.Count)
+            {
+                case 0:
+                    bankPanel2.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay1.IsEnabled = false;
+                    bankSlider1.IsEnabled = false;
+                    break;
+                case 1:
+                    //Code to handle one bank
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
+                    bankPlay2.IsEnabled = false;
+                    bankSlider2.IsEnabled = false;
+                    break;
+                case 2:
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
+                    bankPlay3.IsEnabled = false;
+                    bankSlider3.IsEnabled = false;
+                    break;
+                case 3:
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
+                    bankPlay3.IsEnabled = true;
+                    bankSlider3.IsEnabled = true;
+                    bankPlay4.IsEnabled = false;
+                    bankSlider4.IsEnabled = false;
+                    break;
+                case 4:
+                    bankPlay1.IsEnabled = true;
+                    bankSlider1.IsEnabled = true;
+                    bankPlay2.IsEnabled = true;
+                    bankSlider2.IsEnabled = true;
+                    bankPlay3.IsEnabled = true;
+                    bankSlider3.IsEnabled = true;
+                    bankPlay4.IsEnabled = true;
+                    bankSlider4.IsEnabled = true;
+                    break;
+                default:
+                    break;
+            }
 
             foreach (Bank b in viewModel.SelectedProject.banks)
             {
@@ -264,7 +334,7 @@ namespace MetroLooper
 
         private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            viewModel.AudioMan.TestExport("testWAV.wav");
+            //viewModel.AudioMan.TestExport("testWAV.wav");
             ContentPanel.Visibility = ContentPanel.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             ContentPanel2.Visibility = ContentPanel2.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }
