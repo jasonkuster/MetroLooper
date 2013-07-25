@@ -80,6 +80,7 @@ namespace MetroLooper
                 recTimer.Dispose();
                 micTimer.Dispose();
                 viewModel.AudioMan.StopClick();
+                viewModel.AudioMan.MixDownBank(viewModel.SelectedBank.bankID);
                 if (recording && !starting)
                 {
                     viewModel.AudioMan.RecordStop();
@@ -420,9 +421,11 @@ namespace MetroLooper
                 //Mix-down and deletion code
                 viewModel.AudioMan.FinalizeBank(viewModel.SelectedBank.bankID);
                 viewModel.SelectedBank.Finalized = true;
+
                 timer.Dispose();
                 recTimer.Dispose();
                 micTimer.Dispose();
+                OffsetTextBlock.Text = "0".ToString();
 
                 VisualStateManager.GoToState(this, "Finalized", true);
 

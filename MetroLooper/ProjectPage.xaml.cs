@@ -76,22 +76,22 @@ namespace MetroLooper
                 //}
                 if (play1)
                 {
-                    viewModel.AudioMan.PlayBank(0);
+                    viewModel.AudioMan.PlayMixedBank(0);
                     Bank1Go.Begin();
                 }
                 if (play2)
                 {
-                    viewModel.AudioMan.PlayBank(1);
+                    viewModel.AudioMan.PlayMixedBank(1);
                     Bank2Go.Begin();
                 }
                 if (play3)
                 {
-                    viewModel.AudioMan.PlayBank(2);
+                    viewModel.AudioMan.PlayMixedBank(2);
                     Bank3Go.Begin();
                 }
                 if (play4)
                 {
-                    viewModel.AudioMan.PlayBank(3);
+                    viewModel.AudioMan.PlayMixedBank(3);
                     Bank4Go.Begin();
                 }
             });
