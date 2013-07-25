@@ -579,6 +579,9 @@ namespace MetroLooper
             catch (LiveConnectException)
             {
             }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
