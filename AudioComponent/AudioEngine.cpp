@@ -509,6 +509,7 @@ void AudioEngine::LoadBank(int bank, const Platform::Array<short>^ data, int siz
 	SetBankVolumeDB(bank, volume_db);
 	SetBankPitch(bank, pitch);
 	bankFinalized[bank] = true;
+	bankMixed[bank] = true;
 }
 
 void AudioEngine::deleteTrack(int bank, int track)

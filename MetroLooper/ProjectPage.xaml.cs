@@ -36,15 +36,7 @@ namespace MetroLooper
             InitializeComponent();
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
-            if (!settings.Contains("projects"))
-            {
-                settings["projects"] = new ObservableCollection<Project>();
-                ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
-                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
-            }
-            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-            IsolatedStorageSettings.ApplicationSettings.Save();
+
             banksToPlay = new Dictionary<int, bool>();
         }
 

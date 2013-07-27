@@ -29,7 +29,7 @@ namespace MetroLooper
         {
             InitializeComponent();
 
-            //if (!settings.Contains("projects"))
+            if (!settings.Contains("projects"))
             {
                 settings["projects"] = new ObservableCollection<Project>();
             }

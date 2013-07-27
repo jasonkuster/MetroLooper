@@ -333,7 +333,7 @@ namespace MetroLooper
 
         private void delButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (viewModel.SelectedBank.Finalized)
+            if (!viewModel.SelectedBank.Finalized)
             {
                 VisualStateManager.GoToState(this, "Opened", true);
                 viewModel.AudioMan.DeleteTrack(viewModel.SelectedBank.bankID, viewModel.SelectedTrack.trackID);

@@ -28,19 +28,32 @@ namespace MetroLooper
 
         public WAVConfigPage()
         {
-            stream = new MemoryStream();
+            //stream = new MemoryStream();
             viewModel = MainViewModel.Instance;
-            byteData = stream.ToArray();
+            SetData(viewModel.wavStream);
+            //byteData = stream.ToArray();
 
-            shortData = new short[(int)(secondsPerMeasure*sampleRate)];
-            for (int i = 0; i < sampleRate; i++)
-            {
-                shortData[i] = (short)(Math.Cos(440 * 2 * 3.14 * i / sampleRate)*short.MaxValue);
-            }
-            byteData = Helper.ConvertShortArrayToByteArray(shortData);
+            //shortData = new short[(int)(secondsPerMeasure*sampleRate)];
+            //for (int i = 0; i < sampleRate; i++)
+            //{
+            //    shortData[i] = (short)(Math.Cos(440 * 2 * 3.14 * i / sampleRate)*short.MaxValue);
+            //}
+            //byteData = Helper.ConvertShortArrayToByteArray(shortData);
 
 
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            NavigationService.RemoveBackEntry();
+        }
+
+        public void SetData(Stream s)
+        {
+            s.CopyTo(stream);
+            byteData = stream.ToArray();
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -73,8 +86,21 @@ namespace MetroLooper
         private void DoneButton_Click(object sender, RoutedEventArgs e)
         {
             int trackNum = viewModel.SelectedBank.tracks.Count;
-            viewModel.AudioMan.AddTrackFromWAVStream(stream, startTimeInMilliseconds, viewModel.SelectedBank.bankID, trackNum);
-            viewModel.SelectedBank.tracks.Add(new Track() { trackID = trackNum } );
+            int bankNum = viewModel.SelectedBank.bankID;
+            viewModel.AudioMan.AddTrackFromWAVStream(stream, startTimeInMilliseconds, bankNum, trackNum);
+            byte[] audioData;
+            int size = viewModel.AudioMan.GetAudioData(bankNum, trackNum, out audioData);
+            viewModel.SelectedBank.tracks.Add(new Track()
+            {
+                trackID = trackNum,
+                Latency = viewModel.AudioMan.GetTrackLatency(bankNum, trackNum),
+                Volume = 0,
+                Offset = viewModel.AudioMan.GetOffsetMS(bankNum, trackNum),
+                Size = size,
+                trackData = audioData,
+                Finalized = true
+            });
+            NavigationService.GoBack();
             //Submit to AudioManager, need bank and track
         }
     }

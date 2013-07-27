@@ -75,21 +75,8 @@ namespace MetroLooper
                 MessageBox.Show("Success!");
                 IsolatedStorageFile store = IsolatedStorageFile.GetUserStoreForApplication();
                 IsolatedStorageFileStream wavStream = new IsolatedStorageFileStream("/shared/transfers/"+((SkydriveItem)wavList.SelectedItem).attributes["name"], System.IO.FileMode.Open, store);
-                int bankNum = viewModel.SelectedBank.bankID;
-                int trackNum = viewModel.SelectedBank.tracks.Count;
-                viewModel.AudioMan.AddTrackFromWAVStream(wavStream, 0, bankNum, trackNum);
-                byte[] audioData;
-                int size = viewModel.AudioMan.GetAudioData(bankNum, trackNum, out audioData);
-                viewModel.SelectedBank.tracks.Add(new Track() 
-                { 
-                    trackID = trackNum,
-                    Latency = viewModel.AudioMan.GetTrackLatency(bankNum, trackNum),
-                    Volume = 0,
-                    Offset = viewModel.AudioMan.GetOffsetMS(bankNum, trackNum),
-                    Size = size,
-                    trackData = audioData,
-                    Finalized = true
-                });
+                viewModel.wavStream = wavStream;
+                NavigationService.Navigate(new Uri("/WAVConfigPage.xaml", UriKind.RelativeOrAbsolute));
             }
             catch (System.Threading.Tasks.TaskCanceledException)
             {

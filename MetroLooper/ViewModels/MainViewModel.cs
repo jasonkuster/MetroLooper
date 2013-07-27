@@ -11,6 +11,7 @@ using Windows.Storage;
 using System.ComponentModel;
 using System.Windows.Media;
 using Microsoft.Live;
+using System.IO;
 //using Windows.UI;
 
 namespace MetroLooper.ViewModels
@@ -87,6 +88,8 @@ namespace MetroLooper.ViewModels
                 client = value;
             }
         }
+
+        public Stream wavStream { get; set; }
 
         private Project selectedProject = null;
         public Project SelectedProject

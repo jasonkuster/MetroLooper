@@ -24,10 +24,20 @@ namespace MetroLooper
             this.DataContext = viewModel;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            projSelectList.SelectedItem = null;
+        }
+
         private void projSelectList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            viewModel.SelectedProject = ((Project)projSelectList.SelectedItem);
-            NavigationService.Navigate(new Uri("/ProjectPage.xaml", UriKind.RelativeOrAbsolute));
+            if ((Project)projSelectList.SelectedItem != null)
+            {
+                viewModel.SelectedProject = ((Project)projSelectList.SelectedItem);
+                NavigationService.Navigate(new Uri("/ProjectPage.xaml", UriKind.RelativeOrAbsolute));
+            }
         }
     }
 }
