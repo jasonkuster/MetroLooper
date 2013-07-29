@@ -127,7 +127,157 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.ColumnSpan="2" Grid.RowSpan="4" Visibility="Visible">
-                <StackPanel x:Name="bankPanel1" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0,0,352,288">
+                <StackPanel x:Name="bank1Panel" Orientation="Horizontal" Visibility="Visible" Margin="0,0,555,303">
+                    <Grid x:Name="playGrid1" Width="152">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank1Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton1" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="bankPlay_Tap"/>
+                        <es:Arc x:Name="playRing1" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="bank2Panel" Orientation="Horizontal" Visibility="Visible" Margin="209,0,333,308">
+                    <Grid x:Name="playGrid2" Width="164">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank2Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton2" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
+                        <es:Arc x:Name="playRing2" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="bank3Panel" Orientation="Horizontal" Visibility="Visible" Margin="447,0,110,308">
+                    <Grid x:Name="playGrid3" Width="145">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank3Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton3" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
+                        <es:Arc x:Name="playRing3" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="bank4Panel" Orientation="Horizontal" Visibility="Visible" Margin="0,173,555,138">
+                    <Grid x:Name="playGrid4" Width="149">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank4Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton4" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
+                        <es:Arc x:Name="playRing4" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="bank5Panel" Orientation="Horizontal" Visibility="Visible" Margin="209,173,355,143">
+                    <Grid x:Name="playGrid5" Width="140">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank5Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton5" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
+                        <es:Arc x:Name="playRing5" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="bank6Panel" Orientation="Horizontal" Visibility="Visible" Margin="447,173,110,143">
+                    <Grid x:Name="playGrid6" Width="149">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle x:Name="bank6Rect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="#009450"/>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image x:Name="playButton6" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
+                        <es:Arc x:Name="playRing6" ArcThickness="8" ArcThicknessUnit="Pixel" EndAngle="0" Stretch="None" Stroke="Black" StartAngle="0" UseLayoutRounding="False" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
+                            <es:Arc.Fill>
+                                <SolidColorBrush Color="{StaticResource PhoneBorderColor}"/>
+                            </es:Arc.Fill>
+                        </es:Arc>
+                    </Grid>
+                </StackPanel>
+                <!--StackPanel x:Name="bankPanel1" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Margin="0,0,352,288">
                     <StackPanel Width="123">
                         <Border x:Name="bank1Border" BorderBrush="White" BorderThickness="1" Tap="Border_Tap" HorizontalAlignment="Left" Height="75" VerticalAlignment="Center" Width="100" Background="Black" Margin="10,0,0,0">
                             <Image Margin="0,0,0,-2" Source="/Toolkit.Content/ApplicationBar.Select.png"/>
@@ -198,7 +348,7 @@
                             </Rectangle>
                         </Grid>
                     </StackPanel>
-                </StackPanel>
+                </StackPanel>-->
                 <StackPanel Margin="0,288,0,0">
                     <Grid Height="70">
                         <Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>

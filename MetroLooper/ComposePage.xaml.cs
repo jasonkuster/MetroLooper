@@ -134,52 +134,52 @@ namespace MetroLooper
             stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
             play1 = false;
-            bankPlay1.Content = "Play";
+            //bankPlay1.Content = "Play";
             play2 = false;
-            bankPlay2.Content = "Play";
+            //bankPlay2.Content = "Play";
             play3 = false;
-            bankPlay3.Content = "Play";
+            //bankPlay3.Content = "Play";
             play4 = false;
-            bankPlay4.Content = "Play";
+           // bankPlay4.Content = "Play";
 
             switch (viewModel.SelectedProject.banks.Count)
             {
                 case 0:
-                    bankPanel2.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = false;
+                    bank2Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank3Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    //bank1Play.IsEnabled = false;
                     break;
                 case 1:
                     //Code to handle one bank
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankPlay2.IsEnabled = false;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank3Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = false;
                     break;
                 case 2:
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankPlay3.IsEnabled = false;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = false;
                     break;
                 case 3:
-                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
-                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
-                    bankPlay1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankPlay4.IsEnabled = false;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank4Panel.Visibility = System.Windows.Visibility.Visible;
+                    //bankPlay1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = true;
+                    //bankPlay4.IsEnabled = false;
                     break;
                 case 4:
-                    bankPlay1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankPlay4.IsEnabled = true;
+                    //bankPlay1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = true;
+                    //bankPlay4.IsEnabled = true;
                     break;
                 default:
                     break;
@@ -278,6 +278,33 @@ namespace MetroLooper
                 isPlaying = true;
             }
         }
+        private void bankPlay_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var playButton = sender as Image;
+            switch (playButton.Name)
+            {
+                case "playButton1":
+                    play1 = play1 ? false : true;
+                    break;
+                case "playButton2":
+                    play2 = play2 ? false : true;
+                    break;
+                case "playButton3":
+                    play3 = play3 ? false : true;
+                    break;
+                case "playButton4":
+                    play4 = play4 ? false : true;
+                    break;
+                default:
+                    break;
+            }
+            //playButton.Content = ((string)(playButton.Content)) == "Play" ? "Stop" : "Play";
+            if (!isPlaying)
+            {
+                playingTimer.Change(0, 4000);
+                isPlaying = true;
+            }
+        }
 
         private void bankSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -314,13 +341,13 @@ namespace MetroLooper
             isPlaying = false;
 
             play1 = false;
-            bankPlay1.Content = "Play";
+            //bankPlay1.Content = "Play";
             play2 = false;
-            bankPlay2.Content = "Play";
+            //bankPlay2.Content = "Play";
             play3 = false;
-            bankPlay3.Content = "Play";
+            //bankPlay3.Content = "Play";
             play4 = false;
-            bankPlay4.Content = "Play";
+            //bankPlay4.Content = "Play";
             viewModel.AudioMan.StopAll();
 
             int numMeasures = currentMeasure - 1;
@@ -422,5 +449,7 @@ namespace MetroLooper
                 isPlaying = true;
             }
         }
+
+        
     }
 }
