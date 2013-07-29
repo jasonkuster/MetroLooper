@@ -626,9 +626,10 @@ namespace MetroLooper
         /// <param name="startTimeInMilliseconds">Start time in ms</param>
         /// <param name="bank">Bank #</param>
         /// <param name="track">Track #</param>
-        public void AddTrackFromWAVStream(Stream stream, int startTimeInMilliseconds, int bank, int track)
+        public void AddTrackFromWAVStream(MemoryStream stream, int startTimeInMilliseconds, int bank, int track)
         {
             MemoryStream memStream = new MemoryStream();
+            stream.Seek(0, SeekOrigin.Begin);
             stream.CopyTo(memStream);
 
             short[] shortData = FileHelper.ReadWAVFile(memStream);

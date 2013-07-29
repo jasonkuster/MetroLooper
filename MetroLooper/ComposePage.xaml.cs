@@ -324,7 +324,13 @@ namespace MetroLooper
             viewModel.AudioMan.StopAll();
 
             int numMeasures = currentMeasure - 1;
-            viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, "MyWave.wav");
+            string fileName = FileNameTextBox.Text;
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
+            {
+                fileName = "MyWave";
+            }
+            fileName += ".wav";
+            viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, fileName);
 
             NavigationService.GoBack();
         }
