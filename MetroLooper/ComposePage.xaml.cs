@@ -26,10 +26,12 @@ namespace MetroLooper
         bool play2 = false;
         bool play3 = false;
         bool play4 = false;
+        bool play5 = false;
+        bool play6 = false;
+        bool recording = false;
         bool isPlaying = false;
         Timer playingTimer;
         Timer stopTimer;
-        Dictionary<int,bool> banksToPlay;
         bool[][] instructions;
         int currentMeasure;
 
@@ -38,20 +40,10 @@ namespace MetroLooper
             InitializeComponent();
             viewModel = MainViewModel.Instance;
             this.DataContext = viewModel;
-            if (!settings.Contains("projects"))
-            {
-                settings["projects"] = new ObservableCollection<Project>();
-                ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
-                ((ObservableCollection<Project>)settings["projects"])[0].banks.Add(new Bank() { bankID = 0 });
-            }
-            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            //viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-            IsolatedStorageSettings.ApplicationSettings.Save();
-            banksToPlay = new Dictionary<int, bool>();
             currentMeasure = 0;
 
-            instructions = new bool[4][];
-            for (int i = 0; i < 4; i++)
+            instructions = new bool[6][];
+            for (int i = 0; i < 6; i++)
             {
                 instructions[i] = new bool[60];
                 for (int j = 0; j < 60; j++)
@@ -67,10 +59,12 @@ namespace MetroLooper
             {
                 MainProgress.Stop();
                 viewModel.AudioMan.StopAll();
-                Bank1Go.Stop();
-                Bank2Go.Stop();
-                Bank3Go.Stop();
-                Bank4Go.Stop();
+                PlayBank1.Stop();
+                PlayBank2.Stop();
+                PlayBank3.Stop();
+                PlayBank4.Stop();
+                PlayBank5.Stop();
+                PlayBank6.Stop();
             });
         }
 
@@ -80,39 +74,68 @@ namespace MetroLooper
             Dispatcher.BeginInvoke(delegate
             {
                 MainProgress.Begin();
-                //foreach (int k in banksToPlay.Keys)
-                //{
-                //    if (banksToPlay[k])
-                //    {
-                //        viewModel.AudioMan.PlayBank(k);
-                //    }
-                //}
                 if (play1)
                 {
                     viewModel.AudioMan.PlayMixedBank(0);
-                    Bank1Go.Begin();
-                    instructions[0][currentMeasure] = true;
+                    PlayBank1.Begin();
+                    if (recording)
+                    {
+                        instructions[0][currentMeasure] = true;
+                    }
                 }
                 if (play2)
                 {
                     viewModel.AudioMan.PlayMixedBank(1);
-                    Bank2Go.Begin();
-                    instructions[1][currentMeasure] = true;
+                    PlayBank2.Begin();
+                    if (recording)
+                    {
+                        instructions[1][currentMeasure] = true;
+                    }
                 }
                 if (play3)
                 {
                     viewModel.AudioMan.PlayMixedBank(2);
-                    Bank3Go.Begin();
-                    instructions[2][currentMeasure] = true;
+                    PlayBank3.Begin();
+                    if (recording)
+                    {
+                        instructions[2][currentMeasure] = true;
+                    }
                 }
                 if (play4)
                 {
                     viewModel.AudioMan.PlayMixedBank(3);
-                    Bank4Go.Begin();
-                    instructions[3][currentMeasure] = true;
+                    PlayBank4.Begin();
+
+                    if (recording)
+                    {
+                        instructions[3][currentMeasure] = true;
+                    }
+                }
+                if (play5)
+                {
+                    viewModel.AudioMan.PlayMixedBank(4);
+                    PlayBank5.Begin();
+
+                    if (recording)
+                    {
+                        instructions[4][currentMeasure] = true;
+                    }
+                }
+                if (play6)
+                {
+                    viewModel.AudioMan.PlayMixedBank(5);
+                    PlayBank6.Begin();
+
+                    if (recording)
+                    {
+                        instructions[5][currentMeasure] = true;
+                    }
                 }
 
-                currentMeasure++;
+                if (recording)
+                {
+                    currentMeasure++;
+                }
             });
 
         }
@@ -124,83 +147,110 @@ namespace MetroLooper
                 base.OnNavigatedTo(e);
             }
 
-            if (!viewModel.SelectedProject.Initialized)
-            {
-                viewModel.SelectedProject.Initialized = true;
-                NavigationService.RemoveBackEntry();
-            }
-
             playingTimer = new Timer(PlayTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
             play1 = false;
-            //bankPlay1.Content = "Play";
             play2 = false;
-            //bankPlay2.Content = "Play";
             play3 = false;
-            //bankPlay3.Content = "Play";
             play4 = false;
-           // bankPlay4.Content = "Play";
+            play5 = false;
+            play6 = false;
+            playButton1.Visibility = System.Windows.Visibility.Visible;
+            playButton2.Visibility = System.Windows.Visibility.Visible;
+            playButton3.Visibility = System.Windows.Visibility.Visible;
+            playButton4.Visibility = System.Windows.Visibility.Visible;
+            playButton5.Visibility = System.Windows.Visibility.Visible;
+            playButton6.Visibility = System.Windows.Visibility.Visible;
+            stopButton1.Visibility = System.Windows.Visibility.Collapsed;
+            stopButton2.Visibility = System.Windows.Visibility.Collapsed;
+            stopButton3.Visibility = System.Windows.Visibility.Collapsed;
+            stopButton4.Visibility = System.Windows.Visibility.Collapsed;
+            stopButton5.Visibility = System.Windows.Visibility.Collapsed;
+            stopButton6.Visibility = System.Windows.Visibility.Collapsed;
 
             switch (viewModel.SelectedProject.banks.Count)
             {
                 case 0:
+                    bank1Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank2Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank3Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
-                    //bank1Play.IsEnabled = false;
+                    bank5Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
                     break;
                 case 1:
                     //Code to handle one bank
-                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
+                    bank2Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank3Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
-                    //bankPlay1.IsEnabled = true;
-                    //bankPlay2.IsEnabled = false;
+                    bank5Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
                     break;
                 case 2:
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
                     bank2Panel.Visibility = System.Windows.Visibility.Visible;
-                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock2.Text = viewModel.SelectedProject.banks[1].BankName;
+                    bank3Panel.Visibility = System.Windows.Visibility.Collapsed;
                     bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
-                    //bankPlay1.IsEnabled = true;
-                    //bankPlay2.IsEnabled = true;
-                    //bankPlay3.IsEnabled = false;
+                    bank5Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
                     break;
                 case 3:
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
                     bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock2.Text = viewModel.SelectedProject.banks[1].BankName;
                     bank3Panel.Visibility = System.Windows.Visibility.Visible;
-                    bank4Panel.Visibility = System.Windows.Visibility.Visible;
-                    //bankPlay1.IsEnabled = true;
-                    //bankPlay2.IsEnabled = true;
-                    //bankPlay3.IsEnabled = true;
-                    //bankPlay4.IsEnabled = false;
+                    nameBlock3.Text = viewModel.SelectedProject.banks[2].BankName;
+                    bank4Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank5Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
                     break;
                 case 4:
-                    //bankPlay1.IsEnabled = true;
-                    //bankPlay2.IsEnabled = true;
-                    //bankPlay3.IsEnabled = true;
-                    //bankPlay4.IsEnabled = true;
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock2.Text = viewModel.SelectedProject.banks[1].BankName;
+                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock3.Text = viewModel.SelectedProject.banks[2].BankName;
+                    bank4Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock4.Text = viewModel.SelectedProject.banks[3].BankName;
+                    bank5Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    break;
+                case 5:
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock2.Text = viewModel.SelectedProject.banks[1].BankName;
+                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock3.Text = viewModel.SelectedProject.banks[2].BankName;
+                    bank4Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock4.Text = viewModel.SelectedProject.banks[3].BankName;
+                    bank5Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock5.Text = viewModel.SelectedProject.banks[4].BankName;
+                    bank6Panel.Visibility = System.Windows.Visibility.Collapsed;
+                    break;
+                case 6:
+                    bank1Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock1.Text = viewModel.SelectedProject.banks[0].BankName;
+                    bank2Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock2.Text = viewModel.SelectedProject.banks[1].BankName;
+                    bank3Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock3.Text = viewModel.SelectedProject.banks[2].BankName;
+                    bank4Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock4.Text = viewModel.SelectedProject.banks[3].BankName;
+                    bank5Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock5.Text = viewModel.SelectedProject.banks[4].BankName;
+                    bank6Panel.Visibility = System.Windows.Visibility.Visible;
+                    nameBlock6.Text = viewModel.SelectedProject.banks[5].BankName;
                     break;
                 default:
                     break;
-            }
-
-            foreach (Bank b in viewModel.SelectedProject.banks)
-            {
-                if (!b.Finalized)
-                {
-                    foreach (Track t in b.tracks)
-                    {
-                        if (t.Size > 0)
-                        {
-                            viewModel.AudioMan.LoadTrack(b.bankID, t.trackID, t.trackData, t.Size, t.Offset, t.Latency, t.Volume);
-                        }
-                    }
-                }
-                else
-                {
-                    viewModel.AudioMan.LoadBank(b.bankID, b.finalTrack, b.Size, b.Offset, b.Volume, b.Pitch);
-                }
             }
         }
 
@@ -208,248 +258,92 @@ namespace MetroLooper
         {
             base.OnNavigatingFrom(e);
             playingTimer.Dispose();
+            stopTimer.Dispose();
             viewModel.AudioMan.StopAll();
             isPlaying = false;
         }
 
-        private void Border_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            var borderNum = sender as Border;
-            switch (borderNum.Name)
-            {
-                case "bank1Border":
-                    if (viewModel.SelectedProject.banks.Count == 0)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 0 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-                    break;
-                case "bank2Border":
-                    if (viewModel.SelectedProject.banks.Count == 1)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 1 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[1];
-                    break;
-                case "bank3Border":
-                    if (viewModel.SelectedProject.banks.Count == 2)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 2 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[2];
-                    break;
-                case "bank4Border":
-                    if (viewModel.SelectedProject.banks.Count == 3)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 3 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[3];
-                    break;
-                default:
-                    break;
-            }
-            NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
-        }
-
-        private void bankPlay_Click(object sender, RoutedEventArgs e)
-        {
-            var playButton = sender as Button;
-            switch (playButton.Name)
-            {
-                case "bankPlay1":
-                    play1 = play1 ? false : true;
-                    break;
-                case "bankPlay2":
-                    play2 = play2 ? false : true;
-                    break;
-                case "bankPlay3":
-                    play3 = play3 ? false : true;
-                    break;
-                case "bankPlay4":
-                    play4 = play4 ? false : true;
-                    break;
-                default:
-                    break;
-            }
-            playButton.Content = ((string)(playButton.Content)) == "Play" ? "Stop" : "Play";
-            if (!isPlaying)
-            {
-                playingTimer.Change(0, 4000);
-                isPlaying = true;
-            }
-        }
         private void bankPlay_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var playButton = sender as Image;
-            switch (playButton.Name)
+            switch (playButton.Name.Remove(0,4))
             {
-                case "playButton1":
+                case "Button1":
                     play1 = play1 ? false : true;
+                    playButton1.Visibility = play1 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton1.Visibility = play1 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
-                case "playButton2":
+                case "Button2":
                     play2 = play2 ? false : true;
+                    playButton2.Visibility = play2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton2.Visibility = play2 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
-                case "playButton3":
+                case "Button3":
                     play3 = play3 ? false : true;
+                    playButton3.Visibility = play3 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton3.Visibility = play3 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
-                case "playButton4":
+                case "Button4":
                     play4 = play4 ? false : true;
+                    playButton4.Visibility = play4 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton4.Visibility = play4 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "Button5":
+                    play5 = play5 ? false : true;
+                    playButton5.Visibility = play5 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton6.Visibility = play5 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "Button6":
+                    play6 = play6 ? false : true;
+                    playButton6.Visibility = play6 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButton6.Visibility = play6 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 default:
                     break;
             }
-            //playButton.Content = ((string)(playButton.Content)) == "Play" ? "Stop" : "Play";
+
             if (!isPlaying)
             {
                 playingTimer.Change(0, 4000);
                 isPlaying = true;
-            }
-        }
-
-        private void bankSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            double value = e.NewValue;
-            if (value < -35.0)
-            {
-                value = -120;
-            }
-            int bankNumber = -1;
-            var sliderNum = sender as Slider;
-            switch (sliderNum.Name)
-            {
-                case "bankSlider1":
-                    bankNumber = 0;
-                    break;
-                case "bankSlider2":
-                    bankNumber = 1;
-                    break;
-                case "bankSlider3":
-                    bankNumber = 2;
-                    break;
-                case "bankSlider4":
-                    bankNumber = 3;
-                    break;
-                default:
-                    break;
-            }
-            viewModel.AudioMan.SetBankVolumeDB(bankNumber, value);
-        }
-
-        private void stopAllButton_Click(object sender, RoutedEventArgs e)
-        {
-            playingTimer.Dispose();
-            isPlaying = false;
-
-            play1 = false;
-            //bankPlay1.Content = "Play";
-            play2 = false;
-            //bankPlay2.Content = "Play";
-            play3 = false;
-            //bankPlay3.Content = "Play";
-            play4 = false;
-            //bankPlay4.Content = "Play";
-            viewModel.AudioMan.StopAll();
-
-            int numMeasures = currentMeasure - 1;
-            string fileName = FileNameTextBox.Text;
-            if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
-            {
-                fileName = "MyWave";
-            }
-            fileName += ".wav";
-            viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, fileName);
-
-            NavigationService.GoBack();
-        }
-
-        private void ResetButton_Click(object sender, RoutedEventArgs e)
-        {
-            settings["projects"] = new ObservableCollection<Project>();
-            ((ObservableCollection<Project>)settings["projects"]).Add(new Project() { projName = "MyProject", bpm = 120, measures = 2 });
-            viewModel.SelectedProject = ((ObservableCollection<Project>)settings["projects"])[0];
-            IsolatedStorageSettings.ApplicationSettings.Save();
-            OnNavigatedTo(null);
-
-            viewModel.AudioMan.ResetAll();
-        }
-
-        private void playButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            PlayBank1.Begin();
-        }
-
-        private void swapButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //viewModel.AudioMan.TestExport("testWAV.wav");
-            ContentPanel.Visibility = ContentPanel.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-            ContentPanel2.Visibility = ContentPanel2.Visibility == System.Windows.Visibility.Collapsed ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-        }
-
-        private void editImageOne_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
-        }
-
-        private void playButton_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            if (((Bank)BankList.SelectedItem) != null)
-            {
-                if (banksToPlay.ContainsKey(((Bank)BankList.SelectedItem).bankID))
-                {
-                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = banksToPlay[((Bank)BankList.SelectedItem).bankID] == true ? false : true;
-                }
-                else
-                {
-                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = true;
-                }
-                playingTimer.Change(0, 4000);
-            }
-        }
-
-        private void editButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            if (((Bank)BankList.SelectedItem) != null)
-            {
-                if (!((Bank)BankList.SelectedItem).Initialized)
-                {
-                    ((Bank)BankList.SelectedItem).Initialized = true;
-                    viewModel.SelectedProject.banks.Add(new Bank() { bankID = viewModel.SelectedProject.banks.Count });
-                }
-                viewModel.SelectedBank = ((Bank)BankList.SelectedItem);
-                BankList.SelectedItem = null;
-                NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
-            }
-        }
-
-        private void deleteButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            if (((Bank)BankList.SelectedItem) != null)
-            {
-                if (((Bank)BankList.SelectedItem).Finalized)
-                {
-                    viewModel.AudioMan.DeleteFinalizedBank(((Bank)BankList.SelectedItem).bankID);
-                }
-                else //TODO: FIX SO THAT DELETING BANK 2/4 DOESN'T BREAK EVERYTHING
-                {
-                    foreach (Track t in ((Bank)BankList.SelectedItem).tracks) //TODO: DECREMENT EVERY BANK AFTERWARD
-                    {
-                        viewModel.AudioMan.DeleteTrack(((Bank)BankList.SelectedItem).bankID, t.trackID);
-                    }
-                }
-                viewModel.SelectedProject.banks.Remove(((Bank)BankList.SelectedItem));
-                BankList.SelectedItem = null;
             }
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            if (recording)
+            {
+                playingTimer.Dispose();
+                stopTimer.Dispose();
+                isPlaying = false;
+                recording = false;
+
+                play1 = false;
+                play2 = false;
+                play3 = false;
+                play4 = false;
+                play5 = false;
+                play6 = false;
+                viewModel.AudioMan.StopAll();
+
+                //int numMeasures = currentMeasure - 1;
+                //string fileName = FileNameTextBox.Text;
+                //if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
+                //{
+                //    fileName = "MyWave";
+                //}
+                //fileName += ".wav";
+                //viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, fileName);
+
+                NavigationService.GoBack();
+            }
+            recording = true;
             if (!isPlaying)
             {
                 playingTimer.Change(0, 4000);
                 isPlaying = true;
+                recording = true;
             }
         }
-
-        
     }
 }

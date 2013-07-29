@@ -329,7 +329,7 @@
                     <Image Source="/Assets/AppBar/add.png"/>
                 </Border>
             </Grid>
-            <ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,150,0"/>
+            <ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="2" Grid.ColumnSpan="3" Margin="12,12,150,12"/>
             <Button x:Name="composeButton" Content="Compose" Click="ComposeButton_Click" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#FF43E098" Foreground="Black"/>
             <StackPanel Visibility="Collapsed">
                 <Grid Height="70">
