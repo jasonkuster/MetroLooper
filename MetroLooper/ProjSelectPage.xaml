@@ -17,8 +17,14 @@
 			<StackPanel>
 				<TextBlock x:Name="nameBlock" Text="{Binding projName}" FontSize="34.667" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe WP Semibold"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="measuresBlock" Margin="24,12,12,0" Text="{Binding measures}" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="bpmBlock"  Margin="0,12,12,0" Text="{Binding bpm}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="bpmBlock" Width="85" Margin="0,12,12,0" TextWrapping="NoWrap">
+                        <Run Text="{Binding bpm}"/>
+                        <Run Text=" bpm"/>
+                    </TextBlock>
+                    <TextBlock x:Name="measuresBlock" Width="100" Margin="24,12,12,0" TextWrapping="NoWrap">
+                        <Run Text="{Binding measures}"/>
+                        <Run> measures</Run>
+                    </TextBlock>
                 </StackPanel>
             </StackPanel>
 		</DataTemplate>

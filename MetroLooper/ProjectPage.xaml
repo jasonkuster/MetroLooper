@@ -145,7 +145,7 @@
             </Grid.RowDefinitions>
             <Grid x:Name="bankPanel1" Height="150" Width="200" Grid.Row="0" Grid.Column="0">
                 <StackPanel x:Name="playPanel1">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank1Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonOne" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                                 <Image x:Name="playImageOne" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
@@ -176,7 +176,7 @@
             </Grid>
             <Grid x:Name="bankPanel2" Height="150" Width="200" Grid.Row="0" Grid.Column="1">
                 <StackPanel x:Name="playPanel2" Visibility="Collapsed">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank2Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonTwo" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageTwo" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
@@ -207,7 +207,7 @@
             </Grid>
             <Grid x:Name="bankPanel3" Height="150" Width="200" Grid.Row="0" Grid.Column="2">
                 <StackPanel x:Name="playPanel3" Visibility="Collapsed">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank3Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonThree" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageThree" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
@@ -238,7 +238,7 @@
             </Grid>
             <Grid x:Name="bankPanel4" Height="150" Width="200" Grid.Row="1" Grid.Column="0">
                 <StackPanel x:Name="playPanel4" Visibility="Collapsed">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank4Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonFour" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageFour" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
@@ -269,7 +269,7 @@
             </Grid>
             <Grid x:Name="bankPanel5" Height="150" Width="200" Grid.Row="1" Grid.Column="1">
                 <StackPanel x:Name="playPanel5" Visibility="Collapsed">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank5Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonFive" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageFive" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
@@ -300,7 +300,7 @@
             </Grid>
             <Grid x:Name="bankPanel6" Height="150" Width="200" Grid.Row="1" Grid.Column="2">
                 <StackPanel x:Name="playPanel6" Visibility="Collapsed">
-                    <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
+                    <TextBlock TextWrapping="Wrap" x:Name="bank6Name" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
                         <Border x:Name="playButtonSix" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageSix" Source="/Toolkit.Content/ApplicationBar.Play.png"/>

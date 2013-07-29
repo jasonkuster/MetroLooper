@@ -153,6 +153,7 @@ namespace MetroLooper
                 case 1:
                     //Code to handle one bank
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
@@ -166,8 +167,10 @@ namespace MetroLooper
                     break;
                 case 2:
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bank2Name.Text = viewModel.SelectedProject.banks[1].BankName;
                     newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
@@ -183,10 +186,13 @@ namespace MetroLooper
                     break;
                 case 3:
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bank2Name.Text = viewModel.SelectedProject.banks[1].BankName;
                     newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bank3Name.Text = viewModel.SelectedProject.banks[2].BankName;
                     newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
@@ -204,12 +210,16 @@ namespace MetroLooper
                     break;
                 case 4:
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bank2Name.Text = viewModel.SelectedProject.banks[1].BankName;
                     newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bank3Name.Text = viewModel.SelectedProject.banks[2].BankName;
                     newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bank4Name.Text = viewModel.SelectedProject.banks[3].BankName;
                     newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
@@ -227,14 +237,19 @@ namespace MetroLooper
                     break;
                 case 5:
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bank2Name.Text = viewModel.SelectedProject.banks[1].BankName;
                     newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bank3Name.Text = viewModel.SelectedProject.banks[2].BankName;
                     newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bank4Name.Text = viewModel.SelectedProject.banks[3].BankName;
                     newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel5.Visibility = System.Windows.Visibility.Visible;
+                    bank5Name.Text = viewModel.SelectedProject.banks[4].BankName;
                     newButtonFive.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
@@ -244,16 +259,22 @@ namespace MetroLooper
                     break;
                 case 6:
                     playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    bank1Name.Text = viewModel.SelectedProject.banks[0].BankName;
                     newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bank2Name.Text = viewModel.SelectedProject.banks[1].BankName;
                     newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bank3Name.Text = viewModel.SelectedProject.banks[2].BankName;
                     newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bank4Name.Text = viewModel.SelectedProject.banks[3].BankName;
                     newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel5.Visibility = System.Windows.Visibility.Visible;
+                    bank5Name.Text = viewModel.SelectedProject.banks[4].BankName;
                     newButtonFive.Visibility = System.Windows.Visibility.Collapsed;
                     playPanel6.Visibility = System.Windows.Visibility.Visible;
+                    bank6Name.Text = viewModel.SelectedProject.banks[5].BankName;
                     newButtonSix.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;

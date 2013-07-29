@@ -259,6 +259,13 @@ namespace MetroLooper
             base.OnNavigatingFrom(e);
             playingTimer.Dispose();
             stopTimer.Dispose();
+            MainProgress.Stop();
+            PlayBank1.Stop();
+            PlayBank2.Stop();
+            PlayBank3.Stop();
+            PlayBank4.Stop();
+            PlayBank5.Stop();
+            PlayBank6.Stop();
             viewModel.AudioMan.StopAll();
             isPlaying = false;
         }
@@ -324,22 +331,33 @@ namespace MetroLooper
                 play4 = false;
                 play5 = false;
                 play6 = false;
+                MainProgress.Stop();
+                PlayBank1.Stop();
+                PlayBank2.Stop();
+                PlayBank3.Stop();
+                PlayBank4.Stop();
+                PlayBank5.Stop();
+                PlayBank6.Stop();
                 viewModel.AudioMan.StopAll();
 
-                //int numMeasures = currentMeasure - 1;
+                int numMeasures = currentMeasure - 1;
                 //string fileName = FileNameTextBox.Text;
-                //if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
-                //{
-                //    fileName = "MyWave";
-                //}
-                //fileName += ".wav";
-                //viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, fileName);
+                string fileName = "ML_Performance_" + DateTime.Now.ToShortDateString();
+                if (string.IsNullOrEmpty(fileName) || string.IsNullOrWhiteSpace(fileName))
+                {
+                    fileName = "MyWave";
+                }
+                fileName += ".wav";
+                viewModel.AudioMan.ExportAndUpload(instructions, viewModel.SelectedProject.banks.Count, numMeasures, fileName);
+
+                StartButton.Content = "Start";
 
                 NavigationService.GoBack();
             }
             recording = true;
             if (!isPlaying)
             {
+                StartButton.Content = "Finalize";
                 playingTimer.Change(0, 4000);
                 isPlaying = true;
                 recording = true;
