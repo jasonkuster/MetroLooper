@@ -28,7 +28,7 @@ namespace MetroLooper
 
         public WAVConfigPage()
         {
-            //stream = new MemoryStream();
+            stream = new MemoryStream();
             viewModel = MainViewModel.Instance;
             SetData(viewModel.wavStream);
             //byteData = stream.ToArray();
@@ -81,6 +81,7 @@ namespace MetroLooper
         private void RightButton_Click(object sender, RoutedEventArgs e)
         {
             startTimeInMilliseconds += 100;
+            Time.Text = startTimeInMilliseconds.ToString();
         }
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
