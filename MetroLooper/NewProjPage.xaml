@@ -29,7 +29,7 @@
         <!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
 			<Canvas HorizontalAlignment="Center" Height="435" VerticalAlignment="Center" Width="730">
-				<Image Height="360" Width="710" Source="/Assets/MetroLooperv1.2_icon_trans.png" Canvas.Left="10" Canvas.Top="56"/>
+				<Image Height="360" Width="710" Source="/Assets/MetroLooperv1.2_icon.png" Canvas.Left="10" Canvas.Top="56"/>
 				<TextBlock TextWrapping="Wrap" Text="Project Name" Canvas.Left="299"/>
 				<TextBox x:Name="projNameBox" Height="72" TextWrapping="Wrap" Width="241" Canvas.Left="241" Canvas.Top="25" TextAlignment="Center" InputScope="Default"/>
 				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="BPM" VerticalAlignment="Top" Canvas.Left="173" Canvas.Top="181"/>

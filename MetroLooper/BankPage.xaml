@@ -18,9 +18,9 @@
     <phone:PhoneApplicationPage.Resources>
     	<DataTemplate x:Key="LoopItemTemplate">
     		<Grid>
-                <Border BorderThickness="1" HorizontalAlignment="Stretch" Background="{Binding Finalized, Converter={StaticResource BoolBrushConverter}}" BorderBrush="{StaticResource PhoneBorderBrush}">
+                <Border BorderThickness="0" HorizontalAlignment="Stretch" Background="{Binding Finalized, Converter={StaticResource BoolBrushConverter}}" BorderBrush="{StaticResource PhoneBorderBrush}">
                     <Grid>
-                        <TextBlock x:Name="TrackName" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="16"/>
+                        <TextBlock x:Name="TrackName" Foreground="{Binding IsSelected, Converter={StaticResource BoolSelectedConverter}}" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="{Binding trackName}" VerticalAlignment="Center" FontSize="16"/>
                         <TextBlock x:Name="finBlock" Margin="{StaticResource PhoneMargin}" TextWrapping="Wrap" Text="Finalizing..." HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Finalized, Converter={StaticResource BoolVisConverter}}"/>
                     </Grid>
                 </Border>

@@ -39,8 +39,8 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<Image Source="/Assets/MetroLooperv1.2_icon_trans_vert.png" HorizontalAlignment="Left"/>
-        	<phone:LongListSelector x:Name="projSelectList" SelectionChanged="projSelectList_SelectionChanged" ItemsSource="{Binding Projects}" HorizontalAlignment="Left" Height="402" VerticalAlignment="Top" Width="511" Margin="236,68,0,0" ItemTemplate="{StaticResource ProjTemplate}"/>
+        	<Image Source="/Assets/MetroLooperv1.2_icon_vert.png" HorizontalAlignment="Left"/>
+        	<phone:LongListSelector x:Name="projSelectList" SelectionChanged="projSelectList_SelectionChanged" ItemsSource="{Binding Projects}" Height="402" VerticalAlignment="Top" Margin="243,68,0,0" ItemTemplate="{StaticResource ProjTemplate}"/>
         	<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Load Project" VerticalAlignment="Top" Margin="437,36,0,0"/>
 
         </Grid>

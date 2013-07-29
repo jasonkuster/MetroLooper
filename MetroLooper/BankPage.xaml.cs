@@ -378,6 +378,10 @@ namespace MetroLooper
         {
             if (((Track)loopList.SelectedItem) != null)
             {
+                if (e.RemovedItems[0] != null)
+                {
+                    ((Track)e.RemovedItems[0]).IsSelected = false;
+                }
                 VisualStateManager.GoToState(this, "TrackSelected", true);
                 PlayAnimation.Stop();
                 MetronomeSlider.IsChecked = false;
@@ -501,18 +505,34 @@ namespace MetroLooper
     }
 
     /// <summary>
-    /// Converter which turns True -> Green, False -> Orange
+    /// Converter which turns True -> Trans, False -> Orange
     /// </summary>
     public sealed class BooleanToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return (value is bool && (bool)value) ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80)) : new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80));
+            return (value is bool && (bool)value) ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 224, 155, 11));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return value is SolidColorBrush && ((SolidColorBrush)value).Color == System.Windows.Media.Color.FromArgb(255, 0, 148, 80);
+            return value is SolidColorBrush && ((SolidColorBrush)value).Color == Colors.Transparent;
+        }
+    }
+
+    /// <summary>
+    /// Converter which turns True -> Mint, False -> Trans
+    /// </summary>
+    public sealed class BooleanToSelectedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return (value is bool && (bool)value) ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 67, 224, 152)) : new SolidColorBrush(Colors.White);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
+        {
+            return value is SolidColorBrush && ((SolidColorBrush)value).Color == System.Windows.Media.Color.FromArgb(255, 67, 224, 152);
         }
     }
 }
