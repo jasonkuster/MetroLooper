@@ -42,8 +42,8 @@
 				</Border>
 				<TextBlock TextWrapping="Wrap" Text="Measures" Canvas.Left="490" Canvas.Top="181"/>
 				<toolkitPrimitives:LoopingSelector x:Name="measureSelector" HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="64" Canvas.Left="656" Canvas.Top="30"/>
-				<TextBox x:Name="bpmBox" Height="72" TextWrapping="Wrap" Width="80" Canvas.Left="155" Canvas.Top="208" TextAlignment="Center" InputScope="Number"/>
-				<TextBox x:Name="measuresBox" HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Canvas.Left="494" Canvas.Top="208" TextAlignment="Center" InputScope="Number"/>
+				<TextBox x:Name="bpmBox" Height="72" Text="120" TextWrapping="Wrap" Width="80" Canvas.Left="155" Canvas.Top="208" TextAlignment="Center" InputScope="Number"/>
+				<TextBox x:Name="measuresBox" Text="2" HorizontalAlignment="Left" Height="72" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Canvas.Left="494" Canvas.Top="208" TextAlignment="Center" InputScope="Number"/>
 				<Button x:Name="startButton" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="318" Canvas.Top="333" FontFamily="Segoe WP Light" BorderThickness="0" Click="startButton_Click"/>
 			</Canvas>
 
