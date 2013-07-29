@@ -165,7 +165,7 @@ namespace MetroLooper.ViewModels
             }
         }
 
-        private Brush barColor = new SolidColorBrush(Colors.Green);
+        private Brush barColor = new SolidColorBrush(Color.FromArgb(255, 0, 148, 80));
         public Brush BarColor
         {
             get
@@ -204,12 +204,12 @@ namespace MetroLooper.ViewModels
                 case LOCK_STATE.NONE:
                     RecButtons = true;
                     Stop = false;
-                    BarColor = new SolidColorBrush(Colors.Green);
+                    BarColor = new SolidColorBrush(Color.FromArgb(255, 0, 148, 80));
                     break;
                 default:
                     RecButtons = false;
                     Stop = false;
-                    BarColor = new SolidColorBrush(Colors.Green);
+                    BarColor = new SolidColorBrush(Color.FromArgb(255, 0, 148, 80));
                     break;
             }
         }

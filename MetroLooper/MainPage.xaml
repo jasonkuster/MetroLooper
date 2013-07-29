@@ -13,11 +13,6 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Landscape" Orientation="Landscape"
     shell:SystemTray.IsVisible="True">
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar>
-            <shell:ApplicationBarIconButton x:Name="settingsButton" Text="settings" Click="settingsButton_Click" IconUri="/Assets/AppBar/feature.settings.png"/>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -26,17 +21,18 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="0" Margin="12,0,12,0">
             <Image Source="/Assets/MetroLooperv1.2_logo.png" Margin="0,0,0,237" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Grid Margin="48,248,48,91">
-            	<Border x:Name="newProjButton" HorizontalAlignment="Left" BorderBrush="White" BorderThickness="2" Tap="newProjButton_Tap">
+            <Grid Margin="80,248,80,91">
+            	<Border x:Name="newProjButton" HorizontalAlignment="Left" BorderThickness="2" Tap="newProjButton_Tap" Background="#FF009450">
             		<Image Source="/Assets/AppBar/add.png"/>
             	</Border>
-            	<Border x:Name="openProjButton" Tap="openProjButton_Tap" HorizontalAlignment="Center" BorderBrush="White" BorderThickness="2">
+            	<Border x:Name="openProjButton" Tap="openProjButton_Tap" HorizontalAlignment="Center" BorderThickness="2" Background="#FF009450">
             		<Image Source="/Assets/AppBar/folder.png"/>
             	</Border>
-            	<Border x:Name="openSkydriveButton" HorizontalAlignment="Right" BorderBrush="White" BorderThickness="2">
+            	<Border x:Name="openSkydriveButton" HorizontalAlignment="Right" BorderThickness="2" Background="#FF009450">
             		<Image Source="/Assets/skydrive.png" Margin="{StaticResource PhoneMargin}"/>
             	</Border>
             </Grid>
+            <Image x:Name="settingsButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="{StaticResource PhoneMargin}" Source="/Assets/AppBar/feature.settings.png" Width="60" Height="60" Tap="settingsButton_Tap"/>
         </Grid>
         <!--<phone:Pivot Title="METROLOOPER">
             <phone:PivotItem Header="projects">

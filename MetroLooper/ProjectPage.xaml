@@ -144,33 +144,33 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid x:Name="bankPanel1" Height="150" Width="200" Grid.Row="0" Grid.Column="0">
-                <StackPanel x:Name="playPanel1" Visibility="Collapsed">
+                <StackPanel x:Name="playPanel1">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonOne" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonOne" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                                 <Image x:Name="playImageOne" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonOne" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageOne" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonOne" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageOne" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect1" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect1" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonOne" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+                        <Border x:Name="editButtonOne" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonOne" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                        <Border x:Name="deleteButtonOne" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
+                            <Image Source="delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderOne" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderOne" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
-                <Border x:Name="newButtonOne" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
+                <Border x:Name="newButtonOne" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Collapsed">
                     <Image Source="/Assets/AppBar/add.png"/>
                 </Border>
             </Grid>
@@ -178,28 +178,28 @@
                 <StackPanel x:Name="playPanel2" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonTwo" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonTwo" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageTwo" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonTwo" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageTwo" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonTwo" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageTwo" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect2" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect2" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonTwo" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+                        <Border x:Name="editButtonTwo" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonTwo" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+                        <Border x:Name="deleteButtonTwo" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
                             <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderTwo" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderTwo" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
                 <Border x:Name="newButtonTwo" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
                     <Image Source="/Assets/AppBar/add.png"/>
@@ -209,13 +209,13 @@
                 <StackPanel x:Name="playPanel3" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonThree" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonThree" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageThree" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonThree" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageThree" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonThree" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageThree" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect3" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect3" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
@@ -230,7 +230,7 @@
                             <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderThree" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderThree" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
                 <Border x:Name="newButtonThree" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
                     <Image Source="/Assets/AppBar/add.png"/>
@@ -240,28 +240,28 @@
                 <StackPanel x:Name="playPanel4" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonFour" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonFour" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageFour" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonFour" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageFour" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonFour" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageFour" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect4" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect4" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonFour" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+                        <Border x:Name="editButtonFour" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonFour" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+                        <Border x:Name="deleteButtonFour" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
                             <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderFour" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderFour" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
                 <Border x:Name="newButtonFour" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
                     <Image Source="/Assets/AppBar/add.png"/>
@@ -271,28 +271,28 @@
                 <StackPanel x:Name="playPanel5" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonFive" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonFive" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageFive" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonFive" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageFive" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonFive" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageFive" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect5" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect5" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonFive" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+                        <Border x:Name="editButtonFive" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonFive" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+                        <Border x:Name="deleteButtonFive" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
                             <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderFive" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderFive" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
                 <Border x:Name="newButtonFive" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
                     <Image Source="/Assets/AppBar/add.png"/>
@@ -302,35 +302,35 @@
                 <StackPanel x:Name="playPanel6" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Text="{Binding BankName}" Margin="0,0,0,3" HorizontalAlignment="Left"/>
                     <Grid>
-                        <Border x:Name="playButtonSix" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
+                        <Border x:Name="playButtonSix" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38">
                             <Image x:Name="playImageSix" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
                         </Border>
-                        <Border x:Name="stopButtonSix" Tap="playButton_Tap_1" BorderBrush="White" BorderThickness="3" Margin="0,0,0,6" Height="38">
-                            <Image x:Name="stopImageSix" Source="/Assets/stop.png" Visibility="Collapsed"/>
+                        <Border x:Name="stopButtonSix" Tap="playButton_Tap_1" BorderThickness="3" Margin="0,0,0,6" Height="38" Visibility="Collapsed">
+                            <Image x:Name="stopImageSix" Source="/Assets/stop.png"/>
                         </Border>
-                        <Rectangle x:Name="progressRect6" Stroke="{StaticResource PhoneBorderBrush}" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
+                        <Rectangle x:Name="progressRect6" Fill="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" RenderTransformOrigin="0,0.5" Canvas.ZIndex="-1" Margin="0,2,0,6">
                             <Rectangle.RenderTransform>
                                 <CompositeTransform ScaleX="0"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonSix" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
+                        <Border x:Name="editButtonSix" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonSix" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+                        <Border x:Name="deleteButtonSix" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
                             <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
-                    <Slider x:Name="volumeSliderSix" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0"/>
+                    <Slider x:Name="volumeSliderSix" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
                 </StackPanel>
                 <Border x:Name="newButtonSix" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3,2,3,3" HorizontalAlignment="Center" Height="100" VerticalAlignment="Center" Width="100" CornerRadius="90" Visibility="Visible">
                     <Image Source="/Assets/AppBar/add.png"/>
                 </Border>
             </Grid>
-            <ProgressBar x:Name="progressBar" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,150,0"/>
-            <Button x:Name="composeButton" Content="Compose" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"/>
+            <ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,150,0"/>
+            <Button x:Name="composeButton" Content="Compose" Click="ComposeButton_Click" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"/>
             <StackPanel Visibility="Collapsed">
                 <Grid Height="70">
                     <Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>

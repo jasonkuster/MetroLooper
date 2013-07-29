@@ -257,5 +257,10 @@ namespace MetroLooper
                 NavigationService.Navigate(new Uri("/ProjSelectPage.xaml", UriKind.RelativeOrAbsolute));
             }
         }
+
+        private void settingsButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.RelativeOrAbsolute));
+        }
     }
 }

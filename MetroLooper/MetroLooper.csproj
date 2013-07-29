@@ -211,6 +211,7 @@
     <Content Include="Assets\AlignmentGrid.png" />
     <Content Include="Assets\AppBar\add.png" />
     <Content Include="Assets\AppBar\back.png" />
+    <Content Include="Assets\AppBar\delete.png" />
     <Content Include="Assets\AppBar\edit.png" />
     <Content Include="Assets\AppBar\feature.settings.png" />
     <Content Include="Assets\AppBar\folder.png" />
@@ -223,8 +224,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\clickTrack.wav" />
+    <Content Include="Assets\MetroLooperv1.2_icon.png" />
     <Content Include="Assets\MetroLooperv1.2_icon_trans.png" />
     <Content Include="Assets\MetroLooperv1.2_icon_trans_vert.png" />
+    <Content Include="Assets\MetroLooperv1.2_icon_vert.png" />
     <Content Include="Assets\MetroLooperv1.2_logo.png" />
     <Content Include="Assets\skydrive.png" />
     <Content Include="Assets\stop.png" />
@@ -289,6 +292,9 @@
       <Project>{92A37FC7-ED72-45AE-9AD4-7EEA88C17E71}</Project>
       <Name>AudioComponent</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="delete.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

@@ -126,18 +126,18 @@ namespace MetroLooper
             play4 = false;
             play5 = false;
             play6 = false;
-            playImageOne.Visibility = System.Windows.Visibility.Visible;
-            stopImageOne.Visibility = System.Windows.Visibility.Collapsed;
-            playImageTwo.Visibility = System.Windows.Visibility.Visible;
-            stopImageTwo.Visibility = System.Windows.Visibility.Collapsed;
-            playImageThree.Visibility = System.Windows.Visibility.Visible;
-            stopImageThree.Visibility = System.Windows.Visibility.Collapsed;
-            playImageFour.Visibility = System.Windows.Visibility.Visible;
-            stopImageFour.Visibility = System.Windows.Visibility.Collapsed;
-            playImageFive.Visibility = System.Windows.Visibility.Visible;
-            stopImageFive.Visibility = System.Windows.Visibility.Collapsed;
-            playImageSix.Visibility = System.Windows.Visibility.Visible;
-            stopImageSix.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonOne.Visibility = System.Windows.Visibility.Visible;
+            stopButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonTwo.Visibility = System.Windows.Visibility.Visible;
+            stopButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonThree.Visibility = System.Windows.Visibility.Visible;
+            stopButtonThree.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonFour.Visibility = System.Windows.Visibility.Visible;
+            stopButtonFour.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonFive.Visibility = System.Windows.Visibility.Visible;
+            stopButtonFive.Visibility = System.Windows.Visibility.Collapsed;
+            playButtonSix.Visibility = System.Windows.Visibility.Visible;
+            stopButtonSix.Visibility = System.Windows.Visibility.Collapsed;
 
             switch (viewModel.SelectedProject.banks.Count)
             {
@@ -457,33 +457,33 @@ namespace MetroLooper
             {
                 case "ButtonOne":
                     play1 = play1 ? false : true;
-                    playImageOne.Visibility = play1 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageOne.Visibility = play1 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonOne.Visibility = play1 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonOne.Visibility = play1 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 case "ButtonTwo":
                     play2 = play2 ? false : true;
-                    playImageTwo.Visibility = play2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageTwo.Visibility = play2 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonTwo.Visibility = play2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonTwo.Visibility = play2 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 case "ButtonThree":
                     play3 = play3 ? false : true;
-                    playImageThree.Visibility = play3 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageThree.Visibility = play3 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonThree.Visibility = play3 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonThree.Visibility = play3 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 case "ButtonFour":
                     play4 = play4 ? false : true;
-                    playImageFour.Visibility = play4 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageFour.Visibility = play4 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonFour.Visibility = play4 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonFour.Visibility = play4 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 case "ButtonFive":
                     play5 = play5 ? false : true;
-                    playImageFive.Visibility = play5 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageFive.Visibility = play5 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonFive.Visibility = play5 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonFive.Visibility = play5 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 case "ButtonSix":
                     play6 = play6 ? false : true;
-                    playImageSix.Visibility = play6 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-                    stopImageSix.Visibility = play6 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    playButtonSix.Visibility = play6 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopButtonSix.Visibility = play6 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
                     break;
                 default:
                     break;
