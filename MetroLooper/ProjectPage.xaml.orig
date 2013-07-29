@@ -163,9 +163,9 @@
                         <Border x:Name="editButtonOne" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonOne" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderOne" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -194,9 +194,9 @@
                         <Border x:Name="editButtonTwo" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonTwo" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderTwo" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -222,12 +222,12 @@
                         </Rectangle>
                     </Grid>
                     <Grid Height="41">
-                        <Border x:Name="editButtonThree" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
+                        <Border x:Name="editButtonThree" Tap="editButton_Tap" BorderBrush="White" BorderThickness="3" Margin="0" HorizontalAlignment="Left">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                        <Border x:Name="deleteButtonThree" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Border x:Name="deleteButtonThree" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
+                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderThree" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -256,9 +256,9 @@
                         <Border x:Name="editButtonFour" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonFour" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderFour" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -287,9 +287,9 @@
                         <Border x:Name="editButtonFive" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonFive" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderFive" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -318,9 +318,9 @@
                         <Border x:Name="editButtonSix" Tap="editButton_Tap" BorderThickness="3" Margin="0" HorizontalAlignment="Left" Background="#FF43E098">
                             <Image Source="/Assets/AppBar/edit.png" Margin="0" HorizontalAlignment="Left"/>
                         </Border>
-                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                        <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonSix" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderSix" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -329,8 +329,12 @@
                     <Image Source="/Assets/AppBar/add.png"/>
                 </Border>
             </Grid>
+<<<<<<< HEAD
             <ProgressBar x:Name="progressBar" Foreground="{Binding Instance.BarColor, Source={StaticResource MainViewModel}}" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,150,0"/>
-            <Button x:Name="composeButton" Content="Compose" Click="ComposeButton_Click" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" BorderBrush="{x:Null}" Background="#FF43E098" Foreground="Black"/>
+=======
+            <ProgressBar x:Name="progressBar" Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,150,0"/>
+>>>>>>> 0f87b6d706875f2c13f406572efcc732e8c9eb06
+            <Button x:Name="composeButton" Content="Compose" Click="ComposeButton_Click" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right"/>
             <StackPanel Visibility="Collapsed">
                 <Grid Height="70">
                     <Button Content="Record" Visibility="Collapsed" Margin="0,0,704,0"/>
@@ -358,8 +362,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <phone:LongListSelector x:Name="BankList" LayoutMode="Grid" GridCellSize="224,174"  ItemsSource="{Binding SelectedProject.banks}" ItemTemplate="{StaticResource BankItem}"/>
-            <!--<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Visibility="Visible">
-                <Grid x:Name="playGridOne" Width="200">
+            <!--<StackPanel x:Name="bankOnePanel" Orientation="Horizontal" Margin="12,12,497,183" Visibility="Visible">
+                <Grid x:Name="playGridOne" Width="{Binding ActualHeight, ElementName=bankOnePanel}">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -372,7 +376,7 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle x:Name="bankOneRect" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="3" Canvas.ZIndex="-2">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="#009450"/>
+                            <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
                         </Rectangle.Fill>
                     </Rectangle>
                     <Image x:Name="playButtonOne" Grid.Row="1" Grid.Column="1" Source="/Toolkit.Content/ApplicationBar.Play.png" Canvas.ZIndex="-1" Tap="playButton_Tap"/>
@@ -383,6 +387,7 @@
                     </es:Arc>
                     <Image Tap="editImageOne_Tap" x:Name="editImageOne" Grid.Row="2" Source="/Assets/AppBar/edit.png"/>
                 </Grid>
+                <Slider x:Name="volumeSliderOne" Orientation="Vertical" HorizontalAlignment="Center" Margin="{StaticResource PhoneMargin}"/>
             </StackPanel>-->
             <Button x:Name="swapButton2" Content="Swap" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Click="swapButton_Click"/>
         </Grid>

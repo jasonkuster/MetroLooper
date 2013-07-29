@@ -150,6 +150,7 @@ namespace MetroLooper
                         viewModel.AudioMan.RecordStopAndSubmit(viewModel.SelectedBank.bankID, trackNum);
                         byte[] trackData;
                         newTrack.Size = viewModel.AudioMan.GetAudioData(viewModel.SelectedBank.bankID, trackNum, out trackData);
+                        recordCircle.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
                         newTrack.trackData = trackData;
                         //TODO: Mix down bank here?
                         ((MainViewModel)DataContext).lockUI(MainViewModel.LOCK_STATE.NONE); //TODO: Fix this
@@ -195,6 +196,7 @@ namespace MetroLooper
                 timerRunning = true;
             }
             startRecord(true);
+            recordCircle.Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 67, 224, 152));
         }
 
         private void stopPlayButton_Tap(object sender, System.Windows.Input.GestureEventArgs e) //TODO: Merge with finalized stop/start button
@@ -505,7 +507,7 @@ namespace MetroLooper
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return (value is bool && (bool)value) ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80)) : new SolidColorBrush(Colors.Orange);
+            return (value is bool && (bool)value) ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80)) : new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
