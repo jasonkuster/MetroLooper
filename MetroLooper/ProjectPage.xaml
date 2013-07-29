@@ -165,7 +165,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonOne" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderOne" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -196,7 +196,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonTwo" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderTwo" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -227,7 +227,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonThree" Tap="deleteButton_Tap" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Right" Margin="0">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderThree" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -258,7 +258,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonFour" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderFour" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -289,7 +289,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonFive" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderFive" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>
@@ -320,7 +320,7 @@
                         </Border>
                         <TextBlock TextWrapping="Wrap" Text="Volume" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <Border x:Name="deleteButtonSix" Tap="deleteButton_Tap" BorderThickness="3" HorizontalAlignment="Right" Margin="0" Background="#FF43E098">
-                            <Image Source="/Toolkit.Content/ApplicationBar.Delete.png" HorizontalAlignment="Right"/>
+                            <Image Source="/Assets/AppBar/delete.png" HorizontalAlignment="Right"/>
                         </Border>
                     </Grid>
                     <Slider x:Name="volumeSliderSix" ValueChanged="bankSlider_ValueChanged" Maximum="0.0" Minimum="-40.0" Value="{Binding Volume}" Margin="0,-8,0,0" Foreground="#FF009450"/>

@@ -505,12 +505,12 @@ namespace MetroLooper
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return (value is bool && (bool)value) ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Orange);
+            return (value is bool && (bool)value) ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 148, 80)) : new SolidColorBrush(Colors.Orange);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo language)
         {
-            return value is SolidColorBrush && ((SolidColorBrush)value).Color == System.Windows.Media.Colors.Green;
+            return value is SolidColorBrush && ((SolidColorBrush)value).Color == System.Windows.Media.Color.FromArgb(255, 0, 148, 80);
         }
     }
 }

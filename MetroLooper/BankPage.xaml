@@ -302,7 +302,7 @@
 						<StackPanel.RenderTransform>
 							<CompositeTransform ScaleX="0"/>
 						</StackPanel.RenderTransform>
-						<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" SelectionChanged="LongListSelector_SelectionChanged" ItemTemplate="{StaticResource LoopItemTemplate}" RenderTransformOrigin="0.5,0.5" Height="186" Background="#FF43E098">
+						<phone:LongListSelector x:Name="loopList" ItemsSource="{Binding SelectedBank.tracks}" SelectionChanged="LongListSelector_SelectionChanged" ItemTemplate="{StaticResource LoopItemTemplate}" RenderTransformOrigin="0.5,0.5" Height="186" Background="{StaticResource PhoneChromeBrush}">
 							<phone:LongListSelector.RenderTransform>
 								<CompositeTransform/>
 							</phone:LongListSelector.RenderTransform>
@@ -368,21 +368,21 @@
 						</Grid.ColumnDefinitions>
 						<StackPanel>
                             <TextBlock TextWrapping="Wrap" Text="Volume" HorizontalAlignment="Center" FontFamily="Segoe WP Light"/>
-                            <Slider x:Name="VolumeSlider"  Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0" Height="183" Foreground="Black"/>
+                            <Slider x:Name="VolumeSlider"  Maximum="0.0" Minimum="-40.0" Value="0.0" Orientation="Vertical" ValueChanged="VolumeSlider_ValueChanged" Margin="0" Height="183" Foreground="#FF43E098"/>
 						</StackPanel>
 						<StackPanel Grid.Column="1">
 							<TextBlock TextWrapping="Wrap" Text="Offset" HorizontalAlignment="Center" FontFamily="Segoe WP Light"/>
-							<Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20" HorizontalAlignment="Center" BorderBrush="{x:Null}"/>
+							<Button x:Name="OffsetIncreaseButton" Click="OffsetIncreaseButton_Click" Content="+20" HorizontalAlignment="Center" BorderBrush="{x:Null}" Background="#FF43E098" Foreground="Black"/>
 							<TextBlock x:Name="OffsetTextBlock" TextWrapping="NoWrap" HorizontalAlignment="Center" FontSize="32" FontFamily="Segoe WP Light" TextAlignment="Center"/>
-							<Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20" HorizontalAlignment="Center" BorderBrush="{x:Null}"/>
+							<Button x:Name="OffsetDecreaseButton" Click="OffsetDecreaseButton_Click" Content="-20" HorizontalAlignment="Center" BorderBrush="{x:Null}" Foreground="Black" Background="#FF43E098"/>
 						</StackPanel>
-						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" VerticalAlignment="Center" Grid.Row="1" BorderBrush="{x:Null}" Background="#FF43E098"/>
+						<Button x:Name="ResetButton" Click="ResetButton_Click" Content="Reset" VerticalAlignment="Center" Grid.Row="1" BorderBrush="{x:Null}" Background="#FF43E098" Foreground="Black"/>
 						<Grid Grid.Row="1" Grid.Column="1">
 							<Border x:Name="playButton" Tap="PlayBankButton_Tap" BorderThickness="3" Margin="0,12,77,12" Background="#FF43E098">
 								<Image x:Name="playStopImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Play.png"/>
 							</Border>
                             <Border x:Name="delButton" Tap="delButton_Tap" BorderThickness="3" Margin="75,12,0,12" Background="#FF43E098">
-								<Image x:Name="delImage" Width="67" Source="/Toolkit.Content/ApplicationBar.Delete.png"/>
+								<Image x:Name="delImage" Width="67" Source="/Assets/AppBar/delete.png"/>
 							</Border>
 						</Grid>
 					</Grid>
