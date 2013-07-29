@@ -26,6 +26,8 @@ namespace MetroLooper
         bool play2 = false;
         bool play3 = false;
         bool play4 = false;
+        bool play5 = false;
+        bool play6 = false;
         bool isPlaying = false;
         Timer playingTimer;
         Timer stopTimer;
@@ -50,6 +52,8 @@ namespace MetroLooper
                 Bank2Go.Stop();
                 Bank3Go.Stop();
                 Bank4Go.Stop();
+                Bank5Go.Stop();
+                Bank6Go.Stop();
             });
         }
 
@@ -86,6 +90,16 @@ namespace MetroLooper
                     viewModel.AudioMan.PlayMixedBank(3);
                     Bank4Go.Begin();
                 }
+                if (play5)
+                {
+                    viewModel.AudioMan.PlayMixedBank(4);
+                    Bank5Go.Begin();
+                }
+                if (play6)
+                {
+                    viewModel.AudioMan.PlayMixedBank(5);
+                    Bank6Go.Begin();
+                }
             });
 
         }
@@ -107,13 +121,23 @@ namespace MetroLooper
             stopTimer = new Timer(StopTracks, new object(), System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
             play1 = false;
-            bankPlay1.Content = "Play";
             play2 = false;
-            bankPlay2.Content = "Play";
             play3 = false;
-            bankPlay3.Content = "Play";
             play4 = false;
-            bankPlay4.Content = "Play";
+            play5 = false;
+            play6 = false;
+            playImageOne.Visibility = System.Windows.Visibility.Visible;
+            stopImageOne.Visibility = System.Windows.Visibility.Collapsed;
+            playImageTwo.Visibility = System.Windows.Visibility.Visible;
+            stopImageTwo.Visibility = System.Windows.Visibility.Collapsed;
+            playImageThree.Visibility = System.Windows.Visibility.Visible;
+            stopImageThree.Visibility = System.Windows.Visibility.Collapsed;
+            playImageFour.Visibility = System.Windows.Visibility.Visible;
+            stopImageFour.Visibility = System.Windows.Visibility.Collapsed;
+            playImageFive.Visibility = System.Windows.Visibility.Visible;
+            stopImageFive.Visibility = System.Windows.Visibility.Collapsed;
+            playImageSix.Visibility = System.Windows.Visibility.Visible;
+            stopImageSix.Visibility = System.Windows.Visibility.Collapsed;
 
             switch (viewModel.SelectedProject.banks.Count)
             {
@@ -121,52 +145,121 @@ namespace MetroLooper
                     bankPanel2.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = false;
-                    bankSlider1.IsEnabled = false;
+                    bankPanel5.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel6.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = false;
+                    //bankSlider1.IsEnabled = false;
                     break;
                 case 1:
                     //Code to handle one bank
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = false;
-                    bankSlider2.IsEnabled = false;
+                    bankPanel5.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel6.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankSlider1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = false;
+                    //bankSlider2.IsEnabled = false;
                     break;
                 case 2:
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Collapsed;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = false;
-                    bankSlider3.IsEnabled = false;
+                    bankPanel5.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel6.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankSlider1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankSlider2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = false;
+                    //bankSlider3.IsEnabled = false;
                     break;
                 case 3:
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
                     bankPanel2.Visibility = System.Windows.Visibility.Visible;
                     bankPanel3.Visibility = System.Windows.Visibility.Visible;
                     bankPanel4.Visibility = System.Windows.Visibility.Visible;
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
-                    bankPlay4.IsEnabled = false;
-                    bankSlider4.IsEnabled = false;
+                    bankPanel5.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel6.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankSlider1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankSlider2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = true;
+                    //bankSlider3.IsEnabled = true;
+                    //bankPlay4.IsEnabled = false;
+                    //bankSlider4.IsEnabled = false;
                     break;
                 case 4:
-                    bankPlay1.IsEnabled = true;
-                    bankSlider1.IsEnabled = true;
-                    bankPlay2.IsEnabled = true;
-                    bankSlider2.IsEnabled = true;
-                    bankPlay3.IsEnabled = true;
-                    bankSlider3.IsEnabled = true;
-                    bankPlay4.IsEnabled = true;
-                    bankSlider4.IsEnabled = true;
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel5.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel6.Visibility = System.Windows.Visibility.Collapsed;
+                    //bankPlay1.IsEnabled = true;
+                    //bankSlider1.IsEnabled = true;
+                    //bankPlay2.IsEnabled = true;
+                    //bankSlider2.IsEnabled = true;
+                    //bankPlay3.IsEnabled = true;
+                    //bankSlider3.IsEnabled = true;
+                    //bankPlay4.IsEnabled = true;
+                    //bankSlider4.IsEnabled = true;
+                    break;
+                case 5:
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel5.Visibility = System.Windows.Visibility.Visible;
+                    newButtonFive.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel5.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel6.Visibility = System.Windows.Visibility.Visible;
+                    break;
+                case 6:
+                    playPanel1.Visibility = System.Windows.Visibility.Visible;
+                    newButtonOne.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel2.Visibility = System.Windows.Visibility.Visible;
+                    newButtonTwo.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel3.Visibility = System.Windows.Visibility.Visible;
+                    newButtonThree.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel4.Visibility = System.Windows.Visibility.Visible;
+                    newButtonFour.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel5.Visibility = System.Windows.Visibility.Visible;
+                    newButtonFive.Visibility = System.Windows.Visibility.Collapsed;
+                    playPanel6.Visibility = System.Windows.Visibility.Visible;
+                    newButtonSix.Visibility = System.Windows.Visibility.Collapsed;
+                    bankPanel2.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel3.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel4.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel5.Visibility = System.Windows.Visibility.Visible;
+                    bankPanel6.Visibility = System.Windows.Visibility.Visible;
                     break;
                 default:
                     break;
@@ -195,48 +288,49 @@ namespace MetroLooper
         {
             base.OnNavigatingFrom(e);
             playingTimer.Dispose();
+            stopTimer.Dispose();
             viewModel.AudioMan.StopAll();
             isPlaying = false;
         }
 
-        private void Border_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            var borderNum = sender as Border;
-            switch (borderNum.Name)
-            {
-                case "bank1Border":
-                    if (viewModel.SelectedProject.banks.Count == 0)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 0 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
-                    break;
-                case "bank2Border":
-                    if (viewModel.SelectedProject.banks.Count == 1)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 1 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[1];
-                    break;
-                case "bank3Border":
-                    if (viewModel.SelectedProject.banks.Count == 2)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 2 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[2];
-                    break;
-                case "bank4Border":
-                    if (viewModel.SelectedProject.banks.Count == 3)
-                    {
-                        viewModel.SelectedProject.banks.Add(new Bank { bankID = 3 });
-                    }
-                    viewModel.SelectedBank = viewModel.SelectedProject.banks[3];
-                    break;
-                default:
-                    break;
-            }
-            NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
-        }
+        //private void Border_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //{
+        //    var borderNum = sender as Border;
+        //    switch (borderNum.Name)
+        //    {
+        //        case "bank1Border":
+        //            if (viewModel.SelectedProject.banks.Count == 0)
+        //            {
+        //                viewModel.SelectedProject.banks.Add(new Bank { bankID = 0 });
+        //            }
+        //            viewModel.SelectedBank = viewModel.SelectedProject.banks[0];
+        //            break;
+        //        case "bank2Border":
+        //            if (viewModel.SelectedProject.banks.Count == 1)
+        //            {
+        //                viewModel.SelectedProject.banks.Add(new Bank { bankID = 1 });
+        //            }
+        //            viewModel.SelectedBank = viewModel.SelectedProject.banks[1];
+        //            break;
+        //        case "bank3Border":
+        //            if (viewModel.SelectedProject.banks.Count == 2)
+        //            {
+        //                viewModel.SelectedProject.banks.Add(new Bank { bankID = 2 });
+        //            }
+        //            viewModel.SelectedBank = viewModel.SelectedProject.banks[2];
+        //            break;
+        //        case "bank4Border":
+        //            if (viewModel.SelectedProject.banks.Count == 3)
+        //            {
+        //                viewModel.SelectedProject.banks.Add(new Bank { bankID = 3 });
+        //            }
+        //            viewModel.SelectedBank = viewModel.SelectedProject.banks[3];
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
+        //}
 
         private void bankPlay_Click(object sender, RoutedEventArgs e)
         {
@@ -277,35 +371,42 @@ namespace MetroLooper
             var sliderNum = sender as Slider;
             switch (sliderNum.Name)
             {
-                case "bankSlider1":
+                case "volumeSliderOne":
                     bankNumber = 0;
                     break;
-                case "bankSlider2":
+                case "volumeSliderTwo":
                     bankNumber = 1;
                     break;
-                case "bankSlider3":
+                case "volumeSliderThree":
                     bankNumber = 2;
                     break;
-                case "bankSlider4":
+                case "volumeSliderFour":
                     bankNumber = 3;
+                    break;
+                case "volumeSliderFive":
+                    bankNumber = 4;
+                    break;
+                case "volumeSliderSix":
+                    bankNumber = 5;
                     break;
                 default:
                     break;
             }
             viewModel.AudioMan.SetBankVolumeDB(bankNumber, value);
+            viewModel.SelectedBank.Volume = value;
         }
 
         private void stopAllButton_Click(object sender, RoutedEventArgs e)
         {
-            play1 = false;
-            bankPlay1.Content = "Play";
-            play2 = false;
-            bankPlay2.Content = "Play";
-            play3 = false;
-            bankPlay3.Content = "Play";
-            play4 = false;
-            bankPlay4.Content = "Play";
-            viewModel.AudioMan.StopAll();
+            //play1 = false;
+            //bankPlay1.Content = "Play";
+            //play2 = false;
+            //bankPlay2.Content = "Play";
+            //play3 = false;
+            //bankPlay3.Content = "Play";
+            //play4 = false;
+            //bankPlay4.Content = "Play";
+            //viewModel.AudioMan.StopAll();
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -338,53 +439,130 @@ namespace MetroLooper
 
         private void playButton_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (((Bank)BankList.SelectedItem) != null)
+            //if (((Bank)BankList.SelectedItem) != null)
+            //{
+            //    if (banksToPlay.ContainsKey(((Bank)BankList.SelectedItem).bankID))
+            //    {
+            //        banksToPlay[((Bank)BankList.SelectedItem).bankID] = banksToPlay[((Bank)BankList.SelectedItem).bankID] == true ? false : true;
+            //    }
+            //    else
+            //    {
+            //        banksToPlay[((Bank)BankList.SelectedItem).bankID] = true;
+            //    }
+            //    playingTimer.Change(0, 4000);
+            //}
+            var clicker = sender as Border;
+            
+            switch (clicker.Name.Remove(0,4))
             {
-                if (banksToPlay.ContainsKey(((Bank)BankList.SelectedItem).bankID))
-                {
-                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = banksToPlay[((Bank)BankList.SelectedItem).bankID] == true ? false : true;
-                }
-                else
-                {
-                    banksToPlay[((Bank)BankList.SelectedItem).bankID] = true;
-                }
+                case "ButtonOne":
+                    play1 = play1 ? false : true;
+                    playImageOne.Visibility = play1 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageOne.Visibility = play1 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "ButtonTwo":
+                    play2 = play2 ? false : true;
+                    playImageTwo.Visibility = play2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageTwo.Visibility = play2 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "ButtonThree":
+                    play3 = play3 ? false : true;
+                    playImageThree.Visibility = play3 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageThree.Visibility = play3 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "ButtonFour":
+                    play4 = play4 ? false : true;
+                    playImageFour.Visibility = play4 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageFour.Visibility = play4 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "ButtonFive":
+                    play5 = play5 ? false : true;
+                    playImageFive.Visibility = play5 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageFive.Visibility = play5 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                case "ButtonSix":
+                    play6 = play6 ? false : true;
+                    playImageSix.Visibility = play6 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+                    stopImageSix.Visibility = play6 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+                    break;
+                default:
+                    break;
+            }
+            if (!isPlaying)
+            {
                 playingTimer.Change(0, 4000);
+                isPlaying = true;
             }
         }
 
         private void editButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (((Bank)BankList.SelectedItem) != null)
+            //if (((Bank)BankList.SelectedItem) != null)
+            //{
+            //    if (!((Bank)BankList.SelectedItem).Initialized)
+            //    {
+            //        ((Bank)BankList.SelectedItem).Initialized = true;
+            //        viewModel.SelectedProject.banks.Add(new Bank() { bankID = viewModel.SelectedProject.banks.Count });
+            //    }
+            //    viewModel.SelectedBank = ((Bank)BankList.SelectedItem);
+            //    BankList.SelectedItem = null;
+            //    NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
+            //}
+            Border b = sender as Border;
+            int buttonNum = -1;
+            switch (b.Name)
             {
-                if (!((Bank)BankList.SelectedItem).Initialized)
-                {
-                    ((Bank)BankList.SelectedItem).Initialized = true;
-                    viewModel.SelectedProject.banks.Add(new Bank() { bankID = viewModel.SelectedProject.banks.Count });
-                }
-                viewModel.SelectedBank = ((Bank)BankList.SelectedItem);
-                BankList.SelectedItem = null;
-                NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
+                case "editButtonOne":
+                    buttonNum = 0;
+                    break;
+                case "editButtonTwo":
+                    buttonNum = 1;
+                    break;
+                case "editButtonThree":
+                    buttonNum = 2;
+                    break;
+                case "editButtonFour":
+                    buttonNum = 3;
+                    break;
+                case "editButtonFive":
+                    buttonNum = 4;
+                    break;
+                case "editButtonSix":
+                    buttonNum = 5;
+                    break;
+                default:
+                    buttonNum = viewModel.SelectedProject.banks.Count;
+                    Bank newBank = new Bank() { bankID = viewModel.SelectedProject.banks.Count, Finalized = false, Initialized = false };
+                    viewModel.SelectedProject.banks.Add(newBank);
+                    viewModel.SelectedBank = newBank;
+                    break;
             }
+
+            viewModel.SelectedBank = viewModel.SelectedProject.banks[buttonNum];
+
+            NavigationService.Navigate(new Uri("/BankPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private void deleteButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (((Bank)BankList.SelectedItem) != null)
-            {
-                if (((Bank)BankList.SelectedItem).Finalized)
-                {
-                    viewModel.AudioMan.DeleteFinalizedBank(((Bank)BankList.SelectedItem).bankID);
-                }
-                else //TODO: FIX SO THAT DELETING BANK 2/4 DOESN'T BREAK EVERYTHING
-                {
-                    foreach (Track t in ((Bank)BankList.SelectedItem).tracks) //TODO: DECREMENT EVERY BANK AFTERWARD
-                    {
-                        viewModel.AudioMan.DeleteTrack(((Bank)BankList.SelectedItem).bankID, t.trackID);
-                    }
-                }
-                viewModel.SelectedProject.banks.Remove(((Bank)BankList.SelectedItem));
-                BankList.SelectedItem = null;
-            }
+            //if (((Bank)BankList.SelectedItem) != null)
+            //{
+            //    if (((Bank)BankList.SelectedItem).Finalized)
+            //    {
+            //        viewModel.AudioMan.DeleteFinalizedBank(((Bank)BankList.SelectedItem).bankID);
+            //    }
+            //    else //TODO: FIX SO THAT DELETING BANK 2/4 DOESN'T BREAK EVERYTHING
+            //    {
+            //        foreach (Track t in ((Bank)BankList.SelectedItem).tracks) //TODO: DECREMENT EVERY BANK AFTERWARD
+            //        {
+            //            viewModel.AudioMan.DeleteTrack(((Bank)BankList.SelectedItem).bankID, t.trackID);
+            //        }
+            //    }
+            //    viewModel.SelectedProject.banks.Remove(((Bank)BankList.SelectedItem));
+            //    BankList.SelectedItem = null;
+            //}
+
+
         }
 
         private void ComposeButton_Click(object sender, RoutedEventArgs e)
